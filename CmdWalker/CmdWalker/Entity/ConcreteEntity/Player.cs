@@ -2,32 +2,66 @@
 {
     internal class Player : Unit
     {
-        public Player(Vector pos) : base(pos, ";)", ConsoleColor.Green) 
+        public Inventory Inventory = new Inventory();
+        private BulletCreator _bulletCreator;
+        
+        public Player(Vector pos) : base(pos, ";)", ConsoleColor.Green)
         {
+            _bulletCreator = new BulletCreator();
             _health = new Health(100);
+            for (int i = 0; i < 1; i++)
+            {
+                var bullet = _bulletCreator.Create();
+                Inventory.PickUp(bullet);
+            }
+            Inventory.Equip(0);
         }
         public  override void Update()
         {
             Execute(InputHandler.GetKeyDown());
             Move(InputHandler.GetCurrentDirection());
         }
-        public void Execute(ConsoleKey key)
+
+        private void Execute(ConsoleKey key)
         {
+            bool isFire = false;
            switch (key)
            {
                case ConsoleKey.I:
-                    _map.SpawnEntity(new BounceBulletCreator(Vector.down, this).Create(Position));
+                   if(Inventory.Contains("Bullet"))
+                   {
+                       isFire = true;
+                       Inventory.Drop(false);
+                       _bulletCreator.Set(this, Vector.down);
+                   }
                    break;
                case ConsoleKey.K:
-                    _map.SpawnEntity(new BounceBulletCreator(Vector.up, this).Create(Position) );
+                   if(Inventory.Contains("Bullet"))
+                   {
+                       isFire = true;
+                       Inventory.Drop(false);
+                       _bulletCreator.Set(this, Vector.up);
+                   }
                    break;
                case ConsoleKey.J:
-                    _map.SpawnEntity(new BounceBulletCreator(Vector.left, this).Create(Position));
+                   if(Inventory.Contains("Bullet"))
+                   {
+                       isFire = true;
+                       Inventory.Drop(false);
+                       _bulletCreator.Set(this, Vector.left);
+                   }
                    break;
                case ConsoleKey.L:
-                    _map.SpawnEntity(new BounceBulletCreator(Vector.right, this).Create(Position));
-                    break;
+                   if(Inventory.Contains("Bullet"))
+                   {
+                       isFire = true;
+                        Inventory.Drop(false);
+                        _bulletCreator.Set(this, Vector.right);
+                   }
+                   break;
            }
+           if(isFire)
+            _map.SpawnEntity(_bulletCreator.CreateActive());
         }
         public override void Move(Vector direction)
         {

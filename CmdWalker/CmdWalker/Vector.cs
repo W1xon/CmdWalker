@@ -18,6 +18,7 @@
             Y = y;
         }
         public static Vector operator +(Vector a, Vector b) => new Vector(a.X + b.X, a.Y + b.Y);
+        public static Vector operator -(Vector a, Vector b) => new Vector(a.X - b.X, a.Y - b.Y);
         public static bool operator ==(Vector a, Vector b) =>  a.X == b.X && a.Y == b.Y;
         public static bool operator !=(Vector a, Vector b) =>  !(a.X == b.X && a.Y == b.Y);
         public static Vector operator *(Vector a, int n) => new Vector(a.X * n, a.Y * n);

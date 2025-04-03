@@ -1,6 +1,8 @@
-﻿namespace CmdWalker
+﻿using CmdWalker;
+
+namespace CmdWalker
 {
-    internal class BounceBullet : Projectile
+    internal class BounceBullet : Projectile, IDestroyable
     {
         private Vector _dir;
         private int _damage;
@@ -14,7 +16,7 @@
         {
             Move(_dir);
         }
-        public override void Destroy()
+        public void Destroy()
         {
             var target = new Vector((Position.X + _dir.X), (Position.Y + _dir.Y));
             foreach (var entity in _map.Entities)

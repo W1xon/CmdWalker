@@ -9,7 +9,7 @@
             _dir = direction;
             _parent = parent;
         }
-        public override GameEntity Create(Vector pos)
+        public  GameEntity Create(Vector pos)
         {
             return new BounceBullet(pos, _dir, _parent);
         }

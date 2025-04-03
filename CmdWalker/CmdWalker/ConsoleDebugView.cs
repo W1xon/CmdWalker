@@ -6,6 +6,7 @@
     /// </summary>
     internal static class ConsoleDebugView
     {
+        public static string InventoryInfo = "";
         public static string DebugInfo = ""; //удалить в след. версиях
         private static Map _map;
         private static Vector _offset = new Vector(2,2);
@@ -25,11 +26,16 @@
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.SetCursorPosition(_offset.X, bound.Y + _offset.Y + 3);
-
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-
             Console.Write($"Инфа дебага: {DebugInfo}");
-
+            
+            
+            Console.SetCursorPosition(_offset.X, bound.Y + _offset.Y + 4);
+            Console.Write($"Инвентарь:                                                                  ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.SetCursorPosition(_offset.X, bound.Y + _offset.Y + 4);
+            Console.Write($"Инвентарь: {InventoryInfo}");
+            
             Console.ForegroundColor = ConsoleColor.White;
         }
         public static void AddKill()

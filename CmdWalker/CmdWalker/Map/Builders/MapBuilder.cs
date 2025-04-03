@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace CmdWalker
+﻿namespace CmdWalker
 {
     internal class MapBuilder : IMapBuilder
     {
@@ -10,26 +8,10 @@ namespace CmdWalker
         {
             _map = new Map();
         }
-
-        public void AddBorder(Vector size)
+        
+        public void AddCarcass(CarcassGenerator carcassGenerator)
         {
-            _map.Carcas = new char[size.Y][];
-            //Базовая генерация стен
-            for (int y = 0; y < size.Y; y++)
-            {
-                _map.Carcas[y] = new char[size.X];
-                for (int x = 0; x < size.X; x++)
-                {
-                    if (x == 0 || x == size.X - 1 || y == 0 || y == size.Y - 1)
-                    {
-                        _map.Carcas[y][x] = Blocks.GetGlyph(Block.Wall);
-                    }
-                    else
-                    {
-                        _map.Carcas[y][x] = Blocks.GetGlyph(Block.Floor);
-                    }
-                }
-            }
+            _map.Carcas = carcassGenerator.Generate();
             _map.Plane = _map.Carcas.DeepCopy();
         }
         public void AddEntity(List<GameEntity> entities)
@@ -40,7 +22,13 @@ namespace CmdWalker
                 _map.SpawnEntity(entity);
             }
         }
-
+        public void AddItem(List<GameEntity> items)
+        { 
+            foreach(var item in items)
+            {
+                _map.SpawnEntity(item);
+            }
+        }
         public void AddRoom(List<Room> rooms)
         {
             if (rooms == null) return;

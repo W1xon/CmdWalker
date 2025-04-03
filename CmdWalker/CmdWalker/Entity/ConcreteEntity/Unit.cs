@@ -1,10 +1,10 @@
 ﻿namespace CmdWalker
 {
-    internal abstract class Unit : GameEntity, IMovable, IDamageable
+    internal abstract class Unit : GameEntity, IMovable, IDamageable, IDestroyable
     {
         protected Health _health;
         public Unit(Vector position, string glyph, ConsoleColor color) : base(position, glyph, color) { }
-
+        public abstract void Destroy();
         public abstract void Move(Vector direction);
         public  virtual bool CanMoveDir(Vector dir)
         {

@@ -7,7 +7,6 @@
         public  ConsoleColor BodyColor { get; }
         protected Map _map;
         public virtual void Update() { }
-        public abstract void Destroy();
         public GameEntity(Vector position, string glyph, ConsoleColor color)
         {
             Position = position;

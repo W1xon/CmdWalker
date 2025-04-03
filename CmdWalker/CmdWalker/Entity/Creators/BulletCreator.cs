@@ -1,17 +1,27 @@
 ﻿namespace CmdWalker
 {
-    internal class BulletCreator : EntityCreator
+    internal class BulletCreator :  CollectableCreator
     {
-        private Vector _dir;
         private GameEntity _parent;
-        public BulletCreator(Vector direction, GameEntity parent)
+        private Vector _dir;
+        public void Set(GameEntity parent, Vector direction)
         {
-            _dir = direction;
             _parent = parent;
+            _dir = direction;
         }
-        public override GameEntity Create(Vector pos)
+        public ICollectable Create()
         {
-            return new Bullet(pos, _dir, _parent);
+            return new Bullet(Vector.zero, ItemState.InInventory);
         }
+        public GameEntity CreateOnMap(Vector pos)
+        {
+            return new Bullet(pos, ItemState.OnMap);
+        }
+
+        public GameEntity CreateActive()
+        {  
+            return new Bullet(_parent.Position, ItemState.Active, _dir, _parent);
+        }
+
     }
 }

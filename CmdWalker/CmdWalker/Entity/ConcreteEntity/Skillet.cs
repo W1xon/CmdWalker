@@ -5,8 +5,9 @@
         private Vector _dir;
         private Random _rand = new Random();
         private int _step = 0;
-        private int _stepMax = 5;
+        private int _stepMax = 10;
         private int _damage = 100;
+        private SearchPath _search;
         public Skillet(Vector position) : base(position, Blocks.GetUnitGlyph(Units.Skillet), ConsoleColor.DarkBlue)
         {
             _dir = Vector.down;
@@ -15,10 +16,17 @@
 
         public override void Update()
         {
+            if (_search == null) _search = new SearchPath(_map, new Vector(Glyph.Length, 1));
+
             _step++;
             if (_step >= _stepMax)
             {
-                if(_rand.Next(0, 10) < 1) ChangeDirection();
+                var player = _map.GetEntity<Player>().First();
+                Vector goal;
+                if (player != null) goal = player.Position;
+                else
+                    goal = Vector.zero;
+                _dir = _search.GetNextPosition(Position, goal) - Position;
                 Move(_dir);
                 _step = 0;
             }
@@ -46,7 +54,7 @@
                 Vector newPos = currentPos + dir;
                 char cell = _map.GetCell(newPos);
 
-                if (cell != Blocks.GetGlyph(Block.Floor))
+                if (cell == Blocks.GetGlyph(Block.Wall))
                 {
                     canMove = false;
                     continue;

@@ -58,15 +58,17 @@
         public char GetCell(Vector pos, bool isCarcas = false)
         {
             // Т.к. массив, то координаты инвертированны
-            if (isCarcas) return Carcas[pos.Y][pos.X];
-            return Plane[pos.Y][pos.X];
-            
+             return isCarcas ? Carcas[pos.Y][pos.X] : Plane[pos.Y][pos.X];
         }
         private bool TryAddEntity(GameEntity entity)
         {
-            if (_entites.Contains(entity) || entity == null) return false;
+            if (_entites.Contains(entity) && entity == null) return false;
             _entites.Add(entity);
             return true;
+        }
+        public List<T> GetEntity<T>() where T : GameEntity
+        {
+            return _entites.OfType<T>().ToList();
         }
     }
 }

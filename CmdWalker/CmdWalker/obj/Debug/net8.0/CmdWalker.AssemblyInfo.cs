@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CmdWalker")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fedd81be76fe074ee8eccfc253ec8142c5326722")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("CmdWalker")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CmdWalker")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

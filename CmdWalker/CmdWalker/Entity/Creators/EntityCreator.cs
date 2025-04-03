@@ -1,7 +1,7 @@
 ﻿namespace CmdWalker
 {
-    internal abstract class EntityCreator
+    internal interface EntityCreator
     {
-        public abstract GameEntity Create( Vector pos);
+        public GameEntity Create(Vector pos);
     }
 }
