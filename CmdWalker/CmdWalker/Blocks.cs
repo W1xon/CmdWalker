@@ -24,13 +24,6 @@
         };
         public static char GetGlyph(Block name) => _glyphs[name];
         public static string GetUnitGlyph(Units name) => _units[name];
-        public static bool ContainsPartUnit(char glyph)
-        {
-            foreach(var unitGlyph in _units.Values)
-            {
-                if (unitGlyph.Contains(glyph)) return true;
-            }
-            return false;
-        }
+        
     }
 }

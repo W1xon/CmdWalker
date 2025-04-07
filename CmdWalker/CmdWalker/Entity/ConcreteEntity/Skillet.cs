@@ -8,68 +8,58 @@
         private int _stepMax = 10;
         private int _damage = 100;
         private SearchPath _search;
-        public Skillet(Vector position) : base(position, Blocks.GetUnitGlyph(Units.Skillet), ConsoleColor.DarkBlue)
+        public Skillet(Vector position) : base(position)
         {
             _dir = Vector.down;
             _health = new Health(100);
+            
+            Glyph = new Glyph(Blocks.GetUnitGlyph(Units.Skillet), ConsoleColor.DarkBlue);
         }
 
         public override void Update()
         {
-            if (_search == null) _search = new SearchPath(_map, new Vector(Glyph.Length, 1));
+            if (_search == null) _search = new SearchPath(_map, Glyph.Size);
 
             _step++;
             if (_step >= _stepMax)
             {
-                var player = _map.GetEntity<Player>().First();
-                Vector goal;
-                if (player != null) goal = player.Position;
-                else
-                    goal = Vector.zero;
-                _dir = _search.GetNextPosition(Position, goal) - Position;
+                CalculateDirection();
                 Move(_dir);
                 _step = 0;
             }
         }
-
         public override void Move(Vector direction)
         {
             ClearPreviousPosition();
             if (!CanMoveDir(direction))
             {
                 ChangeDirection();
-                _map.SetCells(GetPositions(), Glyph, BodyColor);
+                _map.SetCells(Collider.GetPositions(), Glyph);
                 return;
             }
             Position += direction;
-            _map.SetCells(GetPositions(), Glyph, BodyColor);
+            _map.SetCells(Collider.GetPositions(), Glyph);
         }
         public override bool CanMoveDir(Vector dir)
         {
-            Vector[] positions = GetPositions();
-            bool canMove = true;
-
-            foreach (Vector currentPos in positions)
-            {
-                Vector newPos = currentPos + dir;
-                char cell = _map.GetCell(newPos);
-
-                if (cell == Blocks.GetGlyph(Block.Wall))
-                {
-                    canMove = false;
-                    continue;
-                }
-
-                foreach (var entity in _map.Entities)
-                {
-                    if (entity.IsEntity(newPos) && entity is IDamageable damageable && damageable != this)
-                    {
-                        damageable.TakeDamage(_damage);
-                        return true;
-                    }
-                }
-            }
+            Vector newPos = Position + dir;
+            bool canMove =  Collider.CanMoveTo(dir);
+            
+            if(TryAttack(newPos)) canMove = false;
+            
             return canMove;
+        }
+        public override void Destroy()
+        {
+            ConsoleDebugView.AddKill();
+            ClearPreviousPosition();
+            _map.DeleteEntity(this);
+        }
+        private void CalculateDirection()
+        {
+            var player = _map.GetEntity<Player>().First();
+            var goal = player != null ? player.Position : Vector.zero;
+            _dir = _search.GetNextPosition(Position, goal) - Position;
         }
         private void ChangeDirection()
         {
@@ -90,11 +80,19 @@
 
             }
         }
-        public override void Destroy()
+
+        private bool TryAttack(Vector position)
         {
-            ConsoleDebugView.AddKill();
-            ClearPreviousPosition();
-            _map.DeleteEntity(this);
+            foreach (var entity in _map.Entities)
+            {
+                if (entity.IsSelf(position) && entity is IDamageable damageable && damageable != this)
+                {
+                    damageable.TakeDamage(_damage);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

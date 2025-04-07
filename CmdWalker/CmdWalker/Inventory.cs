@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace CmdWalker;
+﻿namespace CmdWalker;
 
 internal class Inventory
 {
@@ -12,6 +10,7 @@ internal class Inventory
         if (index >= _stacks.Count()) return;
 
         ActiveItem = _stacks[index].Item;
+        ConsoleDebugView.InventoryInfo = Summary();
     }
 
     public void PickUp(ICollectable item)
@@ -27,38 +26,54 @@ internal class Inventory
         ConsoleDebugView.InventoryInfo = Summary();
     }
 
-    public void Drop(bool dropAll = false)
+    public void DropAll(ICollectable collectable)
     {
-        if (Contains(ActiveItem))
+        _stacks.Remove(GetStack(collectable));
+        ConsoleDebugView.InventoryInfo = Summary();
+    }
+    public void Drop(ICollectable collectable)
+    {
+        if (Contains(collectable))
         {
-            if (ActiveItem.IsStackable() && !dropAll)
-                GetStack(ActiveItem).Count--;
-            if ((ActiveItem.IsStackable() && dropAll) || !ActiveItem.IsStackable() || GetStack(ActiveItem).Count <= 0)
-                _stacks.Remove(GetStack(ActiveItem));
+            if (collectable.IsStackable())
+                GetStack(collectable).Count--;
+            if (!collectable.IsStackable() || GetStack(collectable).Count <= 0)
+                _stacks.Remove(GetStack(collectable));
         }
-        else
-            ActiveItem = null;
         ConsoleDebugView.InventoryInfo = Summary();
     }
 
-    public void Use(ICollectable item)
+    public void Use()
     {
-        if (Contains(item))
-            item.Execute();
+        if (Contains(ActiveItem))
+            ActiveItem.Execute();
+    }
+
+    public void Use(Vector direction)
+    {
+        if (ActiveItem is Weapon weapon)
+        {
+            weapon.Fire(direction, this);
+        }
     }
 
     public bool Contains(ICollectable item) => Contains(item.GetName());
     public bool Contains(string name) => _stacks.FirstOrDefault(i => i.Item.GetName() == name) != null;
+    public bool Contains(int id) => _stacks.FirstOrDefault(i => i.Item.GetId() == id) != null;
 
-    public string Summary()
+    private (char[][],  ConsoleColor[]) Summary()
     {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.Append("");
-        foreach (var stack in _stacks)
+        char[][] inventory = new char[_stacks.Count * 3][];
+        ConsoleColor[] consoleColors = new ConsoleColor[_stacks.Count];
+        int k = 0;
+        for (int i = 0; i < _stacks.Count; i++)
         {
-            stringBuilder.Append($"{stack.Item.GetName()}: {stack.Count};");
+            consoleColors[i] = _stacks[i].Item == ActiveItem ? ConsoleColor.Red : ConsoleColor.White;
+            inventory[k++] =  "╔══════╗".ToCharArray();
+            inventory[k++] = $"║{_stacks[i].Item.GetGlyph().Symbol,-2} x{_stacks[i].Count,2}║".ToCharArray();
+            inventory[k++] =  "╚══════╝".ToCharArray();
         }
-        return stringBuilder.ToString();
+        return (inventory, consoleColors);
     }
 
     private Stack? GetStack(ICollectable item)

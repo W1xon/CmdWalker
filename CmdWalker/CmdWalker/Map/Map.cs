@@ -27,8 +27,8 @@
         {
             if (TryAddEntity(entity))
             {
-                SetCells(entity.GetPositions(), entity.Glyph, entity.BodyColor);
                 entity.BindToMap(this);
+                SetCells(entity.Collider.GetPositions(), entity.Glyph);
             }
         }
         public void BuildStructure(IStructure structure)
@@ -40,7 +40,8 @@
             if (!_entites.Contains(entity)) return;
             _entites.Remove(entity);
         }
-        public void SetCell(Vector pos, char symbol, ConsoleColor color = ConsoleColor.White)
+
+        private void SetCell(Vector pos, char symbol, ConsoleColor color = ConsoleColor.White)
         {
             Console.ForegroundColor = color;
             Console.SetCursorPosition(pos.X, pos.Y);
@@ -48,11 +49,16 @@
             Plane[pos.Y][pos.X] = symbol;
             Console.ForegroundColor = ConsoleColor.White;
         }
-        public void SetCells(Vector[] vectors, string symbols, ConsoleColor color = ConsoleColor.White)
+        public void SetCells(Vector[] vectors, string symbols)
         {
+            SetCells(vectors, new Glyph(symbols, ConsoleColor.White));
+        }
+        public void SetCells(Vector[] vectors, Glyph glyph, bool isStandartColor = false)
+        {
+            ConsoleColor color = isStandartColor ? ConsoleColor.White : glyph.Color;
             for (int x = 0; x < vectors.Length; x++)
             {
-                SetCell(vectors[x], symbols[x], color);
+                SetCell(vectors[x], glyph.Symbol[x], color);
             }
         }
         public char GetCell(Vector pos, bool isCarcas = false)

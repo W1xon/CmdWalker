@@ -1,34 +1,26 @@
 ﻿namespace CmdWalker
 {
-    abstract class GameEntity
+    internal abstract class GameEntity
     {
         public Vector Position { get; set; }
-        public string Glyph { get; }
-        public  ConsoleColor BodyColor { get; }
+
+        public Glyph Glyph { get; set; }
+        public Collider Collider { get; private set; }
+        
         protected Map _map;
         public virtual void Update() { }
-        public GameEntity(Vector position, string glyph, ConsoleColor color)
+        public GameEntity(Vector position)
         {
             Position = position;
-            Glyph = glyph;
-            BodyColor = color;
         }
         public void BindToMap(Map map)
         {
             _map = map;
+            Collider = new Collider(new Vector(Glyph.Symbol.Length, 1), Position, this, _map);
         }
-        public Vector[] GetPositions()
+        public bool IsSelf(Vector pos)
         {
-            Vector[] vectors = new Vector[Glyph.Length];
-            for (int x = 0; x < Glyph.Length; x++)
-            {
-                vectors[x] = new Vector(Position.X + x, Position.Y);
-            }
-            return vectors;
-        }
-        public bool IsEntity(Vector pos)
-        {
-            foreach(var vector in GetPositions())
+            foreach(var vector in Collider.GetPositions())
             {
                 if (pos == vector) return true;
             }

@@ -12,11 +12,19 @@
             {
                 (Player)(new PlayerCreator().Create(new Vector(3, 5))),
                 (Skillet)(new SkilletCreator().Create(new Vector(60, 5))),
+                (Skillet)(new SkilletCreator().Create(new Vector(70, 15))),
             };
             BulletCreator bulletCreator = new BulletCreator();
+            BounceBulletCreator bounceBulletCreator = new BounceBulletCreator();
+            WeaponCreator gunCreator = new GunCreator();
+            
             mapTemplate.Items = new List<GameEntity>()
             {
-                bulletCreator.CreateOnMap(new Vector(10,10)),
+                bounceBulletCreator.CreateOnMap(new Vector(10,10)),
+                bounceBulletCreator.CreateOnMap(new Vector(20,19)),
+                bounceBulletCreator.CreateOnMap(new Vector(39,1)),
+                bulletCreator.CreateOnMap(new Vector(70,6)),
+                gunCreator.CreateOnMap(new Vector(20,10)),
             };
             return mapTemplate;
         }

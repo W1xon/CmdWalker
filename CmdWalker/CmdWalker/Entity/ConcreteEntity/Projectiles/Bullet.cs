@@ -6,21 +6,27 @@
         private int _damage;
         private ItemState _state;
 
-        public Bullet(Vector position,  ItemState state, Vector dir = default, GameEntity parent = null) : base(position, parent, "*", ConsoleColor.Red)
+        public Bullet(Vector position,  ItemState state, Vector dir, GameEntity parent) : base(position, parent)
         {
             _dir = dir;
             _damage = 100;
             _state = state;
+            
+            Glyph = new Glyph( "*", ConsoleColor.Red);
         }
 
-        public Bullet(Vector position, ItemState state) : base(position, "*", ConsoleColor.Red)
+        public Bullet(Vector position, ItemState state) : base(position)
         {
             _state = state;
+            
+            Glyph = new Glyph( "*", ConsoleColor.Cyan);
         }
         
         public string GetName() => "Bullet";
+        public Glyph GetGlyph() => Glyph;
 
-        public int GetId() => 1;
+        public int GetId() => 100;
+        public ItemState GetState() => _state;
 
         public bool IsStackable() => true;
         public void Execute() => _state = ItemState.Active; 
@@ -38,10 +44,10 @@
         }
         private void UpdateOnMap()
         { 
-            _map.SetCells([Position], Glyph, ConsoleColor.Cyan);
+            _map.SetCells([Position], Glyph);
             foreach (var entity in _map.Entities)
             {
-                if (entity.IsEntity(Position) && entity != this)
+                if (entity.IsSelf(Position) && entity != this)
                 {
                     if(entity is Player player)
                     {
@@ -61,7 +67,7 @@
             var target = new Vector((Position.X + _dir.X), (Position.Y + _dir.Y));
             foreach (var entity in _map.Entities)
             {
-                if (entity.IsEntity(target) && entity is IDamageable damageable)
+                if (entity.IsSelf(target) && entity is IDamageable damageable)
                 {
                     if(damageable != _parent)
                      damageable.TakeDamage(_damage);
@@ -80,7 +86,7 @@
                 return;
             }
             Position += direction;
-            _map.SetCells(GetPositions(), Glyph, ConsoleColor.Red);
+            _map.SetCells(Collider.GetPositions(), Glyph);
         }
     }
 }

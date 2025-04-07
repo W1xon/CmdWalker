@@ -5,69 +5,75 @@
         public Inventory Inventory = new Inventory();
         private BulletCreator _bulletCreator;
         
-        public Player(Vector pos) : base(pos, ";)", ConsoleColor.Green)
+        public Player(Vector pos) : base(pos)
         {
             _bulletCreator = new BulletCreator();
             _health = new Health(100);
-            for (int i = 0; i < 1; i++)
-            {
-                var bullet = _bulletCreator.Create();
-                Inventory.PickUp(bullet);
-            }
-            Inventory.Equip(0);
+            
+            
+            Glyph = new Glyph(";)", ConsoleColor.Green);
         }
-        public  override void Update()
+        public override void Update()
         {
-            Execute(InputHandler.GetKeyDown());
+            KeyHandler(InputHandler.GetKeyDown());
             Move(InputHandler.GetCurrentDirection());
         }
 
-        private void Execute(ConsoleKey key)
+        private void KeyHandler(ConsoleKey key)
         {
-            bool isFire = false;
            switch (key)
            {
                case ConsoleKey.I:
-                   if(Inventory.Contains("Bullet"))
-                   {
-                       isFire = true;
-                       Inventory.Drop(false);
-                       _bulletCreator.Set(this, Vector.down);
-                   }
+                   Inventory.Use(Vector.down);
                    break;
                case ConsoleKey.K:
-                   if(Inventory.Contains("Bullet"))
-                   {
-                       isFire = true;
-                       Inventory.Drop(false);
-                       _bulletCreator.Set(this, Vector.up);
-                   }
+                   Inventory.Use(Vector.up);
                    break;
                case ConsoleKey.J:
-                   if(Inventory.Contains("Bullet"))
-                   {
-                       isFire = true;
-                       Inventory.Drop(false);
-                       _bulletCreator.Set(this, Vector.left);
-                   }
+                   Inventory.Use(Vector.left);
                    break;
                case ConsoleKey.L:
-                   if(Inventory.Contains("Bullet"))
-                   {
-                       isFire = true;
-                        Inventory.Drop(false);
-                        _bulletCreator.Set(this, Vector.right);
-                   }
+                   Inventory.Use(Vector.right);
+                   break;
+               
+               case ConsoleKey.D1:
+                   Inventory.Equip(0);
+                   break;
+               case ConsoleKey.D2:
+                   Inventory.Equip(1);
+                   break;
+               case ConsoleKey.D3:
+                   Inventory.Equip(2);
+                   break;
+               case ConsoleKey.D4:
+                   Inventory.Equip(3);
+                   break;
+               case ConsoleKey.D5:
+                   Inventory.Equip(4);
+                   break;
+               case ConsoleKey.D6:
+                   Inventory.Equip(5);
+                   break;
+               case ConsoleKey.D7:
+                   Inventory.Equip(6);
+                   break;
+               case ConsoleKey.D8:
+                   Inventory.Equip(7);
+                   break;
+               case ConsoleKey.D9:
+                   Inventory.Equip(8);
                    break;
            }
-           if(isFire)
-            _map.SpawnEntity(_bulletCreator.CreateActive());
         }
         public override void Move(Vector direction)
         {
             ClearPreviousPosition();
             if (CanMoveDir(direction)) Position += direction;
-            _map.SetCells(GetPositions(), Glyph, BodyColor);
+            _map.SetCells(Collider.GetPositions(), Glyph);
+        }
+        public override bool CanMoveDir(Vector dir)
+        {
+            return Collider.CanMoveTo(dir);
         }
         public override void Destroy()
         {

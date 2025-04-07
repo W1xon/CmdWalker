@@ -3,24 +3,13 @@
     internal abstract class Unit : GameEntity, IMovable, IDamageable, IDestroyable
     {
         protected Health _health;
-        public Unit(Vector position, string glyph, ConsoleColor color) : base(position, glyph, color) { }
+        public Unit(Vector position) : base(position) { }
         public abstract void Destroy();
         public abstract void Move(Vector direction);
-        public  virtual bool CanMoveDir(Vector dir)
-        {
-            Vector[] vectors = GetPositions();
-            foreach (Vector v in vectors)
-            {
-                if (_map.GetCell(new Vector((v.X + dir.X), (v.Y + dir.Y))) == Blocks.GetGlyph(Block.Wall))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+        public abstract bool CanMoveDir(Vector dir);
         public void ClearPreviousPosition()
         {
-            Vector[] positions = GetPositions();
+            Vector[] positions = Collider.GetPositions();
             char[] backgroundCells = new char[positions.Length];
             for (int i = 0; i < positions.Length; i++)
             {

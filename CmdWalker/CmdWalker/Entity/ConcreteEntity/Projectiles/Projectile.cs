@@ -4,16 +4,16 @@
     {
         protected GameEntity _parent;
         protected Health _health;
-        public Projectile(Vector position, GameEntity parent, string glyph, ConsoleColor color) : base(position,glyph, color)
+        public Projectile(Vector position, GameEntity parent) : base(position)
         {
             _parent = parent;
         }
-        public Projectile(Vector position, string glyph, ConsoleColor color) : base(position,glyph, color){}
+        public Projectile(Vector position) : base(position){}
 
         public abstract void Move(Vector direction);
         public void ClearPreviousPosition()
         {
-            Vector[] positions = GetPositions();
+            Vector[] positions = Collider.GetPositions();
             char[] backgroundCells = new char[positions.Length];
             for (int i = 0; i < positions.Length; i++)
             {
@@ -23,17 +23,16 @@
         }
         public virtual bool CanMoveDir(Vector dir)
         {
-            Vector[] vectors = GetPositions();
-            foreach (Vector v in vectors)
+            return Collider.CanMoveTo(dir, newPos =>
             {
-                var target = new Vector((v.X + dir.X), (v.Y + dir.Y));
-                var cell = _map.GetCell(target);
-                if ( cell == Blocks.GetGlyph(Block.Wall) || Blocks.ContainsPartUnit(cell))
+                var cell = _map.GetCell(newPos);
+                if (cell == Blocks.GetGlyph(Block.Wall)) return true;
+                foreach (var entity in _map.Entities)
                 {
-                    return false;
+                    if (entity.IsSelf(newPos) && entity != this) return true;
                 }
-            }
-            return true;
+                return false; 
+            });
         }
     }
 }

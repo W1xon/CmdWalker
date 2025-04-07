@@ -47,8 +47,8 @@
             while (pos != start)
             {
                 path.Add(pos);
-                if (!cameFrom.ContainsKey(pos)) return null;
-                pos = cameFrom[pos];
+                if (!cameFrom.TryGetValue(pos, out var value)) return null;
+                pos = value;
             }
             path.Reverse();
             return path;
