@@ -6,6 +6,7 @@
         {
             _parent = parent;
             _dir = direction;
+            CalculateSpawnPosition();
         }
         public override ICollectable Create()
         {
@@ -18,7 +19,7 @@
 
         public override GameEntity CreateActive()
         {  
-            return new Bullet(_parent.Position, ItemState.Active, _dir, _parent);
+            return new Bullet(_spawnPosition, ItemState.Active, _dir, _parent);
         }
 
     }

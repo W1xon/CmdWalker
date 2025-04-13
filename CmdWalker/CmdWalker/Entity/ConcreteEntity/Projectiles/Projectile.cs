@@ -4,6 +4,8 @@
     {
         protected GameEntity _parent;
         protected Health _health;
+        protected Vector _dir;
+        protected int _damage;
         public Projectile(Vector position, GameEntity parent) : base(position)
         {
             _parent = parent;
@@ -21,18 +23,33 @@
             }
             _map.SetCells(positions, new string(backgroundCells));
         }
+        public void Destroy()
+        {
+            ClearPreviousPosition();
+            _map.DeleteEntity(this);
+        }
         public virtual bool CanMoveDir(Vector dir)
         {
-            return Collider.CanMoveTo(dir, newPos =>
+            return Collider.CanMoveTo(dir);
+        }
+        public bool TryKill()
+        { 
+            var target = new Vector((Position.X + _dir.X), (Position.Y + _dir.Y));
+            foreach (var entity in _map.Entities)
             {
-                var cell = _map.GetCell(newPos);
-                if (cell == Blocks.GetGlyph(Block.Wall)) return true;
-                foreach (var entity in _map.Entities)
+                if (entity.IsSelf(target) && entity is IDamageable damageable)
                 {
-                    if (entity.IsSelf(newPos) && entity != this) return true;
+                    if (damageable != _parent)
+                    {
+                        Destroy();
+                        ClearPreviousPosition();
+                        damageable.TakeDamage(_damage);
+                        return true;
+                    }
                 }
-                return false; 
-            });
+            }
+
+            return false;
         }
     }
 }

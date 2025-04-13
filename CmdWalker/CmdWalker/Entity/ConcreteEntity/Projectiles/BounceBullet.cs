@@ -2,8 +2,6 @@
 {
     internal class BounceBullet : Projectile, IDestroyable, ICollectable
     {
-        private Vector _dir;
-        private int _damage;
         private ItemState _state;
         public BounceBullet(Vector position,  ItemState state, Vector dir, GameEntity parent) : base(position, parent)
         {
@@ -60,54 +58,30 @@
         {
             Move(_dir);
         }
-        public void Destroy()
-        {
-            var target = new Vector((Position.X + _dir.X), (Position.Y + _dir.Y));
-            foreach (var entity in _map.Entities)
-            {
-                if (entity.IsSelf(target) && entity is IDamageable damageable)
-                {
-                    if (damageable != _parent)
-                        damageable.TakeDamage(_damage);
-                }
-            }
-            ClearPreviousPosition();
-            _map.DeleteEntity(this);
-        }
 
         public override void Move(Vector direction)
         {
             ClearPreviousPosition();
-            if (!CanMoveDir(direction))
+            
+            if (CanMoveDir(direction))
             {
-                if (!_health.TryTakeDamage(30))
-                {
-                    Destroy();
-                    return;
-                }
+                Position += direction;
+                _map.SetCells(Collider.GetPositions(), Glyph);
+                return;
+            }
+            
+            if(TryKill())return;
+            else if (!_health.TryTakeDamage(30))
+            {
+                Destroy();
+                return;
+            }
+            else
+            {
                 _dir = Vector.GetRandom(direction, true);
                 _map.SetCells(Collider.GetPositions(), Glyph);
                 return;
             }
-            Position += direction;
-            _map.SetCells(Collider.GetPositions(), Glyph);
-        }
-        public override bool CanMoveDir(Vector dir)
-        {
-            return Collider.CanMoveTo(dir, newPos =>
-            {
-                var cell = _map.GetCell(newPos);
-                if (cell == Blocks.GetGlyph(Block.Wall)) return true;
-                foreach (var entity in _map.Entities)
-                {
-                    if (entity.IsSelf(newPos) && entity != this)
-                    {
-                        _health.Reset();
-                        return true;
-                    }
-                }
-                return false; 
-            });
         }
     }
 }

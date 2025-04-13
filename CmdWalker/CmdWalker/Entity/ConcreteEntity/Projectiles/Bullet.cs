@@ -62,27 +62,15 @@
         {
             Move(_dir);
         }
-        public void Destroy()
-        {
-            var target = new Vector((Position.X + _dir.X), (Position.Y + _dir.Y));
-            foreach (var entity in _map.Entities)
-            {
-                if (entity.IsSelf(target) && entity is IDamageable damageable)
-                {
-                    if(damageable != _parent)
-                     damageable.TakeDamage(_damage);
-                }
-            }
-            ClearPreviousPosition();
-            _map.DeleteEntity(this);
-        }
 
+        
         public override void Move(Vector direction)
         {
             ClearPreviousPosition();
             if (!CanMoveDir(direction))
             {
-                Destroy();
+                if(!TryKill())
+                    Destroy();
                 return;
             }
             Position += direction;

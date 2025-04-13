@@ -59,7 +59,7 @@ internal class Collider
         }
         return body;
     }
-
+    
     public bool CanMoveTo(Vector direction)
     {
         Vector[] currentPositions = GetPositions();
@@ -72,28 +72,16 @@ internal class Collider
         }
         return true;
     }
-
-    public bool CanMoveTo(Vector direction, Func<Vector, bool> isObstacle)
-    {
-        Vector[] positions = GetPositions();
-        foreach (var pos in positions)
-        {
-            Vector newPos = pos + direction;
-            if (newPos.X < 0 || newPos.Y < 0 || newPos.X >= _map.Size.X || newPos.Y >= _map.Size.Y) return false;
-            if (IsOther(newPos) && isObstacle(newPos)) return false; 
-        }
-        return true;
-    }
     
     private bool IsOther(Vector pos)
     {
         if (_map.GetCell(pos) == Blocks.GetGlyph(Block.Wall)) return true;
-
         foreach (var entity in _map.Entities)
         {
-            if (entity is ICollectable) return false;
+            if (entity is ICollectable item && item.GetState() != ItemState.Active) continue;
             if (entity.IsSelf(pos) && entity != _parent) return true;
         }
+
         return false;
     }
 }

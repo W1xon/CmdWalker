@@ -23,8 +23,10 @@
                 bounceBulletCreator.CreateOnMap(new Vector(10,10)),
                 bounceBulletCreator.CreateOnMap(new Vector(20,19)),
                 bounceBulletCreator.CreateOnMap(new Vector(39,1)),
+                bounceBulletCreator.CreateOnMap(new Vector(40,1)),
+                bounceBulletCreator.CreateOnMap(new Vector(41,1)),
                 bulletCreator.CreateOnMap(new Vector(70,6)),
-                gunCreator.CreateOnMap(new Vector(20,10)),
+                gunCreator.CreateOnMap(new Vector(4,6)),
             };
             return mapTemplate;
         }
