@@ -8,7 +8,7 @@
             _dir = direction;
             CalculateSpawnPosition();
         }
-        public override ICollectable Create()
+        public override ICollectable Create( )
         {
             return new BounceBullet(Vector.zero, ItemState.InInventory);
         }

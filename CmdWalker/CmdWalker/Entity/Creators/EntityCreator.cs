@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker
 {
-    internal interface EntityCreator
+    internal interface IEntityCreator: ICreator
     {
         public GameEntity Create(Vector pos);
     }

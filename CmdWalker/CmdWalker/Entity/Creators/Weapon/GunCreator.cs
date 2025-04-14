@@ -2,7 +2,7 @@
 
 internal class GunCreator : WeaponCreator
 {
-    public override ICollectable Create()
+    public override ICollectable Create( )
     {
         return new Gun(Vector.zero, _parent, ItemState.InInventory);
     }

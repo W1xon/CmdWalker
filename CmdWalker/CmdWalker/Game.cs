@@ -10,29 +10,24 @@
             mapTemplate.Size = new Vector(80,30);
             mapTemplate.Units = new List<Unit>()
             {
-                (Player)(new PlayerCreator().Create(new Vector(3, 5))),
-                (Skillet)(new SkilletCreator().Create(new Vector(60, 5))),
-                (Skillet)(new SkilletCreator().Create(new Vector(70, 15))),
+                (Player)CreatorRegistry.GetCreator<PlayerCreator>(typeof(Player)).Create(new Vector(3, 5)),
+                (Skillet)(CreatorRegistry.GetCreator<SkilletCreator>(typeof(Skillet)).Create(new Vector(60, 5))),
+                (Skillet)(CreatorRegistry.GetCreator<SkilletCreator>(typeof(Skillet)).Create(new Vector(70, 15))),
             };
-            BulletCreator bulletCreator = new BulletCreator();
-            BounceBulletCreator bounceBulletCreator = new BounceBulletCreator();
-            WeaponCreator gunCreator = new GunCreator();
-            
             mapTemplate.Items = new List<GameEntity>()
             {
-                bounceBulletCreator.CreateOnMap(new Vector(10,10)),
-                bounceBulletCreator.CreateOnMap(new Vector(20,19)),
-                bounceBulletCreator.CreateOnMap(new Vector(39,1)),
-                bounceBulletCreator.CreateOnMap(new Vector(40,1)),
-                bounceBulletCreator.CreateOnMap(new Vector(41,1)),
-                bulletCreator.CreateOnMap(new Vector(70,6)),
-                gunCreator.CreateOnMap(new Vector(4,6)),
+                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(10,10)),
+                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(20,19)),
+                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(39,1)),
+                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(40,1)),
+                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(41,1)),
+                CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(70,6)),
+                CreatorRegistry.GetCreator<GunCreator, Gun>().CreateOnMap(new Vector(4,6)),
             };
             return mapTemplate;
         }
         public void Start()
-        {
-            
+        {            
             MapBuilder mapBuilder = new MapBuilder();
             MapGenerator mapGenerator = new MapGenerator(mapBuilder);
             var template = CreateTemplate();

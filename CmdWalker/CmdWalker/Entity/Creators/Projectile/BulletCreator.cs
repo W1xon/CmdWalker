@@ -1,4 +1,6 @@
-﻿namespace CmdWalker
+﻿using System.Numerics;
+
+namespace CmdWalker
 {
     internal class BulletCreator :  ProjectileCreator
     {
@@ -8,7 +10,7 @@
             _dir = direction;
             CalculateSpawnPosition();
         }
-        public override ICollectable Create()
+        public override ICollectable Create( )
         {
             return new Bullet(Vector.zero, ItemState.InInventory);
         }

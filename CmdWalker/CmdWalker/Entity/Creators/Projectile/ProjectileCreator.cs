@@ -1,11 +1,12 @@
 ﻿namespace CmdWalker;
 
-internal abstract class ProjectileCreator : CollectableCreator
+internal abstract class ProjectileCreator : ICollectableCreator
 {
     protected Vector _spawnPosition;
     protected Vector _dir;
     protected GameEntity _parent;
-    public abstract ICollectable Create();
+    public ProjectileCreator(){}
+    public abstract ICollectable Create( );
 
     public abstract GameEntity CreateOnMap(Vector position);
 
@@ -23,5 +24,4 @@ internal abstract class ProjectileCreator : CollectableCreator
         if (_dir == Vector.right)
             _spawnPosition = new Vector(_parent.Position.X + _parent.Glyph.Symbol.Length, _parent.Position.Y);
     }
-    
 }

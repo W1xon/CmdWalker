@@ -2,15 +2,15 @@
 
 internal class Gun : Weapon
 {
-    private Dictionary<int, ProjectileCreator> _collectableCreators;
+    private Dictionary<int, Type> _collectableCreators;
     private ItemState _state;
     private ProjectileCreator _creator;
     public Gun(Vector position, GameEntity parent, ItemState state) : base(position, parent, state)
     {
-        _collectableCreators = new Dictionary<int, ProjectileCreator>()
+        _collectableCreators = new Dictionary<int, Type>()
         {
-            {100, new BulletCreator()},
-            {101, new BounceBulletCreator()},
+            {100, typeof(Bullet)},
+            {101, typeof(BounceBullet)},
         };
 
         Glyph = new Glyph("\u2566", ConsoleColor.Blue);
@@ -61,10 +61,10 @@ internal class Gun : Weapon
 
     private ProjectileCreator GetCreator(Inventory inventory)
     {
-        foreach (var id in _collectableCreators.Keys)
+        foreach (var id in _collectableCreators)
         {
-            if (inventory.Contains(id))
-                return _collectableCreators[id];
+            if (inventory.Contains(id.Key))
+                return CreatorRegistry.GetCreator<ProjectileCreator>(id.Value);
         }
         return null;
     }

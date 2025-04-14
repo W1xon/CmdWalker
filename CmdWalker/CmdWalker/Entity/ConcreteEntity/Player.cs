@@ -3,14 +3,10 @@
     internal class Player : Unit
     {
         public Inventory Inventory = new Inventory();
-        private BulletCreator _bulletCreator;
         
         public Player(Vector pos) : base(pos)
         {
-            _bulletCreator = new BulletCreator();
             _health = new Health(100);
-            
-            
             Glyph = new Glyph(";)", ConsoleColor.Green);
         }
         public override void Update()

@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker;
 
-internal interface CollectableCreator
+internal interface ICollectableCreator : ICreator
 {
     public ICollectable Create();
     public GameEntity CreateOnMap(Vector position);
