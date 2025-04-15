@@ -1,17 +1,11 @@
 ﻿namespace CmdWalker
 {
-    internal class Bullet : Projectile, IDestroyable, ICollectable
+    internal class Bullet : Projectile
     {
-        private Vector _dir;
-        private int _damage;
-        private ItemState _state;
 
-        public Bullet(Vector position,  ItemState state, Vector dir, GameEntity parent) : base(position, parent)
+        public Bullet(Vector position,  ItemState state, Vector dir, GameEntity parent) : base(position, parent, state, dir)
         {
-            _dir = dir;
             _damage = 100;
-            _state = state;
-            
             Glyph = new Glyph( "*", ConsoleColor.Red);
         }
 
@@ -22,14 +16,14 @@
             Glyph = new Glyph( "*", ConsoleColor.Cyan);
         }
         
-        public string GetName() => "Bullet";
-        public Glyph GetGlyph() => Glyph;
+        public override string GetName() => "Bullet";
+        public override Glyph GetGlyph() => Glyph;
 
-        public int GetId() => 100;
-        public ItemState GetState() => _state;
+        public override int GetId() => 100;
+        public override ItemState GetState() => _state;
 
-        public bool IsStackable() => true;
-        public void Execute() => _state = ItemState.Active; 
+        public override bool IsStackable() => true;
+        public override void Execute() => _state = ItemState.Active; 
         public override void Update()
         {
             switch (_state)
@@ -42,39 +36,19 @@
                     break;
             }
         }
-        private void UpdateOnMap()
-        { 
-            _map.SetCells([Position], Glyph);
-            foreach (var entity in _map.Entities)
-            {
-                if (entity.IsSelf(Position) && entity != this)
-                {
-                    if(entity is Player player)
-                    {
-                        player.Inventory.PickUp(this);
-                        _map.DeleteEntity(this);
-                        _state = ItemState.InInventory;
-                    }
-                }
-            }
-        }
-        private void UpdateActive() 
-        {
-            Move(_dir);
-        }
-
         
+
         public override void Move(Vector direction)
         {
             ClearPreviousPosition();
-            if (!CanMoveDir(direction))
-            {
-                if(!TryKill())
-                    Destroy();
+            if (CanMoveDir(direction))
+            {    
+                Position += direction;
+                _map.SetCells(Collider.GetPositions(), Glyph);
                 return;
             }
-            Position += direction;
-            _map.SetCells(Collider.GetPositions(), Glyph);
+            if(!TryKill())
+                Destroy();
         }
     }
 }

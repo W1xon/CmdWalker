@@ -9,7 +9,6 @@
             _map = map;
             _size = size;
         }
-
         public List<Vector> GetPath(Vector start, Vector goal)
         {
             PriorityQueue<Vector, int> frontier = new PriorityQueue<Vector, int>();
@@ -67,7 +66,7 @@
             {
                 Vector target = position + direction;
                 if (target.Y < 0 || target.X < 0 || target.X > _map.Size.X || target.Y > _map.Size.Y) continue;
-                if (_map.GetCell(target) == Blocks.GetGlyph(Block.Wall)) continue;
+                if (_map.GetCell(target) == GlyphRegistry.GetChar(Entity.Wall)) continue;
                 neighbors.Add(target);
             }
             return neighbors;
@@ -93,7 +92,7 @@
 
                     if (newX < 0 || newX >= field[0].Length ||
                         newY < 0 || newY >= field.Length ||
-                        field[newY][newX] == Blocks.GetGlyph(Block.Wall))
+                        field[newY][newX] == GlyphRegistry.GetChar(Entity.Wall))
                     {
                         return true;
                     }

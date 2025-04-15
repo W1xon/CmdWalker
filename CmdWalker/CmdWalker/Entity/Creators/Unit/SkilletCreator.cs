@@ -4,7 +4,7 @@
     {
         public  GameEntity Create(Vector pos)
         {
-            return new Skillet(pos);
+            return new Skeleton(pos);
         }
     }
 }

@@ -75,7 +75,7 @@ internal class Collider
     
     private bool IsOther(Vector pos)
     {
-        if (_map.GetCell(pos) == Blocks.GetGlyph(Block.Wall)) return true;
+        if (_map.GetCell(pos) == GlyphRegistry.GetChar(Entity.Wall)) return true;
         foreach (var entity in _map.Entities)
         {
             if (entity is ICollectable item && item.GetState() != ItemState.Active) continue;

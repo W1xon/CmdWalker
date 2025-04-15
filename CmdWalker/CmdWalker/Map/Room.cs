@@ -28,9 +28,9 @@
                 for (int x = 0; x < Size.X; x++)
                 {
                     if (IsWall(new Vector(x, y)))
-                        Plane[y][x] = Blocks.GetGlyph(Block.Wall);
+                        Plane[y][x] = GlyphRegistry.GetChar(Entity.Wall);
                     else
-                        Plane[y][x] = Blocks.GetGlyph(Block.Floor);
+                        Plane[y][x] = GlyphRegistry.GetChar(Entity.Floor);
                 }
             }
 

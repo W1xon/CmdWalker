@@ -21,9 +21,9 @@
             for (int i = start; i < start + sizeDoor; i++)
             {
                 if (isHorizontal)
-                    _room.Plane[fixedCoord][i] = Blocks.GetGlyph(Block.Floor);
+                    _room.Plane[fixedCoord][i] = GlyphRegistry.GetChar(Entity.Floor);
                 else
-                    _room.Plane[i][fixedCoord] = Blocks.GetGlyph(Block.Floor);
+                    _room.Plane[i][fixedCoord] = GlyphRegistry.GetChar(Entity.Floor);
             }
         }
     }

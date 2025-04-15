@@ -11,16 +11,16 @@
             mapTemplate.Units = new List<Unit>()
             {
                 (Player)CreatorRegistry.GetCreator<PlayerCreator>(typeof(Player)).Create(new Vector(3, 5)),
-                (Skillet)(CreatorRegistry.GetCreator<SkilletCreator>(typeof(Skillet)).Create(new Vector(60, 5))),
-                (Skillet)(CreatorRegistry.GetCreator<SkilletCreator>(typeof(Skillet)).Create(new Vector(70, 15))),
+                (Skeleton)(CreatorRegistry.GetCreator<SkilletCreator>(typeof(Skeleton)).Create(new Vector(60, 5))),
+                (Skeleton)(CreatorRegistry.GetCreator<SkilletCreator>(typeof(Skeleton)).Create(new Vector(70, 15))),
             };
             mapTemplate.Items = new List<GameEntity>()
             {
-                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(10,10)),
-                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(20,19)),
-                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(39,1)),
-                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(40,1)),
-                CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(41,1)),
+                CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(10,10)),
+                CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(20,19)),
+                CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(39,1)),
+                CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(40,1)),
+                CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(41,1)),
                 CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(70,6)),
                 CreatorRegistry.GetCreator<GunCreator, Gun>().CreateOnMap(new Vector(4,6)),
             };

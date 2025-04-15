@@ -7,13 +7,13 @@
         public abstract void Destroy();
         public abstract void Move(Vector direction);
         public abstract bool CanMoveDir(Vector dir);
-        public void ClearPreviousPosition()
+        public void ClearPreviousPosition(char defaultChar = '\0')
         {
             Vector[] positions = Collider.GetPositions();
             char[] backgroundCells = new char[positions.Length];
             for (int i = 0; i < positions.Length; i++)
             {
-                backgroundCells[i] = _map.GetCell(positions[i], true);
+                backgroundCells[i] = defaultChar == 0 ?  _map.GetCell(positions[i], true) : defaultChar;
             }
             _map.SetCells(positions, new string(backgroundCells));
         }

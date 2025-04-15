@@ -47,7 +47,7 @@ internal class BSPCarcasGenerator : CarcassGenerator
         foreach (var l in leafs)
         {
             if(l.room != null)
-                AddShapeContour(l.room, Blocks.GetGlyph(Block.Wall));
+                AddShapeContour(l.room, GlyphRegistry.GetChar(Entity.Wall));
                 
         }
         foreach (var l in leafs)
@@ -56,7 +56,7 @@ internal class BSPCarcasGenerator : CarcassGenerator
             {
                 foreach (var hall in l.halls)
                 {
-                    AddRectangle(hall, Blocks.GetGlyph(Block.Floor));
+                    AddRectangle(hall, GlyphRegistry.GetChar(Entity.Floor));
                 }
             }
         }
@@ -65,26 +65,14 @@ internal class BSPCarcasGenerator : CarcassGenerator
             for (int x = 0; x < _field[y].Length; x++)
             {
                 if (y == 0 || x == 0 || y == _field.Length - 1 || x == _field[y].Length - 1)
-                    _field[y][x] = Blocks.GetGlyph(Block.Wall);
-                else if(_field[y][x] == ' ') _field[y][x] = Blocks.GetGlyph(Block.Floor);
+                    _field[y][x] = GlyphRegistry.GetChar(Entity.Wall);
+                else if(_field[y][x] == ' ') _field[y][x] = GlyphRegistry.GetChar(Entity.Floor);
             }
         }
     }
 
     public void AddRectangle(Rectangle rectangle, char glyph)
     {
-        /*AddShapeContur(shape, glyph);
-        var vertices = shape.GetVertices();
-        int x = 0, y = 0;
-        foreach (var vertex in vertices)
-        {
-            x += vertex.X;
-            y += vertex.Y;
-        }
-        var center = new Vector(x / vertices.Length, y / vertices.Length);
-        
-        FillNeighbour(center, glyph);*/
-
         for (int y = 0; y < rectangle.Height; y++)
         {
             for (int x = 0; x < rectangle.Width; x++)
@@ -92,7 +80,7 @@ internal class BSPCarcasGenerator : CarcassGenerator
                 int fieldY = rectangle.Y + y;
                 int fieldX = rectangle.X + x;
                 if (fieldY >= 0 && fieldY < _height && fieldX >= 0 && fieldX < _width)
-                    _field[fieldY][fieldX] = Blocks.GetGlyph(Block.Floor);
+                    _field[fieldY][fieldX] = GlyphRegistry.GetChar(Entity.Floor);
             }
         }
     }

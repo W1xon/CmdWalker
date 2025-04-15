@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker
 {
-    internal class Skillet : Unit
+    internal class Skeleton : Unit
     {
         private Vector _dir;
         private Random _rand = new Random();
@@ -8,12 +8,12 @@
         private int _stepMax = 10;
         private int _damage = 100;
         private SearchPath _search;
-        public Skillet(Vector position) : base(position)
+        public Skeleton(Vector position) : base(position)
         {
             _dir = Vector.down;
             _health = new Health(100);
             
-            Glyph = new Glyph(Blocks.GetUnitGlyph(Units.Skillet), ConsoleColor.DarkBlue);
+            Glyph = new Glyph(GlyphRegistry.GetString(Entity.Skeleton), ConsoleColor.DarkBlue);
         }
 
         public override void Update()
