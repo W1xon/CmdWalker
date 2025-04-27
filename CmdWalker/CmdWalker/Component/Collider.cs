@@ -1,17 +1,40 @@
-﻿using System.Numerics;
-
-namespace CmdWalker;
+﻿namespace CmdWalker;
 
 internal class Collider
 {
-    private Vector _size;
+    public bool IsTrigger { get; set; }
+    private Vector _size => _parent.GetSize();
     private Map _map;
     private GameEntity _parent;
-    public Collider(Vector size, Vector position, GameEntity parent, Map map)
+    private bool _isSprite;
+    
+    public Collider(Vector position, GameEntity parent, Map map, bool isTrigger = false)
     {
-        _size = size;
         _map = map;
+        IsTrigger = isTrigger;
         _parent = parent;
+    }
+
+    public int GetDistance(Vector dir)
+    {
+        if (dir is { X: 0, Y: 0 })
+            return 0;
+
+        Vector startPos = _parent.Position;
+        Vector currentPos = startPos;
+        Vector step = new Vector(Math.Sign(dir.X), Math.Sign(dir.Y));
+
+        while (_map.IsWithinBounds(currentPos))
+        {
+            currentPos += step;
+
+            if (_map.GetCell(currentPos, true) != GlyphRegistry.GetChar(Entity.Floor))
+            {
+                Vector relativePos = GetRelativePosition(dir);
+                return Vector.Distance(relativePos, currentPos);
+            }
+        }
+        return 0;
     }
 
     public GameEntity GetCollision()
@@ -52,14 +75,27 @@ internal class Collider
     } 
     public Vector[] GetPositions()
     {
-        Vector[] body = new Vector[_size.X];
+        var body = new List<Vector>();
         for (int x = 0; x < _size.X; x++)
         {
-            body[x] = new Vector(_parent.Position.X + x, _parent.Position.Y);
+            for (int y = 0; y < _size.Y; y++)
+            {
+                body.Add(new Vector(_parent.Position.X + x, _parent.Position.Y + y));
+            }
         }
-        return body;
+        return body.ToArray();
     }
-    
+    public Vector GetRelativePosition(Vector direction)
+    {
+        return direction switch
+        {
+            Vector v when v == Vector.down => _parent.Position + Vector.down,
+            Vector v when v == Vector.up => _parent.Position + Vector.up,
+            Vector v when v == Vector.left => new Vector(_parent.Position.X - 1, _parent.Position.Y),
+            Vector v when v == Vector.right => new Vector(_parent.Position.X + _parent.Visual.Representation.Length, _parent.Position.Y),
+            _ => throw new ArgumentException("Invalid direction")
+        };
+    }
     public bool CanMoveTo(Vector direction)
     {
         Vector[] currentPositions = GetPositions();
@@ -79,9 +115,10 @@ internal class Collider
         foreach (var entity in _map.Entities)
         {
             if (entity is ICollectable item && item.GetState() != ItemState.Active) continue;
-            if (entity.IsSelf(pos) && entity != _parent) return true;
+            if (entity.IsSelf(pos) && entity != _parent && !entity.Collider.IsTrigger) return true;
         }
 
         return false;
     }
+    
 }

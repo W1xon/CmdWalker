@@ -3,7 +3,7 @@
     internal class Room : IStructure
     {
         public Vector Size { get; set; }
-        public char[][] Plane;
+        public char[,] Plane;
         private Vector _position;
         private Door _door;
         private Random _rand = new Random();
@@ -21,16 +21,15 @@
         }
         public void Create()
         {
-            Plane = new char[Size.Y][];
+            Plane = new char[Size.Y, Size.X];
             for (int y = 0; y < Size.Y; y++)
             {
-                Plane[y] = new char[Size.X];
                 for (int x = 0; x < Size.X; x++)
                 {
                     if (IsWall(new Vector(x, y)))
-                        Plane[y][x] = GlyphRegistry.GetChar(Entity.Wall);
+                        Plane[y,x] = GlyphRegistry.GetChar(Entity.Wall);
                     else
-                        Plane[y][x] = GlyphRegistry.GetChar(Entity.Floor);
+                        Plane[y,x] = GlyphRegistry.GetChar(Entity.Floor);
                 }
             }
 

@@ -10,7 +10,7 @@ internal enum ItemState
 internal interface ICollectable
 {
     string GetName();
-    Glyph GetGlyph();
+    IVisual GetVisual();
     int GetId();
     ItemState GetState();
     bool IsStackable();

@@ -3,7 +3,7 @@
 internal abstract class CarcassGenerator
 {
     protected MapTemplate _template;
-    protected char[][] _field;
+    protected char[,] _field;
     protected int _width;
     protected int _height;
     protected Random _rand = new Random();
@@ -14,11 +14,10 @@ internal abstract class CarcassGenerator
         _width = _template.Size.X;
         _height = _template.Size.Y;
         
-        _field = new char[_height][];
-        for (int i = 0; i < _height; i++)
-            _field[i] = new char[_width].Select(_ => ' ').ToArray();
+        _field = new char[_height, _width];
+        _field.Fill(' ');
     }
-    public abstract char[][] Generate();
+    public abstract char[,] Generate();
     protected void AddShapeContour(Polygon polygon, char glyph)
     {
         var vertices = polygon.GetVertices();
@@ -57,7 +56,7 @@ internal abstract class CarcassGenerator
             {
                 int col = steep ? y : x;
                 int row = steep ? x : y;
-                _field[row][col] = glyph;
+                _field[row, col] = glyph;
                 error -= deltaY;
                 if (error < 0)
                 {

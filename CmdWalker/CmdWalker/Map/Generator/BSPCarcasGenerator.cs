@@ -7,7 +7,7 @@ internal class BSPCarcasGenerator : CarcassGenerator
     private int _maxLeafSize;
 
     public BSPCarcasGenerator(MapTemplate template) : base(template){}
-    public override char[][] Generate()
+    public override char[,] Generate()
     {
         _maxLeafSize = _template.MaxRoomSize;
         GenerateRoom();
@@ -62,11 +62,11 @@ internal class BSPCarcasGenerator : CarcassGenerator
         }
         for (int y = 0; y < _height; y++)
         {
-            for (int x = 0; x < _field[y].Length; x++)
+            for (int x = 0; x < _width; x++)
             {
-                if (y == 0 || x == 0 || y == _field.Length - 1 || x == _field[y].Length - 1)
-                    _field[y][x] = GlyphRegistry.GetChar(Entity.Wall);
-                else if(_field[y][x] == ' ') _field[y][x] = GlyphRegistry.GetChar(Entity.Floor);
+                if (y == 0 || x == 0 || y == _field.GetLength(0) - 1 || x == _field.GetLength(1) - 1)
+                    _field[y, x] = GlyphRegistry.GetChar(Entity.Wall);
+                else if(_field[y, x] == ' ') _field[y, x] = GlyphRegistry.GetChar(Entity.Floor);
             }
         }
     }
@@ -80,7 +80,7 @@ internal class BSPCarcasGenerator : CarcassGenerator
                 int fieldY = rectangle.Y + y;
                 int fieldX = rectangle.X + x;
                 if (fieldY >= 0 && fieldY < _height && fieldX >= 0 && fieldX < _width)
-                    _field[fieldY][fieldX] = GlyphRegistry.GetChar(Entity.Floor);
+                    _field[fieldY, fieldX] = GlyphRegistry.GetChar(Entity.Floor);
             }
         }
     }
@@ -94,9 +94,9 @@ internal class BSPCarcasGenerator : CarcassGenerator
                 var newX = point.X + x;
                 var newY = point.Y + y;
                 if ((x == 0 && y == 0) || 
-                    newX < 0 || newY < 0 || newX >= _field[0].Length || newY >= _field.Length) continue;
-                if(_field[newY][newX] == glyph) continue;
-                _field[newY][newX] = glyph;
+                    newX < 0 || newY < 0 || newX >= _field.GetLength(1) || newY >= _field.GetLength(0)) continue;
+                if(_field[newY, newX] == glyph) continue;
+                _field[newY, newX] = glyph;
                 FillNeighbour(new Vector(newX,newY), glyph);
             }
         }

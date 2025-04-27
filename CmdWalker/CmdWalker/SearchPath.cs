@@ -81,7 +81,7 @@
         private int Heuristic(Vector a, Vector b) => Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
 
 
-        public bool IsBlocked(char[][] field, Vector pos)
+        public bool IsBlocked(char[,] field, Vector pos)
         {
             for (int x = 0; x < _size.X; x++)
             {
@@ -90,9 +90,9 @@
                     int newX = pos.X + x;
                     int newY = pos.Y + y;
 
-                    if (newX < 0 || newX >= field[0].Length ||
+                    if (newX < 0 || newX >= field.GetLength(1) ||
                         newY < 0 || newY >= field.Length ||
-                        field[newY][newX] == GlyphRegistry.GetChar(Entity.Wall))
+                        field[newY, newX] == GlyphRegistry.GetChar(Entity.Wall))
                     {
                         return true;
                     }

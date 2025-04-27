@@ -13,12 +13,12 @@
             _dir = Vector.down;
             _health = new Health(100);
             
-            Glyph = new Glyph(GlyphRegistry.GetString(Entity.Skeleton), ConsoleColor.DarkBlue);
+            Visual = new Glyph(GlyphRegistry.GetString(Entity.Skeleton), ConsoleColor.DarkBlue);
         }
 
         public override void Update()
         {
-            if (_search == null) _search = new SearchPath(_map, Glyph.Size);
+            if (_search == null) _search = new SearchPath(_map, Visual.Size);
 
             _step++;
             if (_step >= _stepMax)
@@ -34,11 +34,11 @@
             if (!CanMoveDir(direction))
             {
                 ChangeDirection();
-                _map.SetCells(Collider.GetPositions(), Glyph);
+                _map.SetCells(Position, Visual);
                 return;
             }
             Position += direction;
-            _map.SetCells(Collider.GetPositions(), Glyph);
+            _map.SetCells(Position, Visual);
         }
         public override bool CanMoveDir(Vector dir)
         {

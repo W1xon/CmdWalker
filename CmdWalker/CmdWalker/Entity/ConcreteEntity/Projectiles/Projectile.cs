@@ -16,7 +16,7 @@
         public Projectile(Vector position) : base(position){}
 
         public abstract string GetName();
-        public abstract Glyph GetGlyph();
+        public abstract IVisual GetVisual();
         public abstract int GetId();
         public abstract ItemState GetState();
         public abstract bool IsStackable();
@@ -30,7 +30,7 @@
             {
                 backgroundCells[i] = defaultChar == 0 ?  _map.GetCell(positions[i], true) : defaultChar;
             }
-            _map.SetCells(positions, new string(backgroundCells));
+            _map.SetCells(Position, new string(backgroundCells));
         }
         public void Destroy()
         {
@@ -61,7 +61,7 @@
         }
         protected virtual void UpdateOnMap()
         { 
-            _map.SetCells([Position], Glyph);
+            _map.SetCells(Position, Visual);
             foreach (var entity in _map.Entities)
             {
                 if (entity.IsSelf(Position) && entity != this)

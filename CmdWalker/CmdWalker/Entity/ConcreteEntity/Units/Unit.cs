@@ -15,9 +15,8 @@
             {
                 backgroundCells[i] = defaultChar == 0 ?  _map.GetCell(positions[i], true) : defaultChar;
             }
-            _map.SetCells(positions, new string(backgroundCells));
+            _map.SetCells(Position, new string(backgroundCells));
         }
-
         public void TakeDamage(int damage)
         {
             _health.TryTakeDamage(damage);

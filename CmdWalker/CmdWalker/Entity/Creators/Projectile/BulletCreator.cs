@@ -8,7 +8,7 @@ namespace CmdWalker
         {
             _parent = parent;
             _dir = direction;
-            CalculateSpawnPosition();
+            _spawnPosition = _parent.Collider.GetRelativePosition(_dir);
         }
         public override ICollectable Create( )
         {

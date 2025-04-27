@@ -33,6 +33,11 @@
             var filtered = possibleVectors.Where(v => (v != exclude && (!excludeZero || v != zero))).ToArray();
             return filtered[_rand.Next(0, filtered.Length)];
         }
+        
+        public static int Distance(Vector a, Vector b)
+        {
+            return (int)Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
+        }
 
     }
 }

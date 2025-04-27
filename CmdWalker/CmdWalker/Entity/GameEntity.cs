@@ -1,10 +1,12 @@
-﻿namespace CmdWalker
+﻿using System.Numerics;
+
+namespace CmdWalker
 {
     internal abstract class GameEntity
     {
         public Vector Position { get; set; }
 
-        public Glyph Glyph { get; set; }
+        public IVisual Visual { get;  set; }
         public Collider Collider { get; private set; }
         
         protected Map _map;
@@ -16,7 +18,7 @@
         public void BindToMap(Map map)
         {
             _map = map;
-            Collider = new Collider(new Vector(Glyph.Symbol.Length, 1), Position, this, _map);
+            Collider = new Collider(Position, this, _map);
         }
         public bool IsSelf(Vector pos)
         {
@@ -26,5 +28,7 @@
             }
             return false;
         }
+
+        public virtual Vector GetSize() => Visual.Size;
     }
 }

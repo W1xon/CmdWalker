@@ -6,18 +6,18 @@
         public Bullet(Vector position,  ItemState state, Vector dir, GameEntity parent) : base(position, parent, state, dir)
         {
             _damage = 100;
-            Glyph = new Glyph( "*", ConsoleColor.Red);
+            Visual = new Glyph( "*", ConsoleColor.Red);
         }
 
         public Bullet(Vector position, ItemState state) : base(position)
         {
             _state = state;
             
-            Glyph = new Glyph( "*", ConsoleColor.Cyan);
+            Visual = new Glyph( "*", ConsoleColor.Cyan);
         }
         
         public override string GetName() => "Bullet";
-        public override Glyph GetGlyph() => Glyph;
+        public override IVisual GetVisual() => Visual;
 
         public override int GetId() => 100;
         public override ItemState GetState() => _state;
@@ -44,7 +44,7 @@
             if (CanMoveDir(direction))
             {    
                 Position += direction;
-                _map.SetCells(Collider.GetPositions(), Glyph);
+                _map.SetCells(Position, Visual);
                 return;
             }
             if(!TryKill())

@@ -2,14 +2,14 @@
 {
     internal class Map
     {
-        public char[][] Plane { get; set; }
-        public char[][] Carcas { get; set; }
+        public char[,] Plane { get; set; }
+        public char[,] Carcas { get; set; }
         public List<GameEntity> Entities { get => new List<GameEntity>(_entites); }
         public Vector Size { get; set; }
         private List<GameEntity> _entites = new List<GameEntity>();
         public void InitializePlane()
         {
-            Size = new Vector(Carcas[0].Length, Carcas.Length);
+            Size = new Vector(Carcas.GetLength(1), Carcas.GetLength(0));
             Plane = Carcas.DeepCopy();
         }
         public void Show()
@@ -28,7 +28,7 @@
             if (TryAddEntity(entity))
             {
                 entity.BindToMap(this);
-                SetCells(entity.Collider.GetPositions(), entity.Glyph);
+                SetCells(entity.Position, entity.Visual);
             }
         }
         public void BuildStructure(IStructure structure)
@@ -46,25 +46,29 @@
             Console.ForegroundColor = color;
             Console.SetCursorPosition(pos.X, pos.Y);
             Console.Write(symbol);
-            Plane[pos.Y][pos.X] = symbol;
+            Plane[pos.Y, pos.X] = symbol;
             Console.ForegroundColor = ConsoleColor.White;
         }
-        public void SetCells(Vector[] vectors, string symbols)
+        public void SetCells(Vector position, string symbols)
         {
-            SetCells(vectors, new Glyph(symbols, ConsoleColor.White));
+            SetCells(position, new Glyph(symbols, ConsoleColor.White));
         }
-        public void SetCells(Vector[] vectors, Glyph glyph, bool isStandartColor = false)
+        public void SetCells(Vector position, IVisual visual, bool isStandartColor = false)
         {
-            ConsoleColor color = isStandartColor ? ConsoleColor.White : glyph.Color;
-            for (int x = 0; x < vectors.Length; x++)
+            ConsoleColor color = isStandartColor ? ConsoleColor.White : visual.Color;
+            for (int y = 0; y < visual.Representation.GetLength(0); y++)
             {
-                SetCell(vectors[x], glyph.Symbol[x], color);
+                for (int x = 0; x < visual.Representation.GetLength(1); x++)
+                {
+                    Vector newPos = position + new Vector(x, y);
+                    SetCell(newPos, visual.Representation[y,x], color);
+                }
             }
         }
         public char GetCell(Vector pos, bool isCarcas = false)
         {
             // Т.к. массив, то координаты инвертированны
-             return isCarcas ? Carcas[pos.Y][pos.X] : Plane[pos.Y][pos.X];
+            return isCarcas ? Carcas[pos.Y, pos.X] : Plane[pos.Y, pos.X];
         }
         private bool TryAddEntity(GameEntity entity)
         {
@@ -75,6 +79,10 @@
         public List<T> GetEntity<T>() where T : GameEntity
         {
             return _entites.OfType<T>().ToList();
+        }
+        public bool IsWithinBounds(Vector pos)
+        {
+            return pos.X >= 0 && pos.X < Size.X && pos.Y >= 0 && pos.Y < Size.Y;
         }
     }
 }
