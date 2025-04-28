@@ -4,41 +4,36 @@
     /// Временный класс для отображения статистики и отладочной информации в консоли.
     /// Будет заменён на полноценный интерфейс в будущих версиях.
     /// </summary>
-    internal static class ConsoleDebugView
+    internal  class ConsoleDebugView : RenderObject
     {
+        public static ConsoleDebugView Instance;
         public static (char[][], ConsoleColor[]) InventoryInfo;
         public static string DebugInfo = ""; //удалить в след. версиях
         private static Map _map;
-        private static Vector _offset = new Vector(2,2);
         private static int _killCount;
-
-        private static Vector _bound;
         private static int _oldInventoryX = 0, _oldInventoryY = 0;
+        
+        private  RenderObject _parent;
+
+        public ConsoleDebugView()
+        {
+            Instance = this;
+        }
         public static void SetMap(Map map)
         {
-            _bound = map.Size;
             _map = map;
         }
         public static void Show()
         {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-
-            Console.SetCursorPosition(_bound.X + _offset.X, _offset.Y);
-            Console.Write($"Kills: {_killCount}");
-
-            Console.ForegroundColor = ConsoleColor.White;
-
-            Console.SetCursorPosition(_bound.X + _offset.X, _offset.Y + 3);
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write($"Инфа дебага: {DebugInfo}");
+            Instance.Draw(Instance.Position, $"Kills: {_killCount}", Instance, ConsoleColor.DarkRed);
             
-            
-            Console.SetCursorPosition(_bound.X + _offset.X, _offset.Y + 4);
+            Instance.Draw(new Vector( Instance.Position.X , Instance.Position.Y + + 3), $"Инфа дебага: {DebugInfo}", Instance, ConsoleColor.DarkRed);
+
             
             if(InventoryInfo.Item1 != null)
             {
-                ClearInventory();
-                ShowInventory();
+                Instance.ClearInventory();
+                Instance.ShowInventory();
             }
 
             Console.ForegroundColor = ConsoleColor.White;
@@ -49,18 +44,17 @@
             _killCount++;
         }
 
-        private static void ShowInventory()
+        private  void ShowInventory()
         {
             for (int y = 0; y < InventoryInfo.Item1.Length; y++)
             {
                 Console.ForegroundColor = InventoryInfo.Item2[y / 3];
                 for (int x = 0; x < InventoryInfo.Item1[0].Length; x++)
                 {
-                    int newX = _bound.X + _offset.X + x;
-                    int newY = _offset.Y + 4 + y;
-                    
-                    Console.SetCursorPosition(newX, newY);
-                    Console.Write(InventoryInfo.Item1[y][x]);
+                    int newX = Position.X + x;
+                    int newY = Position.Y + 4 + y;
+                    Instance.Draw(new Vector(newX, newY), InventoryInfo.Item1[y][x].ToString(), Instance, InventoryInfo.Item2[y / 3]);
+
                 }
             }
             
@@ -71,19 +65,27 @@
             }
         }
 
-        private static void ClearInventory()
+        private  void ClearInventory()
         {
             for (int y = 0; y < _oldInventoryY; y++)
             {
                 for (int x = 0; x < _oldInventoryX; x++)
                 {
-                    int newX = _bound.X + _offset.X + x;
-                    int newY = _offset.Y + 4 + y;
-                    
-                    Console.SetCursorPosition(newX, newY);
-                    Console.Write(' ');
+                    int newX = Position.X + x;
+                    int newY = Position.Y + 4 + y;
+                    Instance.Draw(new Vector(newX, newY), " ", Instance);
                 }
             }
         }
+
+        public override void Draw(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+        {
+            _parent.Draw(position, symbol,  this, color);
+        }
+        public override void AddParent(RenderObject renderObject)
+        {
+            _parent = renderObject;
+        }
+        
     }
 }

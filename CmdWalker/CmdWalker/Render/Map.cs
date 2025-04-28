@@ -1,7 +1,8 @@
 ﻿namespace CmdWalker
 {
-    internal class Map
+    internal class Map : RenderObject
     {
+        private RenderObject _parent;
         public char[,] Plane { get; set; }
         public char[,] Carcas { get; set; }
         public List<GameEntity> Entities { get => new List<GameEntity>(_entites); }
@@ -18,7 +19,8 @@
             {
                 for (int x = 0; x < Size.X; x++)
                 {
-                    Console.Write(GetCell(new Vector(x, y)));
+                    Vector pos = new Vector(x, y);
+                    Draw(pos, GetCell(pos).ToString(), this );
                 }
                 Console.WriteLine();
             }
@@ -28,7 +30,6 @@
             if (TryAddEntity(entity))
             {
                 entity.BindToMap(this);
-                SetCells(entity.Position, entity.Visual);
             }
         }
         public void BuildStructure(IStructure structure)
@@ -43,11 +44,8 @@
 
         private void SetCell(Vector pos, char symbol, ConsoleColor color = ConsoleColor.White)
         {
-            Console.ForegroundColor = color;
-            Console.SetCursorPosition(pos.X, pos.Y);
-            Console.Write(symbol);
+            Draw(pos, symbol.ToString(),  this, color);
             Plane[pos.Y, pos.X] = symbol;
-            Console.ForegroundColor = ConsoleColor.White;
         }
         public void SetCells(Vector position, string symbols)
         {
@@ -83,6 +81,15 @@
         public bool IsWithinBounds(Vector pos)
         {
             return pos.X >= 0 && pos.X < Size.X && pos.Y >= 0 && pos.Y < Size.Y;
+        }
+
+        public override void Draw(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+        {
+            _parent.Draw(position, symbol,  this, color);
+        }
+        public override void AddParent(RenderObject renderObject)
+        {
+            _parent = renderObject;
         }
     }
 }
