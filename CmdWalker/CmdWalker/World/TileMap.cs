@@ -1,0 +1,56 @@
+﻿namespace CmdWalker;
+
+internal class TileMap
+{
+    public char[,] Tiles { get; set; }
+    public Vector Size { get; private set; }
+    public void SetCell(Vector pos, char symbol)
+    {
+        if(IsWithinBounds(pos))
+            Tiles[pos.Y, pos.X] = symbol;
+    }
+    public char GetCell(Vector pos)
+    {
+        // Т.к. массив, то координаты инвертированны
+        if(IsWithinBounds(pos))
+            return Tiles[pos.Y, pos.X];
+        return RenderPalette.GetChar(TileType.Wall);
+    }
+
+    public void SetTile(char[,] tiles)
+    {
+        Tiles = tiles.DeepCopy();
+        Size = new Vector(Tiles.GetLength(1), Tiles.GetLength(0));
+    }
+    
+    public void CopyTo(TileMap destination)
+    {
+        destination.Tiles = Tiles.DeepCopy();
+        destination.Size = this.Size;
+    }
+
+    public TileMap MergeWith(TileMap other)
+    {
+        TileMap result = new TileMap();
+        other.CopyTo(result);
+        for (int y = 0; y < Size.Y; y++)
+        {
+            for (int x = 0; x < Size.X; x++)
+            {
+                Vector pos = new Vector(x, y);
+                char mergedChar = GetCell(pos) != other.GetCell(pos) ? other.GetCell(pos) : GetCell(pos);
+                result.SetCell(pos, mergedChar);
+            }
+        }
+        return result;
+    }
+
+    public bool IsFree(Vector pos)
+    {
+        return GetCell(pos) != RenderPalette.GetChar(TileType.Wall);
+    }
+    public bool IsWithinBounds(Vector pos)
+    {
+        return pos.X >= 0 && pos.X < Size.X && pos.Y >= 0 && pos.Y < Size.Y;
+    }
+}

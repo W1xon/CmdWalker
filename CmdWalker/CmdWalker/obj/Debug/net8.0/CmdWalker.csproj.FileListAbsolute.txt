@@ -1,0 +1,14 @@
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\bin\Debug\net8.0\CmdWalker.exe
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\bin\Debug\net8.0\CmdWalker.deps.json
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\bin\Debug\net8.0\CmdWalker.runtimeconfig.json
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\bin\Debug\net8.0\CmdWalker.dll
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\bin\Debug\net8.0\CmdWalker.pdb
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\obj\Debug\net8.0\CmdWalker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\obj\Debug\net8.0\CmdWalker.AssemblyInfoInputs.cache
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\obj\Debug\net8.0\CmdWalker.AssemblyInfo.cs
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\obj\Debug\net8.0\CmdWalker.csproj.CoreCompileInputs.cache
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\obj\Debug\net8.0\CmdWalker.dll
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\obj\Debug\net8.0\refint\CmdWalker.dll
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\obj\Debug\net8.0\CmdWalker.pdb
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\obj\Debug\net8.0\CmdWalker.genruntimeconfig.cache
+C:\Users\Wixon\source\repos\CmdWalker\CmdWalker\obj\Debug\net8.0\ref\CmdWalker.dll
