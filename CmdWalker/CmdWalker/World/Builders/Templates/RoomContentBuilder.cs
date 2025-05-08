@@ -28,26 +28,11 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
 
             count++;
         }
-        /*Content.GameEntities = new List<GameEntity>()
-        {
-            CreatorRegistry.GetCreator<PortalCreator, Portal>().Create(new Vector(0, 10), true),
-            CreatorRegistry.GetCreator<PortalCreator, Portal>().Create(new Vector(10, 0)),
-        };*/
     }
 
     public override void AddItems()
     {
         int count = 0;
-        /*Content.Items = new List<GameEntity>()
-        {
-            CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(10, 10)),
-            CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(20, 19)),
-            CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(39, 1)),
-            CreatorRegistry.GetCreator<BulletCreator, Bullet>().CreateOnMap(new Vector(40, 1)),
-            CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(41, 1)),
-            CreatorRegistry.GetCreator<BounceBulletCreator, BounceBullet>().CreateOnMap(new Vector(70, 6)),
-            CreatorRegistry.GetCreator<GunCreator, Gun>().CreateOnMap(new Vector(4, 6)),
-        };*/
         Content.Items = new List<GameEntity>();
         foreach (var (itemType, value) in _config.ItemPreferences)
         {
@@ -64,7 +49,7 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
                 }
                 else if (itemType == typeof(Gun))
                 {
-                    Content.GameEntities.Add(CreatorRegistry.GetCreator<BulletCreator>(itemType).CreateOnMap(GetPosition()));
+                    Content.GameEntities.Add(CreatorRegistry.GetCreator<GunCreator>(itemType).CreateOnMap(GetPosition()));
                 }
             }
             count++;
@@ -90,12 +75,6 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
 
             count++;
         }
-        /*
-        Content.Units = new List<Unit>()
-        {
-            (Skeleton)(CreatorRegistry.GetCreator<SkeletonCreator, Skeleton>().Create(new Vector(60, 5))),
-            (Skeleton)(CreatorRegistry.GetCreator<SkeletonCreator, Skeleton>().Create(new Vector(70, 15))),
-        };*/
         
         var player = GameScene.Map.GetEntity<Player>().FirstOrDefault();
         var playerPos = GetPosition();

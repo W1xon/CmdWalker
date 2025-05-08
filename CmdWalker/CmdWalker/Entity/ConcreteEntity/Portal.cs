@@ -2,31 +2,48 @@
 
 internal class Portal : GameEntity
 {
-    private bool _isIn;
-    public Portal(Vector position, bool isIn = false) : base(position)
+    private readonly bool _isEntrance;
+    private bool _isInitialized;
+    private const ConsoleColor EntranceColor = ConsoleColor.Yellow;
+    private const ConsoleColor ExitColor = ConsoleColor.Red;
+
+    public Portal(Vector position, bool isEntrance = false) : base(position)
     {
-        _isIn = isIn;
-        Visual = new Sprite( RenderPalette.GetSprite(TileType.Portal),
-            isIn ? ConsoleColor.Yellow : ConsoleColor.Red);
-        
+        _isEntrance = isEntrance;
+        Visual = new Sprite(
+            RenderPalette.GetSprite(TileType.Portal),
+            _isEntrance ? EntranceColor : ExitColor
+        );
     }
 
     public override void Update()
     {
-        if (!Collider.IsTrigger) 
-            Collider.IsTrigger = true;
+        InitializeMapIfNeeded();
+        CheckForCollisions();
+    }
 
+    private void InitializeMapIfNeeded()
+    {
+        if (_isInitialized) return;
         _map.SetCells(Position, Visual);
-        if (!_isIn) return;
+        Collider.IsTrigger = true; 
+        _isInitialized = true;
+    }
+
+    private void CheckForCollisions()
+    {
         foreach (var entity in _map.Entities)
         {
             foreach (var cell in Collider.GetPositions())
             {
-                
-                if (entity.IsSelf(cell) && entity is Player)
+                if (entity.IsSelf(cell))
                 {
-                    SceneManager.SwitchTo(new RoomGameScene());
-                    return;
+                    _map.SetCells(Position, Visual); 
+                    if (_isEntrance && entity is Player)
+                    {
+                        SceneManager.SwitchTo(new RoomGameScene());
+                        return; 
+                    }
                 }
             }
         }
