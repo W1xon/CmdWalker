@@ -19,8 +19,6 @@ internal class RoomGameScene : GameScene
         
         InitCanvas();
         Map.Show();
-        
-        Debug.SetMap(Map);
     }
 
     public override void Update()

@@ -120,20 +120,24 @@ internal class Inventory
         _owner.Visual.LeftAdditive  = dir == Vector.left  ? symbol : string.Empty;
     }
 
-    private (char[][],  ConsoleColor[]) Summary()
+    private (char[,],  ConsoleColor[]) Summary()
     {
-        char[][] inventory = new char[_stacks.Count * 3][];
+        char[,] inventory = new char[_stacks.Count * 3,8];
         ConsoleColor[] consoleColors = new ConsoleColor[_stacks.Count];
         int k = 0;
         for (int i = 0; i < _stacks.Count; i++)
         {
             consoleColors[i] = _stacks[i].Item == ActiveItem ? ConsoleColor.Red : ConsoleColor.White;
-            inventory[k++] =  "╔══════╗".ToCharArray();
+            inventory.InsertString(k++, 0, "╔══════╗");
             if(_stacks[i].Item.GetVisual() is Glyph glyph)
             {
-                inventory[k++] = $"║{glyph.Symbol, - 2} x{_stacks[i].Count,2}║".ToCharArray();
+                inventory.InsertString(k++, 0, $"║{glyph.Symbol, - 2} x{_stacks[i].Count,2}║");
             }
-            inventory[k++] =  "╚══════╝".ToCharArray();
+            else
+            {
+                inventory.InsertString(k++, 0, $"║     ║");
+            }
+            inventory.InsertString(k++, 0, "╚══════╝");
         }
         return (inventory, consoleColors);
     }

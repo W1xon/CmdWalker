@@ -41,31 +41,30 @@
             _entites.Remove(entity);
         }
 
-        private void SetCell(Vector pos, char symbol, ConsoleColor color = ConsoleColor.White)
-        {
-            Draw(pos, symbol.ToString(),  this, color);
-            
-            Plane.SetCell(pos, symbol);
-        }
         public void SetCells(Vector position, string symbols)
         {
-            SetCells(position, new Glyph(symbols, ConsoleColor.White));
+            SetCell(position, symbols);
         }
         public void SetCells(Vector position, IVisual visual, bool isStandartColor = false)
         {
             ConsoleColor color = isStandartColor ? ConsoleColor.White : visual.Color;
             for (int y = 0; y < visual.Representation.GetLength(0); y++)
             {
-                for (int x = 0; x < visual.Representation.GetLength(1); x++)
-                {
-                    Vector newPos = position + new Vector(x, y);
-                    SetCell(newPos, visual.Representation[y,x], color);
-                }
+                Vector newPos = position + new Vector(0, y);
+                SetCell(newPos, visual.Representation.GetRowAsString(y).ToString(), color);
             }
         }
         public char GetCell(Vector pos, bool isCarcas = false)
         {
             return isCarcas ? Carcas.GetCell(pos) : Plane.GetCell(pos);
+        }
+        private void SetCell(Vector pos, string symbols, ConsoleColor color = ConsoleColor.White)
+        {
+            Draw(pos, symbols,  this, color);
+            foreach (var symbol in symbols)
+            {
+                Plane.SetCell(pos, symbol);
+            }
         }
         private bool TryAddEntity(GameEntity entity)
         {

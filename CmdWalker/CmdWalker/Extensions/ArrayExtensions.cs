@@ -1,4 +1,6 @@
-﻿namespace CmdWalker
+﻿using System.Text;
+
+namespace CmdWalker
 {
     internal static class ArrayExtensions
     {
@@ -42,5 +44,25 @@
                 }
             }
         }
+        
+        public static string GetRowAsString(this char[,] array, int row)
+        {
+            int cols = array.GetLength(1);
+            var sb = new StringBuilder(cols);
+            for (int i = 0; i < cols; i++)
+            {
+                sb.Append(array[row, i]);
+            }
+            return sb.ToString();
+        }
+        public static void InsertString(this char[,] array, int row, int startCol, string str)
+        {
+            int width = array.GetLength(1);
+            for (int i = 0; i < str.Length && (startCol + i) < width; i++)
+            {
+                array[row, startCol + i] = str[i];
+            }
+        }
+
     }
 }
