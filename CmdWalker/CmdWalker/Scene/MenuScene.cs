@@ -10,7 +10,6 @@ internal class MenuScene : IScene
     private int _pulseFrame;
     private readonly List<Vector> _stars;
 
-    // ASCII-арт заголовка (6 строк по ширине)
     private readonly string[] _asciiTitle = new[]
     {
         @"  ____               _  __        __    _ _             ",
@@ -96,7 +95,7 @@ internal class MenuScene : IScene
     {
         Console.SetCursorPosition(0, 0);
         for (int y = 0; y < _dimensions.Y; y++)
-            Console.WriteLine(new string(_buffer[y]));
+            Console.WriteLine(_buffer[y]);
     }
 
     private void AnimateBorder()

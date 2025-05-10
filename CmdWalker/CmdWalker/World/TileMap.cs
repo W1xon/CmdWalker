@@ -64,9 +64,24 @@ internal class TileMap
         return freePositions[rng.Next(freePositions.Count)];
     }
 
+    public bool IsFree(Vector pos, Vector size)
+    {
+        bool isFree = true;
+        for (int x = 0; x < size.X; x++)
+        {
+            for (int y = 0; y < size.Y; y++)
+            {
+                Vector newPos = pos + new Vector(x, y);
+                
+                isFree = IsWithinBounds(newPos) && GetCell(newPos) == RenderPalette.GetChar(TileType.Floor);
+                if (!isFree) return false;
+            }
+        }
+        return isFree;
+    }
     public bool IsFree(Vector pos)
     {
-        return GetCell(pos) != RenderPalette.GetChar(TileType.Wall);
+        return GetCell(pos) == RenderPalette.GetChar(TileType.Floor);
     }
     public bool IsWithinBounds(Vector pos)
     {

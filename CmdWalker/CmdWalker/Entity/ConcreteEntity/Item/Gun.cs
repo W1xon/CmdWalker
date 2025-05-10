@@ -11,7 +11,7 @@ internal class Gun : Weapon
             {100, typeof(Bullet)},
             {101, typeof(BounceBullet)},
         };
-        Visual = new Glyph("\u2566", ConsoleColor.Blue);
+        Visual = new Glyph(RenderPalette.GetString(TileType.Gun), ConsoleColor.Blue);
     }
     public override string GetName() => "Gun";
 

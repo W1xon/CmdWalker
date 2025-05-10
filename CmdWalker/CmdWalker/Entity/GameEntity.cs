@@ -13,15 +13,21 @@
         public GameEntity(Vector position)
         {
             Position = position;
+            Collider = new Collider();
+            Collider.Parent = this;
         }
         public void BindToMap(Map map)
         {
             _map = map;
-            Collider = new Collider(Position, this, _map);
+            Collider.SetMap(_map);
         }
         public bool IsSelf(Vector pos)
         {
             return Collider.ContainsPoint(pos);
+        }
+        public bool IsIntersection(Collider other)
+        {
+            return Collider.Intersects(other);
         }
 
         public virtual Vector GetSize() => Visual.Size;

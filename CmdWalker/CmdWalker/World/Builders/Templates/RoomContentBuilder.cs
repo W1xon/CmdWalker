@@ -20,9 +20,9 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
                 if (entityType == typeof(Portal))
                 {
                     Content.GameEntities.Add(CreatorRegistry.GetCreator<PortalCreator>(entityType)
-                        .Create(GetPosition(), true));
+                        .Create(GetPosition(RenderPalette.GetSize(TileType.Portal)), true));
                     Content.GameEntities.Add(CreatorRegistry.GetCreator<PortalCreator>(entityType)
-                        .Create(GetPosition(), false));
+                        .Create(GetPosition(RenderPalette.GetSize(TileType.Portal)), false));
                 }
             }
 
@@ -41,15 +41,18 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
                 
                 if (itemType == typeof(BounceBullet))
                 {
-                    Content.GameEntities.Add(CreatorRegistry.GetCreator<BounceBulletCreator>(itemType).CreateOnMap(GetPosition()));
+                    Content.GameEntities.Add(CreatorRegistry.GetCreator<BounceBulletCreator>(itemType).
+                        CreateOnMap(GetPosition(RenderPalette.GetSize(TileType.BounceBullet))));
                 }
                 else if (itemType == typeof(Bullet))
                 {
-                    Content.GameEntities.Add(CreatorRegistry.GetCreator<BulletCreator>(itemType).CreateOnMap(GetPosition()));
+                    Content.GameEntities.Add(CreatorRegistry.GetCreator<BulletCreator>(itemType).
+                        CreateOnMap(GetPosition(RenderPalette.GetSize(TileType.Bullet))));
                 }
                 else if (itemType == typeof(Gun))
                 {
-                    Content.GameEntities.Add(CreatorRegistry.GetCreator<GunCreator>(itemType).CreateOnMap(GetPosition()));
+                    Content.GameEntities.Add(CreatorRegistry.GetCreator<GunCreator>(itemType).
+                        CreateOnMap(GetPosition(RenderPalette.GetSize(TileType.Gun))));
                 }
             }
             count++;
@@ -69,7 +72,8 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
                 if (unitType == typeof(Skeleton))
                 {
                     Content.GameEntities.Add(
-                        CreatorRegistry.GetCreator<SkeletonCreator>(unitType).Create(GetPosition()));
+                        CreatorRegistry.GetCreator<SkeletonCreator>(unitType).
+                            Create(GetPosition(RenderPalette.GetSize(TileType.Skeleton))));
                 }
             }
 
@@ -77,7 +81,7 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
         }
         
         var player = GameScene.Map.GetEntity<Player>().FirstOrDefault();
-        var playerPos = GetPosition();
+        var playerPos = GetPosition(RenderPalette.GetSize(TileType.Player));
         if (player != null)
         {
             player.Position = playerPos;
@@ -85,7 +89,8 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
         }
         else
         {
-            Content.GameEntities.Add((Player)CreatorRegistry.GetCreator<PlayerCreator, Player>()
+            Content.GameEntities.Add((Player)CreatorRegistry
+                .GetCreator<PlayerCreator, Player>()
                 .Create(playerPos));
         }
     }
@@ -97,7 +102,7 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
         _config.Configure();
     }
 
-    private Vector GetPosition()
+    private Vector GetPosition(Vector size)
     {
         Vector position = Vector.zero;
         bool isOccupied = true;
@@ -106,16 +111,16 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
             Vector randV = Vector.GetRandom().Abs();
             position.X =  randV.X *_rand.Next(0, _tileMap.Size.X);
             position.Y =  randV.Y *_rand.Next(0, _tileMap.Size.Y);
-            if (!_tileMap.IsFree(position)) continue;
+            if (!_tileMap.IsFree(position, size)) continue;
 
             var entities = Content.GameEntities ?? Enumerable.Empty<GameEntity>();
             var units = Content.Units ?? Enumerable.Empty<Unit>();
             var items = Content.Items ?? Enumerable.Empty<GameEntity>();
 
             isOccupied =
-                entities.Any(e => e.Position == position) ||
-                units.Any(u => u.Position == position) ||
-                items.Any(i => i.Position == position);
+                entities.Any(e => Collider.Intersects(e.Position, e.GetSize(), position, size)) ||
+                units.Any(u => Collider.Intersects(u.Position, u.GetSize(), position, size)) ||
+                items.Any(i => Collider.Intersects(i.Position, i.GetSize(), position, size));
 
 
 
