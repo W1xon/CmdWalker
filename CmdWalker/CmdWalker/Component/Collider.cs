@@ -41,12 +41,34 @@ internal class Collider
     {
         foreach (var entity in _map.Entities)
         {
-            if (entity.IsSelf(_parent.Position) && entity != _parent)
+            if (entity != _parent && Intersects(entity.Collider))
             {
                 return entity;
             }
         }
         return null;
+    }
+    public bool ContainsPoint(Vector pos)
+    {
+        Vector topLeft = _parent.Position;
+        Vector bottomRight = _parent.Position + _size;
+        
+        return pos.X >= topLeft.X && pos.X <= bottomRight.X &&
+                  pos.Y >= topLeft.Y && pos.Y <= bottomRight.Y;
+    }
+
+    public bool Intersects(Collider other)
+    {
+        Vector topLeftA = _parent.Position;
+        Vector bottomRightA = _parent.Position + _size;
+
+        Vector topLeftB = other._parent.Position;
+        Vector bottomRightB = other._parent.Position + other._size;
+
+        bool overlapX = topLeftA.X < bottomRightB.X && bottomRightA.X > topLeftB.X;
+        bool overlapY = topLeftA.Y < bottomRightB.Y && bottomRightA.Y > topLeftB.Y;
+
+        return overlapX && overlapY;
     }
     public Dictionary<Vector, char> GetNearbyBlocks()
     {
@@ -75,15 +97,14 @@ internal class Collider
     } 
     public Vector[] GetPositions()
     {
-        var body = new List<Vector>();
+        var body = new Vector[_size.X * _size.Y];
+        int i = 0;
+
         for (int x = 0; x < _size.X; x++)
-        {
-            for (int y = 0; y < _size.Y; y++)
-            {
-                body.Add(new Vector(_parent.Position.X + x, _parent.Position.Y + y));
-            }
-        }
-        return body.ToArray();
+        for (int y = 0; y < _size.Y; y++)
+            body[i++] = new Vector(_parent.Position.X + x, _parent.Position.Y + y);
+        
+        return body;
     }
     public Vector GetRelativePosition(Vector direction)
     {

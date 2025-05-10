@@ -12,6 +12,7 @@
             _parent = parent;
             _dir = dir;
             _state = state;
+            Layer = 1;
         }
         public Projectile(Vector position) : base(position){}
 

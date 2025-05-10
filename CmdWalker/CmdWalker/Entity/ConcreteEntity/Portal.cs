@@ -14,6 +14,7 @@ internal class Portal : GameEntity
             RenderPalette.GetSprite(TileType.Portal),
             _isEntrance ? EntranceColor : ExitColor
         );
+        Layer = 1;
     }
 
     public override void Update()
@@ -32,20 +33,18 @@ internal class Portal : GameEntity
 
     private void CheckForCollisions()
     {
-        foreach (var entity in _map.Entities)
+        foreach (var entity in _map.Entities.Where(e => e.Layer < Layer))
         {
-            foreach (var cell in Collider.GetPositions())
+            if (Collider.Intersects(entity.Collider))
             {
-                if (entity.IsSelf(cell))
+                _map.SetCells(Position, Visual); 
+                if (_isEntrance && entity is Player)
                 {
-                    _map.SetCells(Position, Visual); 
-                    if (_isEntrance && entity is Player)
-                    {
-                        SceneManager.SwitchTo(new RoomGameScene());
-                        return; 
-                    }
+                    SceneManager.SwitchTo(new RoomGameScene());
+                    return; 
                 }
             }
+            
         }
     }
 }

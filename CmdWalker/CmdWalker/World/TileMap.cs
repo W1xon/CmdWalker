@@ -44,6 +44,25 @@ internal class TileMap
         }
         return result;
     }
+    public Vector GetRandomFreePosition(Random rng)
+    {
+        List<Vector> freePositions = new();
+
+        for (int y = 0; y < Size.Y; y++)
+        {
+            for (int x = 0; x < Size.X; x++)
+            {
+                Vector pos = new Vector(x, y);
+                if (IsFree(pos))
+                    freePositions.Add(pos);
+            }
+        }
+
+        if (freePositions.Count == 0)
+            throw new InvalidOperationException("Нет свободных позиций на карте.");
+
+        return freePositions[rng.Next(freePositions.Count)];
+    }
 
     public bool IsFree(Vector pos)
     {

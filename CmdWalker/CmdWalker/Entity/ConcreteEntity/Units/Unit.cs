@@ -3,7 +3,11 @@
     internal abstract class Unit : GameEntity, IMovable, IDamageable, IDestroyable
     {
         protected Health _health;
-        public Unit(Vector position) : base(position) { }
+
+        public Unit(Vector position) : base(position)
+        {
+            Layer = 0;
+        }
         public abstract void Destroy();
         public abstract void Move(Vector direction);
         public abstract bool CanMoveDir(Vector dir);

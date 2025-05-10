@@ -4,23 +4,31 @@
     {
         private TileMap _tile;
         private Vector _size;
+        private readonly Dictionary<Vector, Vector> _cameFrom = new();
+        private readonly Dictionary<Vector, int> _gScores = new();
+        private readonly PriorityQueue<Vector, int> _frontier = new();
+
+        private readonly List<Vector> _path = new();
+
         public SearchPath(TileMap tile, Vector size)
         {
             _tile = tile;
             _size = size;
         }
-        public List<Vector> GetPath(Vector start, Vector goal)
+        private List<Vector> GetPath(Vector start, Vector goal)
         {
-            PriorityQueue<Vector, int> frontier = new PriorityQueue<Vector, int>();
-            frontier.Enqueue(start, 0);
+            _cameFrom.Clear();
+            _gScores.Clear();
+            _frontier.Clear();
+            _path.Clear();
+    
+            _frontier.Enqueue(start, 0);
+            _cameFrom[start] = default;
+            _gScores[start] = 0;
 
-            Dictionary<Vector, Vector> cameFrom = new Dictionary<Vector, Vector>() { { start, default } };
-            Dictionary<Vector, int> gScores = new Dictionary<Vector, int>() { { start, 0 } };
-
-            while (frontier.Count > 0)
+            while (_frontier.Count > 0)
             {
-                var current = frontier.Dequeue();
-
+                var current = _frontier.Dequeue();
                 if (ContainsGoal(current, goal))
                 {
                     goal = current;
@@ -30,28 +38,29 @@
                 foreach (var neighbor in GetNeighbours(current))
                 {
                     if (IsBlocked(_tile.Tiles, neighbor)) continue;
-                    var newGScore = gScores[current] + GetCost();
-                    if (!gScores.ContainsKey(neighbor) || newGScore < gScores[neighbor])
+                    var newGScore = _gScores[current] + GetCost();
+
+                    if (!_gScores.TryGetValue(neighbor, out int existingGScore) || newGScore < existingGScore)
                     {
-                        gScores[neighbor] = newGScore;
-                        var priority = newGScore + Heuristic(neighbor, goal);
-                        frontier.Enqueue(neighbor, priority);
-                        cameFrom[neighbor] = current;
+                        _gScores[neighbor] = newGScore;
+                        int priority = newGScore + Heuristic(neighbor, goal);
+                        _frontier.Enqueue(neighbor, priority);
+                        _cameFrom[neighbor] = current;
                     }
                 }
             }
 
             var pos = goal;
-            List<Vector> path = new List<Vector>();
             while (pos != start)
             {
-                path.Add(pos);
-                if (!cameFrom.TryGetValue(pos, out var value)) return null;
-                pos = value;
+                _path.Add(pos);
+                if (!_cameFrom.TryGetValue(pos, out var prev)) return null;
+                pos = prev;
             }
-            path.Reverse();
-            return path;
+            _path.Reverse();
+            return new List<Vector>(_path);
         }
+
         public Vector GetNextPosition(Vector start, Vector goal)
         {
             var path = GetPath(start, goal);

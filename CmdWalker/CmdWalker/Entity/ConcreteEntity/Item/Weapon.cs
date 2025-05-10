@@ -9,8 +9,8 @@ internal abstract class Weapon : GameEntity, ICollectable
     {
         _state = state;
         _parent = parent;
-        
         Visual = new Glyph("\u2566", ConsoleColor.Blue);
+        Layer = 3;
     }
     public abstract string GetName();
 
