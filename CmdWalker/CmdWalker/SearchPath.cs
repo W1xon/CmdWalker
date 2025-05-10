@@ -2,7 +2,6 @@
 {
     internal class SearchPath
     {
-        private TileMap _tile;
         private Vector _size;
         private readonly Dictionary<Vector, Vector> _cameFrom = new();
         private readonly Dictionary<Vector, int> _gScores = new();
@@ -10,12 +9,11 @@
 
         private readonly List<Vector> _path = new();
 
-        public SearchPath(TileMap tile, Vector size)
+        public SearchPath(Vector size)
         {
-            _tile = tile;
             _size = size;
         }
-        private List<Vector> GetPath(Vector start, Vector goal)
+        private List<Vector> GetPath(TileMap tile, Vector start, Vector goal, int maxIteration)
         {
             _cameFrom.Clear();
             _gScores.Clear();
@@ -25,7 +23,7 @@
             _frontier.Enqueue(start, 0);
             _cameFrom[start] = default;
             _gScores[start] = 0;
-
+            int iteration = 0;
             while (_frontier.Count > 0)
             {
                 var current = _frontier.Dequeue();
@@ -35,18 +33,21 @@
                     break;
                 }
 
-                foreach (var neighbor in GetNeighbours(current))
+                foreach (var neighbor in GetNeighbours(tile, current))
                 {
-                    if (IsBlocked(_tile.Tiles, neighbor)) continue;
+                    if (IsBlocked(tile.Tiles, neighbor)) continue;
                     var newGScore = _gScores[current] + GetCost();
 
-                    if (!_gScores.TryGetValue(neighbor, out int existingGScore) || newGScore < existingGScore)
+                    if (newGScore < _gScores.GetValueOrDefault(neighbor, int.MaxValue))
                     {
                         _gScores[neighbor] = newGScore;
                         int priority = newGScore + Heuristic(neighbor, goal);
                         _frontier.Enqueue(neighbor, priority);
                         _cameFrom[neighbor] = current;
                     }
+
+                    iteration++;
+                    if (iteration > maxIteration) return null;
                 }
             }
 
@@ -58,24 +59,24 @@
                 pos = prev;
             }
             _path.Reverse();
-            return new List<Vector>(_path);
+            return _path;
         }
 
-        public Vector GetNextPosition(Vector start, Vector goal)
+        public Vector GetNextPosition(TileMap tile, Vector start, Vector goal, int maxIteration)
         {
-            var path = GetPath(start, goal);
+            var path = GetPath(tile, start, goal, maxIteration );
             if (path == null || path.Count == 0) return Vector.zero;
             return path.First();
         }
-        private List<Vector> GetNeighbours(Vector position)
+        private List<Vector> GetNeighbours(TileMap tile, Vector position)
         {
             var directions = new Vector[] { Vector.up, Vector.down, Vector.left, Vector.right };
             var neighbors = new List<Vector>();
             foreach (var direction in directions)
             {
                 Vector target = position + direction;
-                if (target.Y < 0 || target.X < 0 || target.X > _tile.Size.X || target.Y > _tile.Size.Y) continue;
-                if (_tile.GetCell(target) == RenderPalette.GetChar(TileType.Wall)) continue;
+                if (target.Y < 0 || target.X < 0 || target.X > tile.Size.X || target.Y > tile.Size.Y) continue;
+                if (tile.GetCell(target) == RenderPalette.GetChar(TileType.Wall)) continue;
                 neighbors.Add(target);
             }
             return neighbors;

@@ -14,29 +14,27 @@
             _health = new Health(100);
             
             Visual = new Glyph(RenderPalette.GetString(TileType.Skeleton), ConsoleColor.DarkBlue);
+            Collider.Excludes.Add(typeof(Player));
         }
 
         public override void Update()
         {
-            if (_search == null) _search = new SearchPath(_map.Carcas.MergeWith(_map.Plane), Visual.Size);
+            if (_search == null) _search = new SearchPath(Visual.Size);
 
             _step++;
             if (_step >= _stepMax)
             {
-                CalculateDirection();
                 Move(_dir);
                 _step = 0;
             }
         }
         public override void Move(Vector direction)
         {
-            ClearPreviousPosition();
+            CalculateDirection();
             if (!CanMoveDir(direction))
-            {
-                ChangeDirection();
-                _map.SetCells(Position, Visual);
                 return;
-            }
+            
+            ClearPreviousPosition();
             Position += direction;
             _map.SetCells(Position, Visual);
         }
@@ -59,33 +57,14 @@
         {
             var player = _map.GetEntity<Player>().First();
             var goal = player != null ? player.Position : Vector.zero;
-            _dir = _search.GetNextPosition(Position, goal) - Position;
+            int maxIteration = (int)(_map.Size.X * _map.Size.Y * 0.25f);
+            _dir = _search.GetNextPosition(_map.Plane, Position, goal, maxIteration) - Position;
         }
-        private void ChangeDirection()
-        {
-            switch (_rand.Next(0, 4))
-            {
-                case 0:
-                    _dir = Vector.up;
-                    break;
-                case 1:
-                    _dir = Vector.down;
-                    break;
-                case 2:
-                    _dir = Vector.left;
-                    break;
-                case 3:
-                    _dir = Vector.right;
-                    break;
-
-            }
-        }
-
         private bool TryAttack(Vector position)
         {
-            foreach (var entity in _map.Entities)
+            foreach (var entity in _map.Entities.Where(e => e.GetType() == typeof(Player) ))
             {
-                if (entity.IsSelf(position) && entity is IDamageable damageable && damageable != this)
+                if (entity.IsIntersection(Collider) && entity is IDamageable damageable && damageable != this)
                 {
                     damageable.TakeDamage(_damage);
                     return true;

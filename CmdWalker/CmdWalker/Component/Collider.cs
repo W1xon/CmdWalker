@@ -7,7 +7,7 @@ internal class Collider
     private Vector _size => Parent.GetSize();
     private Map _map;
     private bool _isSprite;
-    
+    public List<Type> Excludes = new List<Type>();
     public Collider(bool isTrigger = false)
     {
         IsTrigger = isTrigger;
@@ -140,6 +140,7 @@ internal class Collider
         if (_map.GetCell(pos) == RenderPalette.GetChar(TileType.Wall)) return true;
         foreach (var entity in _map.Entities)
         {
+            if (Excludes.Contains(entity.GetType())) return false;
             if (entity is ICollectable item && item.GetState() != ItemState.Active) continue;
             if (entity.IsSelf(pos) && entity != Parent && !entity.Collider.IsTrigger) return true;
         }
