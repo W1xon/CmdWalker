@@ -13,6 +13,13 @@
         {
             _size = size;
         }
+
+        public Vector GetNextPosition(TileMap tile, Vector start, Vector goal, int maxIteration)
+        {
+            var path = GetPath(tile, start, goal, maxIteration );
+            if (path == null || path.Count == 0) return Vector.zero;
+            return path.First();
+        }
         private List<Vector> GetPath(TileMap tile, Vector start, Vector goal, int maxIteration)
         {
             _cameFrom.Clear();
@@ -61,13 +68,6 @@
             _path.Reverse();
             return _path;
         }
-
-        public Vector GetNextPosition(TileMap tile, Vector start, Vector goal, int maxIteration)
-        {
-            var path = GetPath(tile, start, goal, maxIteration );
-            if (path == null || path.Count == 0) return Vector.zero;
-            return path.First();
-        }
         private List<Vector> GetNeighbours(TileMap tile, Vector position)
         {
             var directions = new Vector[] { Vector.up, Vector.down, Vector.left, Vector.right };
@@ -84,14 +84,13 @@
 
         private int GetCost()
         {
-            // Пока что стоимость перехода фиксированная
             return 1;
         }
 
         private int Heuristic(Vector a, Vector b) => Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
 
 
-        public bool IsBlocked(char[,] field, Vector pos)
+        private bool IsBlocked(char[,] field, Vector pos)
         {
             for (int x = 0; x < _size.X; x++)
             {
@@ -111,7 +110,7 @@
             return false;
         }
 
-        public bool ContainsGoal(Vector pos, Vector goal)
+        private bool ContainsGoal(Vector pos, Vector goal)
         {
             for (int x = 0; x < _size.X; x++)
             {

@@ -10,13 +10,13 @@
         }
         public void Create(Vector vector)
         {
-            if (_room.Size.X < 3 || _room.Size.Y < 3) return;
+            if (_room.Transform.Size.X < 3 || _room.Transform.Size.Y < 3) return;
 
             bool isHorizontal = vector == Vector.up || vector == Vector.down;
-            int maxSize = isHorizontal ? _room.Size.X : _room.Size.Y;
+            int maxSize = isHorizontal ? _room.Transform.Size.X : _room.Transform.Size.Y;
             int sizeDoor = _rand.Next(1, maxSize - 2);
             int start = _rand.Next(1, maxSize - sizeDoor - 1);
-            int fixedCoord = (vector == Vector.up || vector == Vector.left) ? 0 : (isHorizontal ? _room.Size.Y - 1 : _room.Size.X - 1);
+            int fixedCoord = (vector == Vector.up || vector == Vector.left) ? 0 : (isHorizontal ? _room.Transform.Size.Y - 1 : _room.Transform.Size.X - 1);
 
             for (int i = start; i < start + sizeDoor; i++)
             {

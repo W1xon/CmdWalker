@@ -2,15 +2,13 @@
 {
     internal class Room : IStructure
     {
-        public Vector Size { get; set; }
+        public Transform Transform { get; set; }
         public char[,] Plane;
-        private Vector _position;
         private Door _door;
         private Random _rand = new Random();
-        public Room(Vector position, Vector size)
+        public Room(Transform transform)
         {
-            _position = position;
-            Size = size;
+            Transform = transform;
             _door = new Door(this);
         }
 
@@ -18,14 +16,14 @@
         {
             Create();
             
-            Plane.Paste(map.Carcas.Tiles, _position);
+            Plane.Paste(map.Carcas.Tiles, Transform.Position);
         }
         public void Create()
         {
-            Plane = new char[Size.Y, Size.X];
-            for (int y = 0; y < Size.Y; y++)
+            Plane = new char[Transform.Size.Y, Transform.Size.X];
+            for (int y = 0; y < Transform.Size.Y; y++)
             {
-                for (int x = 0; x < Size.X; x++)
+                for (int x = 0; x < Transform.Size.X; x++)
                 {
                     if (IsWall(new Vector(x, y)))
                         Plane[y,x] = RenderPalette.GetChar(TileType.Wall);
@@ -79,7 +77,7 @@
         }
         protected bool IsWall(Vector position)
         {
-            return (position.Y == 0 || position.X == 0) || (position.X == Size.X - 1 || position.Y == Size.Y - 1);
+            return (position.Y == 0 || position.X == 0) || (position.X == Transform.Size.X - 1 || position.Y == Transform.Size.Y - 1);
         }
     }
 }

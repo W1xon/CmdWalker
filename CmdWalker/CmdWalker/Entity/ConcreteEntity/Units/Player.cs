@@ -2,12 +2,12 @@
 {
     internal class Player : Unit
     {
-        public Inventory Inventory;
+        public readonly Inventory Inventory;
         
         public Player(Vector pos) : base(pos)
         {
             _health = new Health(100);
-            Visual = new Glyph(";)", ConsoleColor.Green);
+            Visual = new Glyph(RenderPalette.GetString(TileType.Player), ConsoleColor.Green);
             Inventory = new Inventory(this);
         }
         public override void Update()
@@ -78,8 +78,8 @@
         public override void Move(Vector direction)
         {
             ClearPreviousPosition();
-            if (CanMoveDir(direction)) Position += direction;
-            _map.SetCells(Position, Visual);
+            if (CanMoveDir(direction)) Transform.Position += direction;
+            _map.SetCells(Transform.Position, Visual);
         }
         public override bool CanMoveDir(Vector dir)
         {

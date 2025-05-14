@@ -2,6 +2,7 @@
 
 internal class Sprite : IVisual
 {
+
     public char[,] Representation
     {
         get => _sprite;

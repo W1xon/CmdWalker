@@ -84,7 +84,7 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
         var playerPos = GetPosition(RenderPalette.GetSize(TileType.Player));
         if (player != null)
         {
-            player.Position = playerPos;
+            player.Transform.Position = playerPos;
             Content.GameEntities.Add(player);
         }
         else
@@ -118,9 +118,9 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
             var items = Content.Items ?? Enumerable.Empty<GameEntity>();
 
             isOccupied =
-                entities.Any(e => Collider.Intersects(e.Position, e.GetSize(), position, size)) ||
-                units.Any(u => Collider.Intersects(u.Position, u.GetSize(), position, size)) ||
-                items.Any(i => Collider.Intersects(i.Position, i.GetSize(), position, size));
+                entities.Any(e => Collider.Intersects(e.Transform.Position, e.Transform.Size, position, size)) ||
+                units.Any(u => Collider.Intersects(u.Transform.Position, u.Transform.Size, position, size)) ||
+                items.Any(i => Collider.Intersects(i.Transform.Position, i.Transform.Size, position, size));
 
 
 

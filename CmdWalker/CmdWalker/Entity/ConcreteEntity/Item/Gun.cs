@@ -32,10 +32,10 @@ internal class Gun : Weapon
     }
     private void UpdateOnMap()
     { 
-        _map.SetCells(Position, Visual);
+        _map.SetCells(Transform.Position, Visual);
         foreach (var entity in _map.Entities)
         {
-            if (entity.IsSelf(Position) && entity != this)
+            if (entity.IsSelf(Transform.Position) && entity != this)
             {
                 if (entity is not Player player) continue;
                 _parent = player;

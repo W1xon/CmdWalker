@@ -2,7 +2,7 @@
 
 internal class TileMap
 {
-    public char[,] Tiles { get; set; }
+    public char[,] Tiles { get; private set; }
     public Vector Size { get; private set; }
     public void SetCell(Vector pos, char symbol)
     {
@@ -28,42 +28,6 @@ internal class TileMap
         destination.Tiles = Tiles.DeepCopy();
         destination.Size = this.Size;
     }
-
-    public TileMap MergeWith(TileMap other)
-    {
-        TileMap result = new TileMap();
-        other.CopyTo(result);
-        for (int y = 0; y < Size.Y; y++)
-        {
-            for (int x = 0; x < Size.X; x++)
-            {
-                Vector pos = new Vector(x, y);
-                char mergedChar = GetCell(pos) != other.GetCell(pos) ? other.GetCell(pos) : GetCell(pos);
-                result.SetCell(pos, mergedChar);
-            }
-        }
-        return result;
-    }
-    public Vector GetRandomFreePosition(Random rng)
-    {
-        List<Vector> freePositions = new();
-
-        for (int y = 0; y < Size.Y; y++)
-        {
-            for (int x = 0; x < Size.X; x++)
-            {
-                Vector pos = new Vector(x, y);
-                if (IsFree(pos))
-                    freePositions.Add(pos);
-            }
-        }
-
-        if (freePositions.Count == 0)
-            throw new InvalidOperationException("Нет свободных позиций на карте.");
-
-        return freePositions[rng.Next(freePositions.Count)];
-    }
-
     public bool IsFree(Vector pos, Vector size)
     {
         bool isFree = true;

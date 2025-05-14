@@ -15,17 +15,11 @@ internal abstract class GameScene : IScene
     {
         foreach (var entity in Map.Entities)
         {
-            Timing.Start(entity);
             entity.Update();
-            Timing.Stop(entity);
             if (!IsActive)
-            {
-                Timing.CalculateAverageTime();
                 return;
-            }
         }
     }
-
     public virtual void Exit()
     {
         IsActive = false;

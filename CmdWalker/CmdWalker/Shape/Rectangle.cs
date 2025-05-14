@@ -2,23 +2,21 @@
 
 internal class Rectangle : Polygon
 {
-    public int X => _position.X;
-    public int Y => _position.Y;
+    public int X => _transform.Position.X;
+    public int Y => _transform.Position.Y;
     public int Left => X;
-    public int Right => X + _size.X;
+    public int Right => X + _transform.Size.X;
     public int Top => Y;
-    public int Bottom => Y + _size.Y;
-    public int Height => _size.Y;
-    public int Width => _size.X;
-    private Vector _size;
-    private Vector _position;
+    public int Bottom => Y + _transform.Size.Y;
+    public int Height => _transform.Size.Y;
+    public int Width => _transform.Size.X;
+    private Transform _transform;
     public Rectangle(Vector position, Vector size) : base(
         new Vector(position.X, position.Y),
             new Vector(position.X + size.X, position.Y),
             new Vector(position.X + size.X, position.Y + size.Y),
             new Vector(position.X, position.Y + size.Y))
     {
-        _size = size;
-        _position = position;
+        _transform = new Transform(position, size);
     }
 }

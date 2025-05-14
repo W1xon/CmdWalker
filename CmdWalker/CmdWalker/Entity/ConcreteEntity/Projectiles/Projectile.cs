@@ -31,7 +31,7 @@
             {
                 backgroundCells[i] = defaultChar == 0 ?  _map.GetCell(positions[i], true) : defaultChar;
             }
-            _map.SetCells(Position, new string(backgroundCells));
+            _map.SetCells(Transform.Position, new string(backgroundCells));
         }
         public void Destroy()
         {
@@ -42,41 +42,35 @@
         {
             return Collider.CanMoveTo(dir);
         }
-        public bool TryKill()
+
+        protected bool TryKill()
         { 
-            var target = new Vector((Position.X + _dir.X), (Position.Y + _dir.Y));
+            var target = new Vector((Transform.Position.X + _dir.X), (Transform.Position.Y + _dir.Y));
             foreach (var entity in _map.Entities)
             {
-                if (entity.IsSelf(target) && entity is IDamageable damageable)
-                {
-                    if (damageable != _parent)
-                    {
-                        Destroy();
-                        ClearPreviousPosition();
-                        damageable.TakeDamage(_damage);
-                        return true;
-                    }
-                }
+                if (!entity.IsSelf(target) || entity is not IDamageable damageable) continue;
+                if (damageable == _parent) continue;
+                
+                Destroy();
+                ClearPreviousPosition();
+                damageable.TakeDamage(_damage);
+                return true;
             }
             return false;
         }
-        protected virtual void UpdateOnMap()
+        protected void UpdateOnMap()
         { 
-            _map.SetCells(Position, Visual);
-            foreach (var entity in _map.Entities)
+            _map.SetCells(Transform.Position, Visual);
+            foreach (var entity in _map.Entities.Where(e => e.GetType() == typeof(Player)))
             {
-                if (entity.IsSelf(Position) && entity != this)
-                {
-                    if(entity is Player player)
-                    {
-                        player.Inventory.PickUp(this);
-                        _map.DeleteEntity(this);
-                        _state = ItemState.InInventory;
-                    }
-                }
+                if (!entity.IsSelf(Transform.Position)) continue;
+                if (entity is not Player player) continue;
+                player.Inventory.PickUp(this);
+                _map.DeleteEntity(this);
+                _state = ItemState.InInventory;
             }
         }
-        protected virtual void UpdateActive() 
+        protected  void UpdateActive() 
         {
             Move(_dir);
         }

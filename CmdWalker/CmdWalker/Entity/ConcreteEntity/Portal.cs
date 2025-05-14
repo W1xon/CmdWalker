@@ -26,7 +26,7 @@ internal class Portal : GameEntity
     private void InitializeMapIfNeeded()
     {
         if (_isInitialized) return;
-        _map.SetCells(Position, Visual);
+        _map.SetCells(Transform.Position, Visual);
         Collider.IsTrigger = true; 
         _isInitialized = true;
     }
@@ -37,7 +37,7 @@ internal class Portal : GameEntity
         {
             if (Collider.Intersects(entity.Collider))
             {
-                _map.SetCells(Position, Visual); 
+                _map.SetCells(Transform.Position, Visual); 
                 if (_isEntrance && entity is Player)
                 {
                     SceneManager.SwitchTo(new RoomGameScene());

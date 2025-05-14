@@ -20,13 +20,9 @@
         }
         public static void UpdateInput()
         {
-            if (Console.KeyAvailable)
-            {
-                _currentKey = Console.ReadKey(true).Key;
-            }
-            else
+            _currentKey = Console.KeyAvailable ? Console.ReadKey(true).Key :
                 //кнопка по уполчанию, чтобы не было зажатий клавиш
-                _currentKey = ConsoleKey.Spacebar;
+                ConsoleKey.Spacebar;
         }
     }
 }

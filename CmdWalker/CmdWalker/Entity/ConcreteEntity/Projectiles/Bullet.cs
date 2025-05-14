@@ -40,11 +40,11 @@
 
         public override void Move(Vector direction)
         {
-            ClearPreviousPosition();
             if (CanMoveDir(direction))
             {    
-                Position += direction;
-                _map.SetCells(Position, Visual);
+                ClearPreviousPosition();
+                Transform.Position += direction;
+                _map.SetCells(Transform.Position, Visual);
                 return;
             }
             if(!TryKill())
