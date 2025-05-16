@@ -26,6 +26,7 @@ internal class Inventory
 
     public bool TryEquip(int index, Func<ICollectable, bool> isCorrectly)
     {
+        if (_stacks.Count <= 0) return false;
         if (isCorrectly.Invoke(_stacks[index].Item))
         {
             Equip(index);
@@ -105,15 +106,13 @@ internal class Inventory
     {
         var visual = ActiveItem?.GetVisual();
         var symbol = visual is Glyph glyph ? glyph.Symbol : string.Empty;
-
-        if (dir == default)
+        Unit unit = (Unit)_owner;
+        unit?.ClearPreviousPosition();
+        
+        if (dir == default && unit != null)
         {
-            if (_owner is Unit unit)
-            {
-                unit.ClearPreviousPosition();
-                unit.Visual.RightAdditive = string.Empty;
-                unit.Visual.LeftAdditive = string.Empty;
-            }
+            unit.Visual.RightAdditive = string.Empty;
+            unit.Visual.LeftAdditive = string.Empty;
             return;
         }
         _owner.Visual.RightAdditive = dir == Vector.right ? symbol : string.Empty;

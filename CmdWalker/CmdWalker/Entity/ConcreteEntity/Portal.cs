@@ -7,6 +7,8 @@ internal class Portal : GameEntity
     private const ConsoleColor EntranceColor = ConsoleColor.Yellow;
     private const ConsoleColor ExitColor = ConsoleColor.Red;
 
+    private int _tickCounter = 0;
+    private int _ticksBeforeMove = 40;
     public Portal(Vector position, bool isEntrance = false) : base(position)
     {
         IsEntrance = isEntrance;
@@ -20,6 +22,12 @@ internal class Portal : GameEntity
     public override void Update()
     {
         InitializeMapIfNeeded();
+        _tickCounter++;
+        if (_tickCounter < _ticksBeforeMove)
+        {
+            _map.SetCells(Transform.Position, Visual); 
+            _tickCounter = 0;
+        }
         CheckForCollisions();
     }
 
