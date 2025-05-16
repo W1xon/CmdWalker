@@ -2,17 +2,22 @@
 
 internal class Leaf
 {
-    public Transform Transform { get; set; }
+    public int Width => _transform.Size.X;
+    public int Height => _transform.Size.Y;
+    public int X => _transform.Position.X;
+    public int Y => _transform.Position.Y;
     public Leaf leftChild;
     public Leaf rightChild;
     public Rectangle room;
     public List<Rectangle> halls;
 
+    private Transform _transform;
     private Random _rand = new Random();
-    private const int MIN_LEAF_SIZE = 10;
-    public Leaf(Transform transform)
+    private Vector _minLeafSize;
+    public Leaf(Vector position, Vector size, Vector minSize)
     {
-        Transform = transform;
+        _transform = new Transform(position, size);
+        _minLeafSize = minSize;
     }
     public bool Split()
     {
@@ -20,34 +25,34 @@ internal class Leaf
             return false;
         bool splitH = _rand.NextSingle() > 0.25;
         float mult = 3f;
-        if (Transform.Size.X > Transform.Size.Y * mult && Transform.Size.X / (Transform.Size.Y * mult) >= 1.25) 
+        if (Width > Height * mult && Width / (Height * mult) >= 1.25) 
             splitH = false; 
-        else if (Transform.Size.Y * mult > Transform.Size.X && (Transform.Size.Y * mult) / Transform.Size.X >= 1.25) 
-            splitH = true; 
+        else if (Height * mult > Width && (Height * mult) / Width >= 1.25) 
+            splitH = true;
+        
 
-        int max = (splitH ? Transform.Size.Y : Transform.Size.X) - MIN_LEAF_SIZE;
-        if (max <= MIN_LEAF_SIZE)
+        int max = splitH ? Height - _minLeafSize.Y : Width - _minLeafSize.X;
+
+        if (splitH ? max <= _minLeafSize.Y : max <= _minLeafSize.X)
             return false;
-
-        int split = _rand.Next(MIN_LEAF_SIZE, max);
-            
+        int split = splitH ? _rand.Next(_minLeafSize.Y, max) : _rand.Next(_minLeafSize.X, max);
         if (splitH)
         {
-            var leftTransform = new Transform(Transform.Position, new Vector(Transform.Size.X, split));
-            var rightTransform = new Transform(new Vector(Transform.Position.X, Transform.Position.Y + split), 
-                new Vector(Transform.Size.X, Transform.Size.Y - split));
+            leftChild = new Leaf(_transform.Position, new Vector(Width, split), _minLeafSize);
+            rightChild = new Leaf(
+                new Vector(X, Y + split),
+                new Vector(Width, Height - split),
+                _minLeafSize);
 
-            leftChild = new Leaf(leftTransform);
-            rightChild = new Leaf(rightTransform);
         }
         else
         {
-            var leftTransform = new Transform(Transform.Position, new Vector(split, Transform.Size.Y));
-            var rightTransform = new Transform(new Vector(Transform.Position.X + split, Transform.Position.Y), 
-                new Vector(Transform.Size.X - split, Transform.Size.Y));
+            leftChild = new Leaf(_transform.Position, new Vector(split, Height), _minLeafSize);
+            rightChild = new Leaf(
+                new Vector(X + split, Y),
+                new Vector(Width - split, Height),
+                _minLeafSize);
 
-            leftChild = new Leaf(leftTransform);
-            rightChild = new Leaf(rightTransform);
         }
         return true;
     }
@@ -66,10 +71,9 @@ internal class Leaf
         }
         else
         {
-            int min = 8;
-            Vector roomSize = new Vector(_rand.Next(min, Transform.Size.X - 2), _rand.Next(min, Transform.Size.Y - 2));
-            Vector roomPos = new Vector(_rand.Next(1, Transform.Size.X - roomSize.X - 1), _rand.Next(1, Transform.Size.Y - roomSize.Y - 1));
-            room = new Rectangle(new Vector(Transform.Position.X + roomPos.X, Transform.Position.Y + roomPos.Y),
+           Vector roomSize = new Vector(_rand.Next(_minLeafSize.X - 2, Width - 2), _rand.Next(_minLeafSize.Y - 2, Height - 2));
+            Vector roomPos = new Vector(_rand.Next(1, Width - roomSize.X - 1), _rand.Next(1, Height - roomSize.Y - 1));
+            room = new Rectangle(new Vector(X + roomPos.X, Y + roomPos.Y),
                 new Vector(  roomSize.X, roomSize.Y));
         }
     }

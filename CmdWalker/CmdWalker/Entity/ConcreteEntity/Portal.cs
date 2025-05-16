@@ -2,17 +2,17 @@
 
 internal class Portal : GameEntity
 {
-    private readonly bool _isEntrance;
+    public readonly bool IsEntrance;
     private bool _isInitialized;
     private const ConsoleColor EntranceColor = ConsoleColor.Yellow;
     private const ConsoleColor ExitColor = ConsoleColor.Red;
 
     public Portal(Vector position, bool isEntrance = false) : base(position)
     {
-        _isEntrance = isEntrance;
+        IsEntrance = isEntrance;
         Visual = new Sprite(
             RenderPalette.GetSprite(TileType.Portal),
-            _isEntrance ? EntranceColor : ExitColor
+            IsEntrance ? EntranceColor : ExitColor
         );
         Layer = 1;
     }
@@ -38,7 +38,7 @@ internal class Portal : GameEntity
             if (Collider.Intersects(entity.Collider))
             {
                 _map.SetCells(Transform.Position, Visual); 
-                if (_isEntrance && entity is Player)
+                if (IsEntrance && entity is Player)
                 {
                     SceneManager.SwitchTo(new RoomGameScene());
                     return; 

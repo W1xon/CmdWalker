@@ -55,6 +55,7 @@ internal abstract class CarcassGenerator
             {
                 int col = steep ? y : x;
                 int row = steep ? x : y;
+                
                 _field[row, col] = glyph;
                 error -= deltaY;
                 if (error < 0)

@@ -4,6 +4,8 @@ internal class TileMap
 {
     public char[,] Tiles { get; private set; }
     public Vector Size { get; private set; }
+    
+    private Random _rand = new Random();
     public void SetCell(Vector pos, char symbol)
     {
         if(IsWithinBounds(pos))
@@ -26,14 +28,43 @@ internal class TileMap
     public void CopyTo(TileMap destination)
     {
         destination.Tiles = Tiles.DeepCopy();
-        destination.Size = this.Size;
+        destination.Size = Size;
     }
-    public bool IsFree(Vector pos, Vector size)
+    public Vector FindFreeAreaPosition(Vector areaSize)
+    {
+        Vector position = Vector.zero;
+        while (true)
+        {
+            Vector randV = Vector.GetRandom().Abs();
+            position.X =  randV.X *_rand.Next(0, Size.X);
+            position.Y =  randV.Y *_rand.Next(0, Size.Y);
+            if (IsFree(position, areaSize)) break;
+        }
+        return position;
+    }
+    public Vector FindFreeAreaPositionInZone(Vector areaSize, Vector center, Vector zoneSize)
+    {
+        Vector position = Vector.zero;
+        while (true)
+        {
+            Vector randV = Vector.GetRandom().Abs();
+
+            int top = center.Y - zoneSize.Y;
+            int bottom = center.Y + zoneSize.Y;
+            int left = center.X - zoneSize.X;
+            int right = center.X + zoneSize.X;
+            position.X =  randV.X *_rand.Next(left, right);
+            position.Y =  randV.Y *_rand.Next(top, bottom);
+            if (IsFree(position, areaSize)) break;
+        }
+        return position;
+    }
+    public bool IsFree(Vector pos, Vector areaSize)
     {
         bool isFree = true;
-        for (int x = 0; x < size.X; x++)
+        for (int x = 0; x < areaSize.X; x++)
         {
-            for (int y = 0; y < size.Y; y++)
+            for (int y = 0; y < areaSize.Y; y++)
             {
                 Vector newPos = pos + new Vector(x, y);
                 

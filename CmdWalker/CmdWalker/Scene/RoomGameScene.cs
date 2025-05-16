@@ -27,7 +27,6 @@ internal class RoomGameScene : GameScene
         if (!IsActive) return;
         Debug.Show();
     }
-
     public override void InitCanvas()
     {
         _canvas.AddChild(Map, Vector.zero);

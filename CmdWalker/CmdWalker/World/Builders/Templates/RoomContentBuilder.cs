@@ -8,8 +8,8 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
         Content.CarcassGenerator = new BSPCarcasGenerator(_config);
     }
 
-    public override void AddEntities()
-    {
+    public override void AddEntities()                      
+    {   
         int count = 0;
         Content.GameEntities = new List<GameEntity>();
         foreach (var (entityType, value) in _config.EntityPreferences)
@@ -68,20 +68,24 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
         {
             for (int i = 0; i < value; i++)
             {
-
-                if (unitType == typeof(Skeleton))
-                {
-                    Content.GameEntities.Add(
-                        CreatorRegistry.GetCreator<SkeletonCreator>(unitType).
-                            Create(GetPosition(RenderPalette.GetSize(TileType.Skeleton))));
-                }
+                if (unitType != typeof(Skeleton)) continue;
+                
+                Content.GameEntities.Add(
+                    CreatorRegistry.GetCreator<SkeletonCreator>(unitType)
+                        .Create(GetPosition(RenderPalette.GetSize(TileType.Skeleton))));
             }
 
             count++;
         }
-        
+        /*
+        Content.GameEntities.Add(
+            CreatorRegistry.GetCreator<SkeletonCreator, Skeleton>()
+                .Create(GetPosition(RenderPalette.GetSize(TileType.Skeleton))));
+        Content.GameEntities.Add(
+            CreatorRegistry.GetCreator<SkeletonCreator, Skeleton>()
+                .Create(GetPosition(RenderPalette.GetSize(TileType.Skeleton))));*/
         var player = GameScene.Map.GetEntity<Player>().FirstOrDefault();
-        var playerPos = GetPosition(RenderPalette.GetSize(TileType.Player));
+        var playerPos = Content.GameEntities.First(e => e is Portal { IsEntrance: false }).Transform.Position;
         if (player != null)
         {
             player.Transform.Position = playerPos;
@@ -97,7 +101,8 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
 
     public override void SetConfig()
     {
-        _config.MaxRoomSize = 20;
+        _config.MaxRoomSize = new Vector(30,10);
+        _config.MinRoomSize = new Vector(10,7);
         _config.Size = new Vector(80, 30);
         _config.Configure();
     }

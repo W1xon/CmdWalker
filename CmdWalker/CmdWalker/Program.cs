@@ -5,7 +5,7 @@
         static void Main()
         {
             Console.CursorVisible = false;
-            Game.SetFPS(30);
+            Game.SetFPS(40);
             Game game = new Game();
             game.Start();
         }

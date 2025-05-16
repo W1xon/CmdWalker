@@ -9,7 +9,8 @@ internal enum LvlDifficult
 internal class LvlConfig
 {
     public Vector Size;
-    public int MaxRoomSize;
+    public Vector MaxRoomSize;
+    public Vector MinRoomSize;
     public int RoomCount;
     public LvlDifficult Difficult;
     public Dictionary<Type, int> UnitPreferences = new Dictionary<Type,  int>();
@@ -24,8 +25,8 @@ internal class LvlConfig
     public void Configure()
     {
         CreateEntities(UnitPreferences, 0.25f);
-        CreateEntities(ItemPreferences, 0.92f);
-        CreateEntities(EntityPreferences, 0.0001f);
+        CreateEntities(ItemPreferences, 0.7f);
+        CreateEntities(EntityPreferences, 0.00001f);
     }
     private void CreateEntities(Dictionary<Type, int> preferences, float seed)
     {

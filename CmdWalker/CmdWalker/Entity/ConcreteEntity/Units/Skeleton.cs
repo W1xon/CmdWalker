@@ -2,19 +2,18 @@
 {
     internal class Skeleton : Unit
     {
+        public PointMover PointMover { get; set; }
         private Vector _dir;
-        private Random _rand = new Random();
         private int _tickCounter = 0;
         private int _ticksBeforeMove = 10;
         private int _damage = 100;
-        private SearchPath _pathToTarget;
         public Skeleton(Vector position) : base(position)
         {
             _dir = Vector.down;
             _health = new Health(100);
             
             Visual = new Glyph(RenderPalette.GetString(TileType.Skeleton), ConsoleColor.DarkBlue);
-            _pathToTarget = new SearchPath(Visual.Size);
+            PointMover = new PointMover(this);
             Collider.Excludes.Add(typeof(Player));
         }
 
@@ -22,7 +21,11 @@
         {
 
             _tickCounter++;
-            if (_tickCounter < _ticksBeforeMove) return;
+            if (_tickCounter < _ticksBeforeMove)
+            {
+                _map.SetCells(Transform.Position, Visual);
+                return;
+            }
             Move(_dir);
             _tickCounter = 0;
         }
@@ -51,12 +54,10 @@
             ClearPreviousPosition();
             _map.DeleteEntity(this);
         }
+
         private void CalculateDirection()
         {
-            var player = _map.GetEntity<Player>().First();
-            var goal = player != null ? player.Transform.Position : Vector.zero;
-            int maxIteration = (int)(_map.Size.X * _map.Size.Y * 0.25f);
-            _dir = _pathToTarget.GetNextPosition(_map.Plane, Transform.Position, goal, maxIteration) - Transform.Position;
+            _dir = PointMover.GetDirection(_map);
         }
         private bool TryAttack(Vector position)
         {

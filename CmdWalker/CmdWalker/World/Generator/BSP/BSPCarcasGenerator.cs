@@ -4,7 +4,7 @@ internal class BSPCarcasGenerator : CarcassGenerator
 {
     private List<Leaf> leafs = new List<Leaf>();
     private Leaf root;
-    private int _maxLeafSize;
+    private Vector _maxLeafSize;
 
     public BSPCarcasGenerator(LvlConfig config) : base(config){}
     public override char[,] Generate()
@@ -16,7 +16,7 @@ internal class BSPCarcasGenerator : CarcassGenerator
     }
     private void GenerateRoom()
     {
-        root = new Leaf(new Transform(Vector.zero,  new Vector(_width, _height)));
+        root = new Leaf(Vector.zero,  new Vector(_width, _height), _config.MinRoomSize );
         leafs.Add(root); 
         bool didSplit = true;
         while (didSplit)
@@ -27,7 +27,7 @@ internal class BSPCarcasGenerator : CarcassGenerator
                 Leaf l = leafs[i];
                 if (l.leftChild == null && l.rightChild == null)
                 {
-                    if (l.Transform.Position.X > _maxLeafSize * 2 || l.Transform.Position.Y > _maxLeafSize || _rand.NextDouble() > 0.25)
+                    if (l.Width > _maxLeafSize.X || l.Height > _maxLeafSize.Y || _rand.NextDouble() > 0.25)
                     {
                         if (l.Split())
                         {

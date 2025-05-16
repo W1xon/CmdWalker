@@ -15,7 +15,7 @@
     {
         private static readonly Dictionary<TileType, string> _glyphs = new()
         {
-            { TileType.Floor, "·" },       
+            { TileType.Floor, " " },       
             { TileType.Wall, "█" },        
             { TileType.Skeleton, "[x_x]" },
             { TileType.Player, ";)" },

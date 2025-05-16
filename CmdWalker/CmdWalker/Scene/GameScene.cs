@@ -6,7 +6,7 @@ internal abstract class GameScene : IScene
     public abstract bool IsActive { get; set; }
 
     public virtual void Enter()
-    {
+    {   
         IsActive = true;
         Console.Clear();
     }
