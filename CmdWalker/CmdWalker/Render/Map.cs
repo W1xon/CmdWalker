@@ -7,22 +7,21 @@
         public List<GameEntity> Entities { get => new List<GameEntity>(_entites); }
         public Vector Size { get; set; }
         private List<GameEntity> _entites = new List<GameEntity>();
+        private MapVisualizer _effectRendering;
         public void InitializePlane()
         {
             Size = Carcas.Size;
             Carcas.CopyTo(Plane);
+            _effectRendering = new MapVisualizer(this);
         }
         public void Show()
         {
-            for (int y = 0; y < Size.Y; y++)
-            {
-                for (int x = 0; x < Size.X; x++)
-                {
-                    Vector pos = new Vector(x, y);
-                    Draw(pos, GetCell(pos).ToString(), this );
-                }
-                Console.WriteLine();
-            }
+            _effectRendering.RenderEntireMap();
+        }
+
+        public void Show(Vector pos)
+        {
+            _effectRendering.AnimateReachableArea(pos);
         }
         public void SpawnEntity(GameEntity entity)
         {

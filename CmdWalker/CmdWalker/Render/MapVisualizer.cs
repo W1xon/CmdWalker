@@ -1,23 +1,41 @@
 ﻿namespace CmdWalker;
 
-internal class ReachableZoneScanner
+internal class MapVisualizer
 {
-    public static List<Vector> GetReachableCells(TileMap map, Vector start, int radius = 0)
+    private Map _map;
+    public MapVisualizer(Map map)
+    {
+        _map = map;
+    }
+
+    public void RenderEntireMap()
+    {
+        for (int y = 0; y < _map.Size.Y; y++)
+        {
+            for (int x = 0; x < _map.Size.X; x++)
+            {
+                Vector pos = new Vector(x, y);
+                _map.Draw(pos, _map.GetCell(pos).ToString(), _map );
+            }
+            Console.WriteLine();
+        }
+    }
+
+    public void AnimateReachableArea(Vector center)
     {
         var reachableCells = new List<Vector>();
         var frontier = new Queue<Vector>();
         var visited = new HashSet<Vector>();
 
-        frontier.Enqueue(start);
-        visited.Add(start);
+        frontier.Enqueue(center);
+        visited.Add(center);
 
         while (frontier.Count > 0)
         {
             var current = frontier.Dequeue();
-            if (radius != 0 && Vector.Distance(start, current) > radius)
-                break;
-            var neighbors = GetNeighbors(map, current);
-        
+            var neighbors = GetNeighbors(_map.Plane, current);
+            Thread.Sleep(TimeSpan.FromTicks(100));
+            _map.Draw(current, _map.GetCell(current).ToString(), _map);
             foreach (var neighbor in neighbors)
             {
                 if (visited.Contains(neighbor))
@@ -29,10 +47,7 @@ internal class ReachableZoneScanner
                 reachableCells.Add(neighbor);
             }
         }
-
-        return reachableCells;
     }
-    
     private static List<Vector> GetNeighbors(TileMap map, Vector pos)
     {
         var neighbors = new List<Vector>();
@@ -46,8 +61,7 @@ internal class ReachableZoneScanner
             int newY = pos.Y + dy[i];
             Vector newPos = new Vector(newX, newY);
             if (newX >= 0 && newX < map.Size.X &&
-                newY >= 0 && newY < map.Size.Y &&
-                map.GetCell(newPos) != RenderPalette.GetChar(TileType.Wall))
+                newY >= 0 && newY < map.Size.Y)
             {
                 neighbors.Add(newPos);
             }

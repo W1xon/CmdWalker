@@ -24,7 +24,6 @@ internal static class Timing
         }
         _stopwatch.Restart();
     }
-
     public static void Stop(GameEntity entity)
     {
         _stopwatch.Stop();

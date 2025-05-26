@@ -18,7 +18,7 @@ internal class RoomGameScene : GameScene
         Map = mapGenerator.Generate(new RoomContentBuilder(lvlConfig));
         
         InitCanvas();
-        Map.Show();
+        Map.Show(Map.GetEntity<Player>().First().Transform.Position);
     }
 
     public override void Update()
