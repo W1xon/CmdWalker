@@ -2,7 +2,7 @@
 
 internal interface IVisual
 {
-    char[,] Representation { get; }
+    char[,] Representation { get; set; }
     ConsoleColor Color { get; }
     Vector Size { get; }
     string LeftAdditive { get; set; }

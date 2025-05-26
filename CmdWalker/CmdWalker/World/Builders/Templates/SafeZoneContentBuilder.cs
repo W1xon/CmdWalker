@@ -26,12 +26,13 @@ internal class SafeZoneContentBuilder(LvlConfig config) : ContentBuilder(config)
         Content.Units = new List<Unit>()
         {
             (Player)CreatorRegistry.GetCreator<PlayerCreator, Player>().Create(new Vector(15,7)),
+            (Cat)CreatorRegistry.GetCreator<CatCreator, Cat>().Create(Vector.one)
         };
     }
 
     public override void SetConfig()
     {
-        _config.Size = new Vector(40, 15);
+        _config.Size = new Vector(40, 20);
         _config.Configure();
     }
 }

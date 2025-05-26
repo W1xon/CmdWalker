@@ -61,6 +61,12 @@ internal class Inventory
         _stacks.Remove(GetStack(collectable));
         Debug.InventoryInfo = Summary();
     }
+
+    public void DropAll()
+    {
+        _stacks.Clear();
+        Debug.InventoryInfo = Summary();
+    }
     public void Drop(ICollectable collectable)
     {
         if (Contains(collectable))

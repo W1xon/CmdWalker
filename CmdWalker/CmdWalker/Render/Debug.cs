@@ -7,7 +7,8 @@
         public static string Info = ""; 
         private static int _killCount;
         private static int  _oldInventoryY = 0;
-        private static char[,] _oldInventoryView;  
+        private static char[,] _oldInventoryView;
+        private static IScene _currentScene;
         public Debug()
         {
             Instance = this;
@@ -20,15 +21,24 @@
             
             Instance.Draw(new Vector( Instance.Position.X , Instance.Position.Y + 3), $"Инфа дебага: {Info}", Instance, ConsoleColor.DarkRed);
 
-            
-            if(InventoryInfo.Item1 != null && _oldInventoryView != InventoryInfo.Item1)
+            if(InventoryInfo.Item1 != null &&
+               (_currentScene != SceneManager.ActiveScene ||
+                _oldInventoryView != InventoryInfo.Item1))
             {
                     _oldInventoryView = InventoryInfo.Item1;
                     Instance.ClearInventory();
                     Instance.ShowInventory();
                 
             }
-
+            if(InventoryInfo.Item1 == null && _currentScene != SceneManager.ActiveScene )
+            {
+                _oldInventoryView = null;
+                Instance.ClearInventory();
+            }
+                
+            
+            if(_currentScene != SceneManager.ActiveScene)
+                _currentScene = SceneManager.ActiveScene;
             Console.ForegroundColor = ConsoleColor.White;
         }
         

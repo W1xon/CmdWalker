@@ -8,7 +8,11 @@ internal class Glyph : IVisual
     private string _rightAdditive;
     private char[,] _representation;
 
-    public char[,] Representation => _representation;
+    public char[,] Representation
+    {
+        get => _representation;
+        set => _representation = value;
+    }
 
     public ConsoleColor Color => _color;
 

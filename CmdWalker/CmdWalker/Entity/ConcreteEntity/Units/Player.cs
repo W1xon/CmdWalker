@@ -89,6 +89,7 @@
         {
             ClearPreviousPosition();
             _map.DeleteEntity(this);
+            Inventory.DropAll();
             Debug.Info = "Игрока грохнули";
             SceneManager.SwitchTo(new DeathMenu(new Vector(90,30)));
         }

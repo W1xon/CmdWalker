@@ -6,6 +6,7 @@ internal class Sprite : IVisual
     public char[,] Representation
     {
         get => _sprite;
+        set => _sprite = value;
     }
 
     public ConsoleColor Color => _color;
@@ -18,7 +19,7 @@ internal class Sprite : IVisual
     public string LeftAdditive { get; set; }
     public string RightAdditive { get; set; }
 
-    private readonly char[,] _sprite;
+    private char[,] _sprite;
     private readonly ConsoleColor _color;
 
     public Sprite(char[,] sprite, ConsoleColor color)
