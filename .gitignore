@@ -1,0 +1,102 @@
+# =========================
+# ОСНОВНОЕ
+# =========================
+bin/
+obj/
+[Bb]uild/
+[Ll]ogs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.vs/
+.vscode/
+.idea/
+
+# =========================
+# Rider / ReSharper
+# =========================
+.idea/
+*.sln.iml
+*.DotSettings.user
+.ReSharper*/
+
+# =========================
+# Visual Studio
+# =========================
+*.dbmdl
+*.bak
+*.backup
+*.log
+*.pdb
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+
+# =========================
+# Кэш / временные файлы
+# =========================
+*.cache
+*.config.old
+*.temp
+*.tmp
+*.log
+*.tlog
+*.obj
+*.dll
+*.exe
+*.ilk
+*.idb
+*.lib
+*.sbr
+
+# =========================
+# Пакеты / зависимости
+# =========================
+packages/
+*.nupkg
+*.nuspec
+*.snupkg
+
+# =========================
+# Публикация / артефакты
+# =========================
+publish/
+out/
+artifacts/
+TestResults/
+*.coverage
+*.coveragexml
+*.testsettings
+
+# =========================
+# Система / IDE / ОС
+# =========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# =========================
+# Rider-specific Cache
+# =========================
+.idea/.idea.*
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# =========================
+# Dotnet tools
+# =========================
+*.dotCover
+project.lock.json
+*.dotsettings.user
+
+# =========================
+# Пользовательские
+# =========================
+*.local.json
+*.secrets.json
+.env
+.env.*
