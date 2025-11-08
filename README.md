@@ -62,12 +62,12 @@ by building something that shouldn’t work this well in a console.
   <br><br>
 
   <img src="Assets/Screenshot_2.png" width="85%" alt="CmdWalker Player Base"><br>
-  <sub>🐈 Player’s base — home, cat, and existential dread.</sub>
+  <sub>🌍 Procedurally generated world — where every symbol can kill you.</sub>
 
   <br><br>
 
   <img src="Assets/Screenshot_3.png" width="85%" alt="CmdWalker Generated World"><br>
-  <sub>🌍 Procedurally generated world — where every symbol can kill you.</sub>
+  <sub>🐈 Player’s base — home, cat, and existential dread.</sub>
 
 </div>
 
