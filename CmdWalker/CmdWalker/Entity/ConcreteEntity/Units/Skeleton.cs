@@ -52,7 +52,7 @@
         {
             Debug.AddKill();
             ClearPreviousPosition();
-            _map.DeleteEntity(this);
+            _map.EntityManager.DeleteEntity(this);
         }
 
         private void CalculateDirection()
@@ -61,7 +61,7 @@
         }
         private bool TryAttack(Vector position)
         {
-            foreach (var entity in _map.Entities.Where(e => e.GetType() == typeof(Player) ))
+            foreach (var entity in _map.EntityManager.Entities.Where(e => e.GetType() == typeof(Player) ))
             {
                 if (entity.IsIntersection(Collider) && entity is IDamageable damageable && damageable != this)
                 {

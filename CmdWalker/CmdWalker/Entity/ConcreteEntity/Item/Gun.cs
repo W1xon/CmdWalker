@@ -4,6 +4,7 @@ internal class Gun : Weapon
 {
     private Dictionary<int, Type> _collectableCreators;
     private ProjectileCreator _creator;
+    private Player _player;
     public Gun(Vector position, GameEntity parent, ItemState state) : base(position, parent, state)
     {
         _collectableCreators = new Dictionary<int, Type>()
@@ -33,25 +34,23 @@ internal class Gun : Weapon
     private void UpdateOnMap()
     { 
         _map.SetCells(Transform.Position, Visual);
-        foreach (var entity in _map.Entities)
+        if(_player == null)
+            _player = _map.EntityManager.GetEntity<Player>().First();
+        if (_player.IsSelf(Transform.Position))
         {
-            if (entity.IsSelf(Transform.Position) && entity != this)
-            {
-                if (entity is not Player player) continue;
-                _parent = player;
-                player.Inventory.PickUp(this);
-                _map.DeleteEntity(this);
-                _state = ItemState.InInventory;
-            }
+            _parent = _player;
+            _player.Inventory.PickUp(this);
+            _map.EntityManager.DeleteEntity(this);
+            _state = ItemState.InInventory;
         }
     }
     public override void Fire(Vector dir, Inventory inventory)
     {
         _creator = GetCreator(inventory);
         if (_creator == null) return;
-        _creator.Set(_parent, dir);
+        _creator.Set(this, dir);
         var projectile = _creator.CreateActive();
-        GameScene.Map.SpawnEntity(projectile);
+        GameScene.Map.EntityManager.SpawnEntity(projectile);
         inventory.Drop((ICollectable)projectile);
     }
 

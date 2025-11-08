@@ -2,20 +2,14 @@
 
 internal class SafeZoneScene : GameScene
 {
-    public override bool IsActive { get; set; }
-    private Canvas _canvas = new Canvas();
-    private Debug _debug = new Debug();
-    public override void Enter()
+    public override void Enter(LvlDifficult lvlDifficult)
     {
         base.Enter();
         IsActive = true;
-        MapBuilder mapBuilder = new MapBuilder();
-        MapGenerator mapGenerator = new MapGenerator(mapBuilder);
-        LvlConfig lvlConfig = new LvlConfig(LvlDifficult.Easy);
-        Map = mapGenerator.Generate(new SafeZoneContentBuilder(lvlConfig));
-        
+        LvlConfig lvlConfig = new LvlConfig(lvlDifficult);
+        Map = _mapGenerator.Generate(new SafeZoneContentBuilder(lvlConfig));
         InitCanvas();
-        Map.Show();
+        MapVisualizer.RenderEntireMap(Map);
     }
     public override void Update()
     {

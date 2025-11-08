@@ -1,13 +1,13 @@
-﻿namespace CmdWalker
+﻿namespace CmdWalker;
+
+internal class Program
 {
-    internal class Program
+    static void Main()
     {
-        static void Main()
-        {
-            Console.CursorVisible = false;
-            Game.SetFPS(40);
-            Game game = new Game();
-            game.Start();
-        }
+        Console.CursorVisible = false;
+        Game.SetFPS(30);
+        Game game = new Game();
+        game.Start();
     }
 }
+

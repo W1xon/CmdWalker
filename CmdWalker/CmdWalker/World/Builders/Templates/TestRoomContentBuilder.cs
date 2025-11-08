@@ -16,13 +16,10 @@ internal class TestRoomContentBuilder(LvlConfig config) : ContentBuilder(config)
     {
         Content.Items = new List<GameEntity>();
         
-        Content.Items.Add(CreatorRegistry.GetCreator<BounceBulletCreator,BounceBullet>().CreateOnMap(new Vector(30,7)));
-        Content.Items.Add(CreatorRegistry.GetCreator<BounceBulletCreator,BounceBullet>().CreateOnMap(new Vector(30,8)));
-        Content.Items.Add(CreatorRegistry.GetCreator<BounceBulletCreator,BounceBullet>().CreateOnMap(new Vector(30,6)));
-        Content.Items.Add(CreatorRegistry.GetCreator<BounceBulletCreator,BounceBullet>().CreateOnMap(new Vector(30,9)));
-        Content.Items.Add(CreatorRegistry.GetCreator<BounceBulletCreator,BounceBullet>().CreateOnMap(new Vector(30,5)));
+        Content.Items.Add(CreatorRegistry.GetCreator<BulletCreator,Bullet>().CreateOnMap(new Vector(30,7)));
+        Content.Items.Add(CreatorRegistry.GetCreator<BulletCreator,Bullet>().CreateOnMap(new Vector(30,8)));
+        Content.Items.Add(CreatorRegistry.GetCreator<BulletCreator,Bullet>().CreateOnMap(new Vector(30,6)));
         
-        Content.Items.Add(CreatorRegistry.GetCreator<GunCreator, GunCreator>().CreateOnMap(new Vector(20,7)));
     }
 
     public override void AddUnits()
@@ -36,7 +33,7 @@ internal class TestRoomContentBuilder(LvlConfig config) : ContentBuilder(config)
 
     public override void SetConfig()
     {
-        _config.Size = new Vector(90, 15);
+        _config.Size = new Vector(90, 30);
         _config.Configure();
     }
 }

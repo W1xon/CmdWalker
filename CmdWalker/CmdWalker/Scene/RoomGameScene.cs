@@ -2,23 +2,15 @@
 
 internal class RoomGameScene : GameScene
 {
-    
-    private Canvas _canvas = new Canvas();
-    private Debug _debug = new Debug();
-
-    public override bool IsActive { get; set; }
-
-    public override void Enter()
+    public override void Enter(LvlDifficult lvlDifficult)
     {   
         base.Enter();
         IsActive = true;
-        MapBuilder mapBuilder = new MapBuilder();
-        MapGenerator mapGenerator = new MapGenerator(mapBuilder);
-        LvlConfig lvlConfig = new LvlConfig(LvlDifficult.Easy);
-        Map = mapGenerator.Generate(new RoomContentBuilder(lvlConfig));
+        LvlConfig lvlConfig = new LvlConfig(lvlDifficult);
+        Map = _mapGenerator.Generate(new RoomContentBuilder(lvlConfig));
         
         InitCanvas();
-        Map.Show(Map.GetEntity<Player>().First().Transform.Position);
+        MapVisualizer.AnimateReachableArea(Map, Map.EntityManager.GetEntity<Player>().First().Transform.Position); 
     }
 
     public override void Update()

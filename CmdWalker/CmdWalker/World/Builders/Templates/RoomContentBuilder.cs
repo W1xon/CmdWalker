@@ -57,6 +57,8 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
             }
             count++;
         }
+        Content.GameEntities.Add(CreatorRegistry.GetCreator<GrenadeCreator, Grenade>().
+            CreateOnMap(GetPosition(Vector.one)));
     }
 
     public override void AddUnits()
@@ -84,7 +86,7 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
         Content.GameEntities.Add(
             CreatorRegistry.GetCreator<SkeletonCreator, Skeleton>()
                 .Create(GetPosition(RenderPalette.GetSize(TileType.Skeleton))));*/
-        var player = GameScene.Map.GetEntity<Player>().FirstOrDefault();
+        var player = GameScene.Map.EntityManager.GetEntity<Player>().FirstOrDefault();
         var playerPos = Content.GameEntities.First(e => e is Portal { IsEntrance: false }).Transform.Position;
         if (player != null)
         {
@@ -101,8 +103,8 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
 
     public override void SetConfig()
     {
-        _config.MaxRoomSize = new Vector(30,10);
-        _config.MinRoomSize = new Vector(10,7);
+        _config.MaxRoomSize = new Vector(50,20);
+        _config.MinRoomSize = new Vector(20,10);
         _config.Size = new Vector(80, 30);
         _config.Configure();
     }

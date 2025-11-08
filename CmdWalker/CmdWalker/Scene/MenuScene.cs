@@ -3,7 +3,7 @@
 internal class MenuScene : IScene
 {
     public bool IsActive { get; set; }
-    private readonly char[][] _buffer;
+    private static char[][] _buffer;
     private readonly Vector _dimensions;
     private readonly string[] _buttons = { "Start Game", "Exit" };
     private int _selectedIndex;
@@ -37,7 +37,8 @@ internal class MenuScene : IScene
     {
         for (int y = 0; y < _dimensions.Y; y++)
         {
-            _buffer[y] = new char[_dimensions.X];
+            if(_buffer[y] == null || _buffer[0].Length != _dimensions.X)
+                _buffer[y] = new char[_dimensions.X];
             for (int x = 0; x < _dimensions.X; x++)
                 _buffer[y][x] = ' ';
         }
@@ -184,7 +185,7 @@ internal class MenuScene : IScene
     private void ActivateSelected()
     {
         if (_selectedIndex == 0)
-            SceneManager.SwitchTo(new SafeZoneScene());
+            SceneManager.SwitchTo(new SafeZoneScene(), LvlDifficult.Easy);
         else
             Environment.Exit(0);
     }

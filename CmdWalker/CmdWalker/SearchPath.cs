@@ -6,8 +6,16 @@
         private readonly Dictionary<Vector, Vector> _cameFrom = new();
         private readonly Dictionary<Vector, int> _gScores = new();
         private readonly PriorityQueue<Vector, int> _frontier = new();
-
         private readonly List<Vector> _path = new();
+        
+        private static readonly Vector[] _directions = new[]
+        {
+            Vector.up,
+            Vector.down,
+            Vector.left,
+            Vector.right
+        };
+
 
         public SearchPath(Vector size)
         {
@@ -16,21 +24,24 @@
 
         public Vector GetNextPosition(TileMap tile, Vector start, Vector goal, int maxIteration)
         {
-            var path = GetPath(tile, start, goal, maxIteration );
-            if (path == null || path.Count == 0) return Vector.zero;
-            return path.First();
+            if (!_path.Contains(start) && !_path.Contains(goal))
+                BuildPath(tile, start, goal, maxIteration);
+            if (_path == null || _path.Count == 0) return Vector.zero;
+            return _path[0];
         }
-        private List<Vector> GetPath(TileMap tile, Vector start, Vector goal, int maxIteration)
+
+        private void BuildPath(TileMap tile, Vector start, Vector goal, int maxIteration)
         {
             _cameFrom.Clear();
             _gScores.Clear();
             _frontier.Clear();
             _path.Clear();
-    
+            
             _frontier.Enqueue(start, 0);
             _cameFrom[start] = default;
             _gScores[start] = 0;
             int iteration = 0;
+
             while (_frontier.Count > 0)
             {
                 var current = _frontier.Dequeue();
@@ -43,18 +54,21 @@
                 foreach (var neighbor in GetNeighbours(tile, current))
                 {
                     if (IsBlocked(tile.Tiles, neighbor)) continue;
-                    var newGScore = _gScores[current] + GetCost();
+                    var newGScore = _gScores[current] + 1; 
 
-                    if (newGScore < _gScores.GetValueOrDefault(neighbor, int.MaxValue))
+                    if (!_gScores.TryGetValue(neighbor, out var existingScore) || newGScore < existingScore)
                     {
                         _gScores[neighbor] = newGScore;
                         int priority = newGScore + Heuristic(neighbor, goal);
                         _frontier.Enqueue(neighbor, priority);
                         _cameFrom[neighbor] = current;
                     }
-
                     iteration++;
-                    if (iteration > maxIteration) return null;
+                    if (iteration > maxIteration)
+                    {
+                        _path.Clear();
+                        return;
+                    }
                 }
             }
 
@@ -62,33 +76,33 @@
             while (pos != start)
             {
                 _path.Add(pos);
-                if (!_cameFrom.TryGetValue(pos, out var prev)) return null;
+                if (!_cameFrom.TryGetValue(pos, out var prev))
+                {
+                    _path.Clear();
+                    return;
+                }
                 pos = prev;
             }
             _path.Reverse();
-            return _path;
         }
+
         private List<Vector> GetNeighbours(TileMap tile, Vector position)
         {
-            var directions = new Vector[] { Vector.up, Vector.down, Vector.left, Vector.right };
-            var neighbors = new List<Vector>();
-            foreach (var direction in directions)
+            var neighbors = new List<Vector>(4); 
+            foreach (var direction in _directions)
             {
-                Vector target = position + direction;
-                if (target.Y < 0 || target.X < 0 || target.X > tile.Size.X || target.Y > tile.Size.Y) continue;
-                if (tile.GetCell(target) == RenderPalette.GetChar(TileType.Wall)) continue;
-                neighbors.Add(target);
+                int newX = position.X + direction.X;
+                int newY = position.Y + direction.Y;
+                
+                if (newY < 0 || newX < 0 || newX > tile.Size.X || newY > tile.Size.Y) continue;
+                if (tile.GetCell(new Vector(newX, newY)) == RenderPalette.GetChar(TileType.Wall)) continue;
+                
+                neighbors.Add(new Vector(newX, newY));
             }
             return neighbors;
         }
 
-        private int GetCost()
-        {
-            return 1;
-        }
-
         private int Heuristic(Vector a, Vector b) => Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
-
 
         private bool IsBlocked(char[,] field, Vector pos)
         {
@@ -118,8 +132,8 @@
                 {
                     int newX = pos.X + x;
                     int newY = pos.Y + y;
-                    var target = new Vector(newX, newY);
-                    if (target == goal)
+                    
+                    if (newX == goal.X && newY == goal.Y)
                     {
                         return true;
                     }

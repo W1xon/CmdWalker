@@ -19,6 +19,6 @@ internal class GunCreator : WeaponCreator
 
     public override void Set(GameEntity parent, Vector direction)
     {
-        throw new NotImplementedException();
+        
     }
 }

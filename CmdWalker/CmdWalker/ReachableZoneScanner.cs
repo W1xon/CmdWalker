@@ -2,29 +2,32 @@
 
 internal class ReachableZoneScanner
 {
+    
+    private static Queue<Vector> _frontier = new Queue<Vector>();
+    private static HashSet<Vector> _visited = new HashSet<Vector>();
     public static List<Vector> GetReachableCells(TileMap map, Vector start, int radius = 0)
     {
-        var reachableCells = new List<Vector>();
-        var frontier = new Queue<Vector>();
-        var visited = new HashSet<Vector>();
+        List<Vector> reachableCells = new List<Vector>();
+        _frontier.Clear();
+        _visited.Clear();
+        _frontier.Clear();
+        _frontier.Enqueue(start);
+        _visited.Add(start);
 
-        frontier.Enqueue(start);
-        visited.Add(start);
-
-        while (frontier.Count > 0)
+        while (_frontier.Count > 0)
         {
-            var current = frontier.Dequeue();
+            var current = _frontier.Dequeue();
             if (radius != 0 && Vector.Distance(start, current) > radius)
                 break;
             var neighbors = GetNeighbors(map, current);
         
             foreach (var neighbor in neighbors)
             {
-                if (visited.Contains(neighbor))
+                if (_visited.Contains(neighbor))
                     continue;
 
-                frontier.Enqueue(neighbor);
-                visited.Add(neighbor);
+                _frontier.Enqueue(neighbor);
+                _visited.Add(neighbor);
 
                 reachableCells.Add(neighbor);
             }

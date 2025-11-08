@@ -26,7 +26,7 @@ internal class Inventory
 
     public bool TryEquip(int index, Func<ICollectable, bool> isCorrectly)
     {
-        if (_stacks.Count <= 0) return false;
+        if (_stacks.Count <= 0 || index >= _stacks.Count) return false;
         if (isCorrectly.Invoke(_stacks[index].Item))
         {
             Equip(index);
@@ -59,6 +59,7 @@ internal class Inventory
     public void DropAll(ICollectable collectable)
     {
         _stacks.Remove(GetStack(collectable));
+        
         Debug.InventoryInfo = Summary();
     }
 
@@ -74,7 +75,12 @@ internal class Inventory
             if (collectable.IsStackable())
                 GetStack(collectable).Count--;
             if (!collectable.IsStackable() || GetStack(collectable).Count <= 0)
+            {
                 _stacks.Remove(GetStack(collectable));
+                UnbindFromEntityGlyph();
+                if(collectable == ActiveItem)
+                    ActiveItem = null;
+            }
         }
         Debug.InventoryInfo = Summary();
     }
@@ -91,6 +97,12 @@ internal class Inventory
         {
             weapon.Fire(direction, this);
             BindToEntityGlyph(direction);
+        }
+        else if (ActiveItem is Projectile projectile) 
+        { 
+            projectile.Launch(direction);
+            BindToEntityGlyph(direction);
+            Drop(projectile);
         }
     }
 
@@ -123,6 +135,16 @@ internal class Inventory
         }
         _owner.Visual.RightAdditive = dir == Vector.right ? symbol : string.Empty;
         _owner.Visual.LeftAdditive  = dir == Vector.left  ? symbol : string.Empty;
+    }
+
+    private void UnbindFromEntityGlyph()
+    {
+        Unit unit = (Unit)_owner;
+        unit?.ClearPreviousPosition();
+        
+        unit.Visual.RightAdditive = string.Empty;
+        unit.Visual.LeftAdditive = string.Empty;
+           
     }
 
     private (char[,],  ConsoleColor[]) Summary()

@@ -5,6 +5,7 @@ internal abstract class Weapon : GameEntity, ICollectable
     protected ItemState _state;
     protected Vector _dir;
     protected GameEntity _parent;
+    
     public Weapon(Vector position, GameEntity parent,  ItemState state) : base(position)
     {
         _state = state;

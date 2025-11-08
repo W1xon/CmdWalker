@@ -24,9 +24,9 @@ internal class LvlConfig
 
     public void Configure()
     {
-        CreateEntities(UnitPreferences, 0.25f);
+        CreateEntities(UnitPreferences, 0.025f);
         CreateEntities(ItemPreferences, 0.7f);
-        CreateEntities(EntityPreferences, 0.00001f);
+        CreateEntities(EntityPreferences, 0.0001f);
     }
     private void CreateEntities(Dictionary<Type, int> preferences, float seed)
     {

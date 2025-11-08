@@ -7,6 +7,7 @@
         protected Vector _dir;
         protected int _damage;
         protected ItemState _state;
+        protected Player _player;
         public Projectile(Vector position, GameEntity parent, ItemState state, Vector dir ) : base(position)
         {
             _parent = parent;
@@ -22,6 +23,11 @@
         public abstract ItemState GetState();
         public abstract bool IsStackable();
         public abstract void Execute();
+
+        public virtual void Launch(Vector direction)
+        {
+        }
+
         public abstract void Move(Vector direction);
         public void ClearPreviousPosition(char defaultChar = '\0')
         {
@@ -36,7 +42,7 @@
         public void Destroy()
         {
             ClearPreviousPosition();
-            _map.DeleteEntity(this);
+            _map.EntityManager.DeleteEntity(this);
         }
         public virtual bool CanMoveDir(Vector dir)
         {
@@ -46,7 +52,7 @@
         protected bool TryKill()
         { 
             var target = new Vector((Transform.Position.X + _dir.X), (Transform.Position.Y + _dir.Y));
-            foreach (var entity in _map.Entities)
+            foreach (var entity in _map.EntityManager.Entities)
             {
                 if (!entity.IsSelf(target) || entity is not IDamageable damageable) continue;
                 if (damageable == _parent) continue;
@@ -59,16 +65,17 @@
             return false;
         }
         protected void UpdateOnMap()
-        { 
+        {
             _map.SetCells(Transform.Position, Visual);
-            foreach (var entity in _map.Entities.Where(e => e.GetType() == typeof(Player)))
+            if(_player == null)
+                _player = _map.EntityManager.GetEntity<Player>().First();
+            if (_player.IsSelf(Transform.Position))
             {
-                if (!entity.IsSelf(Transform.Position)) continue;
-                if (entity is not Player player) continue;
-                player.Inventory.PickUp(this);
-                _map.DeleteEntity(this);
+                _player.Inventory.PickUp(this);
+                _map.EntityManager.DeleteEntity(this);
                 _state = ItemState.InInventory;
             }
+            
         }
         protected  void UpdateActive() 
         {

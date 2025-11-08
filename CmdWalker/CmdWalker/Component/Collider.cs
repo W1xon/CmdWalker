@@ -8,6 +8,7 @@ internal class Collider
     private Map _map;
     private bool _isSprite;
     public List<Type> Excludes = new List<Type>();
+    
     public Collider(bool isTrigger = false)
     {
         IsTrigger = isTrigger;
@@ -54,7 +55,7 @@ internal class Collider
     public bool ContainsPoint(Vector pos)
     {
         Vector topLeft = Parent.Transform.Position;
-        Vector bottomRight = Parent.Transform.Position + _size;
+        Vector bottomRight = Parent.Transform.Position + _size - Vector.one;
         
         return pos.X >= topLeft.X && pos.X <= bottomRight.X &&
                   pos.Y >= topLeft.Y && pos.Y <= bottomRight.Y;
@@ -101,7 +102,7 @@ internal class Collider
     private bool IsOther(Vector pos)
     {
         if (_map.GetCell(pos) == RenderPalette.GetChar(TileType.Wall)) return true;
-        foreach (var entity in _map.Entities)
+        foreach (var entity in _map.EntityManager.Entities)
         {
             if (Excludes.Contains(entity.GetType())) return false;
             if (entity is ICollectable item && item.GetState() != ItemState.Active) continue;

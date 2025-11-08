@@ -11,7 +11,12 @@ internal static class SceneManager
         scene.Enter();
         _sceneStack.Push(scene);
     }
-
+    public static void Activate(GameScene scene, LvlDifficult lvlDifficult)
+    {
+        if (scene == null) throw new ArgumentNullException(nameof(scene));
+        scene.Enter(lvlDifficult);
+        _sceneStack.Push(scene);
+    }
     public static void Deactivate()
     {
         if (!_sceneStack.Any()) throw new InvalidOperationException("Нет сцен для деактивации.");
@@ -22,5 +27,11 @@ internal static class SceneManager
     {
         if (_sceneStack.Any()) Deactivate();
         Activate(scene);
+    }
+
+    public static void SwitchTo(GameScene scene, LvlDifficult lvlDifficult)
+    {
+        if (_sceneStack.Any()) Deactivate();
+        Activate(scene, lvlDifficult);
     }
 }

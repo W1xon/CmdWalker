@@ -19,7 +19,7 @@
             if (entities == null) return;
             foreach(var entity in entities)
             {
-                _map.SpawnEntity(entity);
+                _map.EntityManager.SpawnEntity(entity);
             }
         }
         public void AddItem(List<GameEntity> items)
@@ -27,7 +27,7 @@
             if (items == null) return;
             foreach(var item in items)
             {
-                _map.SpawnEntity(item);
+                _map.EntityManager.SpawnEntity(item);
             }
         }
         public void AddRoom(List<Room> rooms)
@@ -45,7 +45,7 @@
             if (units == null) return;
             foreach (var unit in units)
             {
-                _map.SpawnEntity(unit);
+                _map.EntityManager.SpawnEntity(unit);
             }
         }
 

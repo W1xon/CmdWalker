@@ -16,6 +16,25 @@
             Move(InputHandler.GetCurrentDirection());
         }
 
+        public override void Move(Vector direction)
+        {
+            ClearPreviousPosition();
+            if (CanMoveDir(direction)) Transform.Position += direction;
+            _map.SetCells(Transform.Position, Visual);
+        }
+        public override bool CanMoveDir(Vector dir)
+        {
+            return Collider.CanMoveTo(dir);
+        }
+        public override void Destroy()
+        {
+            ClearPreviousPosition();
+            _map.EntityManager.DeleteEntity(this);
+            Inventory.DropAll();
+            Debug.Info = "Игрока грохнули";
+            SceneManager.SwitchTo(new DeathMenu(new Vector(90,30)));
+        }
+        
         private void KeyHandler(ConsoleKey key)
         {
            switch (key)
@@ -74,24 +93,6 @@
                        collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
                    break;
            }
-        }
-        public override void Move(Vector direction)
-        {
-            ClearPreviousPosition();
-            if (CanMoveDir(direction)) Transform.Position += direction;
-            _map.SetCells(Transform.Position, Visual);
-        }
-        public override bool CanMoveDir(Vector dir)
-        {
-            return Collider.CanMoveTo(dir);
-        }
-        public override void Destroy()
-        {
-            ClearPreviousPosition();
-            _map.DeleteEntity(this);
-            Inventory.DropAll();
-            Debug.Info = "Игрока грохнули";
-            SceneManager.SwitchTo(new DeathMenu(new Vector(90,30)));
         }
     }
 }

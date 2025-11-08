@@ -41,14 +41,14 @@ internal class Portal : GameEntity
 
     private void CheckForCollisions()
     {
-        foreach (var entity in _map.Entities.Where(e => e.Layer < Layer))
+        foreach (var entity in _map.EntityManager.Entities.Where(e => e.Layer < Layer))
         {
             if (Collider.Intersects(entity.Collider))
             {
                 _map.SetCells(Transform.Position, Visual); 
                 if (IsEntrance && entity is Player)
                 {
-                    SceneManager.SwitchTo(new RoomGameScene());
+                    SceneManager.SwitchTo(new RoomGameScene(), LvlDifficult.Easy);
                     return; 
                 }
             }

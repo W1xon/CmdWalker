@@ -4,6 +4,7 @@
     {
         public int X { get; set; }
         public int Y { get; set; }
+        
         public static readonly Vector left = new Vector(-1, 0); 
         public static readonly Vector right = new Vector(1, 0);
         public static readonly Vector up = new Vector(0, 1);

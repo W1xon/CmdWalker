@@ -162,7 +162,7 @@ internal class DeathMenu : IScene
     private void ActivateSelected()
     {
         if (_selectedIndex == 0)
-            SceneManager.SwitchTo(new SafeZoneScene());
+            SceneManager.SwitchTo(new SafeZoneScene(), LvlDifficult.Easy);
         else
             SceneManager.SwitchTo(new MenuScene(_dimensions));
     }

@@ -2,7 +2,7 @@
 {
     internal class InputHandler
     {
-        private  static ConsoleKey _currentKey;
+        private static ConsoleKey _currentKey;
         public static Vector GetCurrentDirection()
         {
            switch (_currentKey)
@@ -13,11 +13,11 @@
                case ConsoleKey.D: return Vector.right;
            }
             return Vector.zero;
-        }
+        }   
         public static ConsoleKey GetKeyDown()
         {
             return _currentKey;
-        }
+        }   
         public static void UpdateInput()
         {
             _currentKey = Console.KeyAvailable ? Console.ReadKey(true).Key :
