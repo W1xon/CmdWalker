@@ -58,7 +58,7 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
             count++;
         }
         Content.GameEntities.Add(CreatorRegistry.GetCreator<GrenadeCreator, Grenade>().
-            CreateOnMap(GetPosition(Vector.one)));
+            CreateOnMap(GetPosition(Vector.One)));
     }
 
     public override void AddUnits()
@@ -111,7 +111,7 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
 
     private Vector GetPosition(Vector size)
     {
-        Vector position = Vector.zero;
+        Vector position = Vector.Zero;
         bool isOccupied = true;
         do
         {

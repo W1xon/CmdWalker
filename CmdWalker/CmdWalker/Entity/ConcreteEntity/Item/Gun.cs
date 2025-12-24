@@ -46,11 +46,12 @@ internal class Gun : Weapon
     }
     public override void Fire(Vector dir, Inventory inventory)
     {
+        
         _creator = GetCreator(inventory);
         if (_creator == null) return;
         _creator.Set(this, dir);
         var projectile = _creator.CreateActive();
-        GameScene.Map.EntityManager.SpawnEntity(projectile);
+        _map.EntityManager.SpawnEntity(projectile);
         inventory.Drop((ICollectable)projectile);
     }
 

@@ -20,7 +20,7 @@ internal class Inventory
             return;
         }
         ActiveItem = _stacks[index].Item;
-        BindToEntityGlyph(Vector.right);
+        BindToEntityGlyph(Vector.Right);
         Debug.InventoryInfo = Summary();
     }
 
@@ -95,6 +95,7 @@ internal class Inventory
     {
         if (ActiveItem is Weapon weapon)
         {
+            weapon.Transform.Position = _owner.Transform.Position + direction;
             weapon.Fire(direction, this);
             BindToEntityGlyph(direction);
         }
@@ -131,10 +132,15 @@ internal class Inventory
         {
             unit.Visual.RightAdditive = string.Empty;
             unit.Visual.LeftAdditive = string.Empty;
+            unit.Visual.UpAdditive = string.Empty;
+            unit.Visual.DownAdditive = string.Empty;
             return;
         }
-        _owner.Visual.RightAdditive = dir == Vector.right ? symbol : string.Empty;
-        _owner.Visual.LeftAdditive  = dir == Vector.left  ? symbol : string.Empty;
+        
+        _owner.Visual.UpAdditive = dir == Vector.Down ? symbol : string.Empty;
+        _owner.Visual.DownAdditive = dir == Vector.Up ? symbol : string.Empty;
+        _owner.Visual.RightAdditive = dir == Vector.Right ? symbol : string.Empty;
+        _owner.Visual.LeftAdditive = dir == Vector.Left ? symbol : string.Empty;
     }
 
     private void UnbindFromEntityGlyph()

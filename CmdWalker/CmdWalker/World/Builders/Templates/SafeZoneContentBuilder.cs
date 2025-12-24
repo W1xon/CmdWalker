@@ -26,7 +26,7 @@ internal class SafeZoneContentBuilder(LvlConfig config) : ContentBuilder(config)
         Content.Units = new List<Unit>()
         {
             (Player)CreatorRegistry.GetCreator<PlayerCreator, Player>().Create(new Vector(15,7)),
-            (Cat)CreatorRegistry.GetCreator<CatCreator, Cat>().Create(Vector.one)
+            (Cat)CreatorRegistry.GetCreator<CatCreator, Cat>().Create(Vector.One)
         };
     }
 

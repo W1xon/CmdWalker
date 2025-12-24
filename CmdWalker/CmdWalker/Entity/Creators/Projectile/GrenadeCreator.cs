@@ -10,7 +10,7 @@ internal class GrenadeCreator : ProjectileCreator
     }
     public override ICollectable Create( )
     {
-        return new Grenade(Vector.zero, ItemState.InInventory);
+        return new Grenade(Vector.Zero, ItemState.InInventory);
     }
     public override GameEntity CreateOnMap(Vector pos)
     {

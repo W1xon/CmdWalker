@@ -10,7 +10,7 @@ internal class ShrapnelCreator : ProjectileCreator
     }
     public override ICollectable Create( )
     {
-        return new Shrapnel(Vector.zero, ItemState.InInventory);
+        return new Shrapnel(Vector.Zero, ItemState.InInventory);
     }
     public override GameEntity CreateOnMap(Vector pos)
     {

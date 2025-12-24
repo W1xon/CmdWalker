@@ -49,7 +49,7 @@
             {
                 return new Vector(sprite.GetLength(1), sprite.GetLength(0));
             }
-            return Vector.one;
+            return Vector.One;
         }
         public static char[,] GetSprite(TileType tileType) => _sprites[tileType];
     }

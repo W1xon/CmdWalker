@@ -12,7 +12,7 @@ namespace CmdWalker
         }
         public override ICollectable Create( )
         {
-            return new Bullet(Vector.zero, ItemState.InInventory);
+            return new Bullet(Vector.Zero, ItemState.InInventory);
         }
         public override GameEntity CreateOnMap(Vector pos)
         {

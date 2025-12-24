@@ -8,7 +8,7 @@ internal class SafeZoneCarcassGenerator : CarcassGenerator
 
     public override char[,] Generate()
     {
-        AddShapeContour(new Rectangle(Vector.zero, _config.Size - Vector.one), RenderPalette.GetChar(TileType.Wall));
+        AddShapeContour(new Rectangle(Vector.Zero, _config.Size - Vector.One), RenderPalette.GetChar(TileType.Wall));
         return _field;
     }
 }

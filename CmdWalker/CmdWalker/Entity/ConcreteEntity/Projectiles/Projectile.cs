@@ -37,7 +37,7 @@
             {
                 backgroundCells[i] = defaultChar == 0 ?  _map.GetCell(positions[i], true) : defaultChar;
             }
-            _map.SetCells(Transform.Position, new string(backgroundCells));
+            _map.SetCells(positions, backgroundCells);
         }
         public void Destroy()
         {

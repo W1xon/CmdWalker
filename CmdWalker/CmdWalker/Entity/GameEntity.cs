@@ -26,7 +26,7 @@
         public virtual void Update() { }
         public GameEntity(Vector position)
         {
-            Transform = new Transform(position, Vector.one);
+            Transform = new Transform(position, Vector.One);
             Collider = new Collider();
             Collider.Parent = this;
             

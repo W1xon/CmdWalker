@@ -32,7 +32,7 @@ internal class TileMap
     }
     public Vector FindFreeAreaPosition(Vector areaSize)
     {
-        Vector position = Vector.zero;
+        Vector position = Vector.Zero;
         while (true)
         {
             Vector randV = Vector.GetRandom().Abs();
@@ -44,7 +44,7 @@ internal class TileMap
     }
     public Vector FindFreeAreaPositionInZone(Vector areaSize, Vector center, Vector zoneSize)
     {
-        Vector position = Vector.zero;
+        Vector position = Vector.Zero;
         while (true)
         {
             Vector randV = Vector.GetRandom().Abs();

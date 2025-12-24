@@ -7,5 +7,7 @@ internal interface IVisual
     Vector Size { get; }
     string LeftAdditive { get; set; }
     string RightAdditive { get; set; }
+    string UpAdditive { get; set; }
+    string DownAdditive { get; set; }
     
 }

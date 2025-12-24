@@ -24,10 +24,10 @@ internal class PointMover
             var player = map.EntityManager.GetEntity<Player>().First();
             
             if(player == null) 
-                return Vector.zero;
+                return Vector.Zero;
             if (Vector.Distance(player.Transform.Position, _parent.Transform.Position) < 20)
             {
-                _target = _pathFinder.GetNextPosition(map.Plane, _parent.Transform.Position, player.Transform.Position, _maxIteration) != Vector.zero 
+                _target = _pathFinder.GetNextPosition(map.Plane, _parent.Transform.Position, player.Transform.Position, _maxIteration) != Vector.Zero 
                     ? player.Transform.Position : _waypoints.GetRandomValue();
             }
             else

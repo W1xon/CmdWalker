@@ -4,7 +4,7 @@ internal class GunCreator : WeaponCreator
 {
     public override ICollectable Create( )
     {
-        return new Gun(Vector.zero, _parent, ItemState.InInventory);
+        return new Gun(Vector.Zero, _parent, ItemState.InInventory);
     }
 
     public override GameEntity CreateOnMap(Vector position)
@@ -14,7 +14,7 @@ internal class GunCreator : WeaponCreator
 
     public override GameEntity CreateActive()
     {
-        return new Gun(Vector.zero, _parent, ItemState.Active);
+        return new Gun(Vector.Zero, _parent, ItemState.Active);
     }
 
     public override void Set(GameEntity parent, Vector direction)

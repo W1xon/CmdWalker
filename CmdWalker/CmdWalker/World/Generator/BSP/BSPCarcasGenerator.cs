@@ -16,7 +16,7 @@ internal class BSPCarcasGenerator : CarcassGenerator
     }
     private void GenerateRoom()
     {
-        root = new Leaf(Vector.zero,  new Vector(_width, _height), _config.MinRoomSize );
+        root = new Leaf(Vector.Zero,  new Vector(_width, _height), _config.MinRoomSize );
         leafs.Add(root); 
         bool didSplit = true;
         while (didSplit)

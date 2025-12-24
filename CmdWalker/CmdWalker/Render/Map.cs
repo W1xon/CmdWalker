@@ -24,9 +24,12 @@
         {
             _parent.Draw(position, symbol,  this, color);
         }
-        public void SetCells(Vector position, string symbols)
+        public void SetCells(Vector[] positions, char[] symbols)
         {
-            SetCell(position, symbols);
+            for(int i = 0; i < positions.Length; i++) 
+            {
+                SetCell(positions[i], symbols[i].ToString());
+            }
         }
         public void SetCells(Vector position, IVisual visual, bool isStandartColor = false)
         {
@@ -34,7 +37,7 @@
             for (int y = 0; y < visual.Representation.GetLength(0); y++)
             {
                 Vector newPos = position + new Vector(0, y);
-                SetCell(newPos, visual.Representation.GetRowAsString(y).ToString(), color);
+                SetCell(newPos, visual.Representation.GetRowAsString(y), color);
             }
         }
         public char GetCell(Vector pos, bool isCarcas = false)

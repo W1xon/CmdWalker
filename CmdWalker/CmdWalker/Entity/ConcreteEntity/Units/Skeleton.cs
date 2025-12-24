@@ -9,7 +9,7 @@
         private int _damage = 100;
         public Skeleton(Vector position) : base(position)
         {
-            _dir = Vector.down;
+            _dir = Vector.Down;
             _health = new Health(100);
             
             Visual = new Glyph(RenderPalette.GetString(TileType.Skeleton), ConsoleColor.DarkBlue);

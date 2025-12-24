@@ -19,7 +19,7 @@ internal class SafeZoneScene : GameScene
     }
     public override void InitCanvas()
     {
-        _canvas.AddChild(Map, Vector.zero);
+        _canvas.AddChild(Map, Vector.Zero);
         _canvas.AddChild(_debug, new Vector(Map.Size.X + 2, 0));
     }
 }

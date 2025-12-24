@@ -7,12 +7,12 @@
         {
            switch (_currentKey)
            {
-               case ConsoleKey.W: return Vector.down;
-               case ConsoleKey.S: return Vector.up;
-               case ConsoleKey.A: return Vector.left;
-               case ConsoleKey.D: return Vector.right;
+               case ConsoleKey.W: return Vector.Down;
+               case ConsoleKey.S: return Vector.Up;
+               case ConsoleKey.A: return Vector.Left;
+               case ConsoleKey.D: return Vector.Right;
            }
-            return Vector.zero;
+            return Vector.Zero;
         }   
         public static ConsoleKey GetKeyDown()
         {

@@ -55,7 +55,7 @@ internal class Collider
     public bool ContainsPoint(Vector pos)
     {
         Vector topLeft = Parent.Transform.Position;
-        Vector bottomRight = Parent.Transform.Position + _size - Vector.one;
+        Vector bottomRight = Parent.Transform.Position + _size - Vector.One;
         
         return pos.X >= topLeft.X && pos.X <= bottomRight.X &&
                   pos.Y >= topLeft.Y && pos.Y <= bottomRight.Y;
@@ -79,10 +79,10 @@ internal class Collider
     {
         return direction switch
         {
-            Vector v when v == Vector.down => Parent.Transform.Position + Vector.down,
-            Vector v when v == Vector.up => Parent.Transform.Position + Vector.up,
-            Vector v when v == Vector.left => new Vector(Parent.Transform.Position.X - 1, Parent.Transform.Position.Y),
-            Vector v when v == Vector.right => new Vector(Parent.Transform.Position.X + Parent.Visual.Representation.Length, Parent.Transform.Position.Y),
+            Vector v when v == Vector.Down => Parent.Transform.Position + Vector.Down,
+            Vector v when v == Vector.Up => Parent.Transform.Position + Vector.Up,
+            Vector v when v == Vector.Left => new Vector(Parent.Transform.Position.X - 1, Parent.Transform.Position.Y),
+            Vector v when v == Vector.Right => new Vector(Parent.Transform.Position.X + Parent.Visual.Representation.Length, Parent.Transform.Position.Y),
             _ => throw new ArgumentException("Invalid direction")
         };
     }

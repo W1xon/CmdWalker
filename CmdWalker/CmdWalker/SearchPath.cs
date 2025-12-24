@@ -10,10 +10,10 @@
         
         private static readonly Vector[] _directions = new[]
         {
-            Vector.up,
-            Vector.down,
-            Vector.left,
-            Vector.right
+            Vector.Up,
+            Vector.Down,
+            Vector.Left,
+            Vector.Right
         };
 
 
@@ -26,7 +26,7 @@
         {
             if (!_path.Contains(start) && !_path.Contains(goal))
                 BuildPath(tile, start, goal, maxIteration);
-            if (_path == null || _path.Count == 0) return Vector.zero;
+            if (_path == null || _path.Count == 0) return Vector.Zero;
             return _path[0];
         }
 

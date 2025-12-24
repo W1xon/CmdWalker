@@ -18,6 +18,8 @@ internal class Sprite : IVisual
 
     public string LeftAdditive { get; set; }
     public string RightAdditive { get; set; }
+    public string UpAdditive { get; set; }
+    public string DownAdditive { get; set; }
 
     private char[,] _sprite;
     private readonly ConsoleColor _color;
@@ -27,7 +29,5 @@ internal class Sprite : IVisual
         
         _sprite = sprite;
         _color = color;
-        LeftAdditive = string.Empty;
-        RightAdditive = string.Empty;
     }
 }

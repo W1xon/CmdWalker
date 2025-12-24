@@ -40,57 +40,57 @@
            switch (key)
            {
                case ConsoleKey.I:
-                   Inventory.TryUse(Vector.down, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.down));
+                   Inventory.TryUse(Vector.Down, collectable =>
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Down));
                    break;
                case ConsoleKey.K:
-                   Inventory.TryUse(Vector.up, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.up));
+                   Inventory.TryUse(Vector.Up, collectable =>
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Up));
                    break;
                case ConsoleKey.J:
-                   Inventory.TryUse(Vector.left, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.left));
+                   Inventory.TryUse(Vector.Left, collectable =>
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Left));
                    break;
                case ConsoleKey.L:
-                   Inventory.TryUse(Vector.right, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                   Inventory.TryUse(Vector.Right, collectable =>
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
                
                case ConsoleKey.D1:
                    Inventory.TryEquip(0, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
                case ConsoleKey.D2:
                    Inventory.TryEquip(1, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
                case ConsoleKey.D3:
                    Inventory.TryEquip(2, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
                case ConsoleKey.D4:
                    Inventory.TryEquip(3, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
                case ConsoleKey.D5:
                    Inventory.TryEquip(4, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
                case ConsoleKey.D6:
                    Inventory.TryEquip(5, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
                case ConsoleKey.D7:
                    Inventory.TryEquip(6, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
                case ConsoleKey.D8:
                    Inventory.TryEquip(7, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
                case ConsoleKey.D9:
                    Inventory.TryEquip(8, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.right));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Right));
                    break;
            }
         }

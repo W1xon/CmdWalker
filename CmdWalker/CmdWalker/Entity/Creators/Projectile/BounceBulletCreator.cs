@@ -10,7 +10,7 @@
         }
         public override ICollectable Create( )
         {
-            return new BounceBullet(Vector.zero, ItemState.InInventory);
+            return new BounceBullet(Vector.Zero, ItemState.InInventory);
         }
         public override GameEntity CreateOnMap(Vector pos)
         {

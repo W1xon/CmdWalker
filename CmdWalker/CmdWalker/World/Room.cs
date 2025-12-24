@@ -42,34 +42,34 @@
                         if (chance < 25)
                         {
                             canDoor = true;
-                            _door.Create(Vector.up);
+                            _door.Create(Vector.Up);
                         }
                         break;
                     case 1:
                         if (chance < 25)
                         {
                             canDoor = true;
-                            _door.Create(Vector.down);
+                            _door.Create(Vector.Down);
                         }
                         break;
                     case 2:
                         if (chance < 25)
                         {
                             canDoor = true;
-                            _door.Create(Vector.left);
+                            _door.Create(Vector.Left);
                         }
                         break;
                     case 3:
                         if (chance < 25)
                         {
                             canDoor = true;
-                            _door.Create(Vector.right);
+                            _door.Create(Vector.Right);
                         }
                         break;
                     default:
                         if (!canDoor)
                         {
-                            _door.Create(Vector.right);
+                            _door.Create(Vector.Right);
                         }
                         break;
                 }

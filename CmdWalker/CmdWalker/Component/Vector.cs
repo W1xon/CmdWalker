@@ -5,12 +5,12 @@
         public int X { get; set; }
         public int Y { get; set; }
         
-        public static readonly Vector left = new Vector(-1, 0); 
-        public static readonly Vector right = new Vector(1, 0);
-        public static readonly Vector up = new Vector(0, 1);
-        public static readonly Vector down = new Vector(0, -1);
-        public static readonly Vector zero = new Vector(0, 0);
-        public static readonly Vector one = new Vector(1, 1);
+        public static readonly Vector Left = new Vector(-1, 0); 
+        public static readonly Vector Right = new Vector(1, 0);
+        public static readonly Vector Up = new Vector(0, 1);
+        public static readonly Vector Down = new Vector(0, -1);
+        public static readonly Vector Zero = new Vector(0, 0);
+        public static readonly Vector One = new Vector(1, 1);
 
         private static Random _rand = new Random();
         public Vector(int x, int y)
@@ -34,7 +34,7 @@
                new Vector(0, -1),  new Vector(0, 0),  new Vector(0, 1),
                new Vector(1, -1),  new Vector(1, 0),  new Vector(1, 1)
             };
-            var filtered = possibleVectors.Where(v => (v != exclude && (!excludeZero || v != zero))).ToArray();
+            var filtered = possibleVectors.Where(v => (v != exclude && (!excludeZero || v != Zero))).ToArray();
             return filtered[_rand.Next(0, filtered.Length)];
         }
         
@@ -43,6 +43,16 @@
             return (int)Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
         }
         public Vector Abs() => new Vector(Math.Abs(X), Math.Abs(Y));
+        
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Vector v) return false;
+            return X == v.X && Y == v.Y;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
+        }
 
     }
 }
