@@ -1,145 +1,103 @@
-﻿namespace CmdWalker
+﻿namespace CmdWalker;
+
+internal class SearchPath
 {
-    internal class SearchPath
+    private List<Vector> _path = new();
+    private Vector _lastTarget = Vector.Zero;
+
+    private static readonly Vector[] _directions = new[] { 
+        Vector.Up, Vector.Down, Vector.Left, Vector.Right 
+    };
+
+    public Vector GetNextPosition(Map map, Vector start, Vector target, int maxIteration)
     {
-        private Vector _size;
-        private readonly Dictionary<Vector, Vector> _cameFrom = new();
-        private readonly Dictionary<Vector, int> _gScores = new();
-        private readonly PriorityQueue<Vector, int> _frontier = new();
-        private readonly List<Vector> _path = new();
-        
-        private static readonly Vector[] _directions = new[]
+        if (_path.Count == 0 || _lastTarget != target || !_path.Contains(start))
         {
-            Vector.Up,
-            Vector.Down,
-            Vector.Left,
-            Vector.Right
-        };
-
-
-        public SearchPath(Vector size)
-        {
-            _size = size;
+            CalculatePath(map, start, target, maxIteration);
+            _lastTarget = target;
         }
 
-        public Vector GetNextPosition(TileMap tile, Vector start, Vector goal, int maxIteration)
+        if (_path.Count == 0) return start;
+
+        int currentIndex = _path.IndexOf(start);
+
+        if (currentIndex >= 0 && currentIndex < _path.Count - 1)
         {
-            if (!_path.Contains(start) && !_path.Contains(goal))
-                BuildPath(tile, start, goal, maxIteration);
-            if (_path == null || _path.Count == 0) return Vector.Zero;
-            return _path[0];
+            return _path[currentIndex + 1];
         }
 
-        private void BuildPath(TileMap tile, Vector start, Vector goal, int maxIteration)
-        {
-            _cameFrom.Clear();
-            _gScores.Clear();
-            _frontier.Clear();
-            _path.Clear();
+        return start;
+    }
+
+    private void CalculatePath(Map map, Vector start, Vector goal, int maxIteration)
+    {
+        _path.Clear();
             
-            _frontier.Enqueue(start, 0);
-            _cameFrom[start] = default;
-            _gScores[start] = 0;
-            int iteration = 0;
+        var cameFrom = new Dictionary<Vector, Vector>();
+        var costSoFar = new Dictionary<Vector, int>();
+        var frontier = new PriorityQueue<Vector, int>();
 
-            while (_frontier.Count > 0)
+        frontier.Enqueue(start, 0);
+        cameFrom[start] = start; 
+        costSoFar[start] = 0;
+
+        int iterations = 0;
+
+        while (frontier.Count > 0)
+        {
+            iterations++;
+            if (iterations > maxIteration) break; 
+
+            var current = frontier.Dequeue();
+
+            if (current == goal) break; 
+
+            foreach (var next in GetNeighbors(map, current))
             {
-                var current = _frontier.Dequeue();
-                if (ContainsGoal(current, goal))
-                {
-                    goal = current;
-                    break;
-                }
+                int newCost = costSoFar[current] + 1; 
 
-                foreach (var neighbor in GetNeighbours(tile, current))
+                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                 {
-                    if (IsBlocked(tile.Tiles, neighbor)) continue;
-                    var newGScore = _gScores[current] + 1; 
-
-                    if (!_gScores.TryGetValue(neighbor, out var existingScore) || newGScore < existingScore)
-                    {
-                        _gScores[neighbor] = newGScore;
-                        int priority = newGScore + Heuristic(neighbor, goal);
-                        _frontier.Enqueue(neighbor, priority);
-                        _cameFrom[neighbor] = current;
-                    }
-                    iteration++;
-                    if (iteration > maxIteration)
-                    {
-                        _path.Clear();
-                        return;
-                    }
+                    costSoFar[next] = newCost;
+                    int priority = newCost + Heuristic(next, goal);
+                    frontier.Enqueue(next, priority);
+                    cameFrom[next] = current;
                 }
             }
-
-            var pos = goal;
-            while (pos != start)
-            {
-                _path.Add(pos);
-                if (!_cameFrom.TryGetValue(pos, out var prev))
-                {
-                    _path.Clear();
-                    return;
-                }
-                pos = prev;
-            }
-            _path.Reverse();
         }
 
-        private List<Vector> GetNeighbours(TileMap tile, Vector position)
+        Vector endNode = cameFrom.ContainsKey(goal) ? goal : Vector.Zero;
+            
+        if (endNode == Vector.Zero) return; 
+
+        var temp = endNode;
+        while (temp != start)
         {
-            var neighbors = new List<Vector>(4); 
-            foreach (var direction in _directions)
-            {
-                int newX = position.X + direction.X;
-                int newY = position.Y + direction.Y;
+            _path.Add(temp);
+            temp = cameFrom[temp];
+        }
+        _path.Add(start); 
+        _path.Reverse();  
+    }
+
+    private IEnumerable<Vector> GetNeighbors(Map map, Vector pos)
+    {
+        foreach (var dir in _directions)
+        {
+            Vector next = pos + dir;
                 
-                if (newY < 0 || newX < 0 || newX > tile.Size.X || newY > tile.Size.Y) continue;
-                if (tile.GetCell(new Vector(newX, newY)) == RenderPalette.GetChar(TileType.Wall)) continue;
-                
-                neighbors.Add(new Vector(newX, newY));
-            }
-            return neighbors;
+            if (next.X < 0 || next.Y < 0 || next.X >= map.Size.X || next.Y >= map.Size.Y) 
+                continue;
+
+            if (!map.Carcas.IsFree(next, Vector.One)) 
+                continue;
+
+            yield return next;
         }
+    }
 
-        private int Heuristic(Vector a, Vector b) => Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
-
-        private bool IsBlocked(char[,] field, Vector pos)
-        {
-            for (int x = 0; x < _size.X; x++)
-            {
-                for (int y = 0; y < _size.Y; y++)
-                {
-                    int newX = pos.X + x;
-                    int newY = pos.Y + y;
-
-                    if (newX < 0 || newX >= field.GetLength(1) ||
-                        newY < 0 || newY >= field.Length ||
-                        field[newY, newX] == RenderPalette.GetChar(TileType.Wall))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool ContainsGoal(Vector pos, Vector goal)
-        {
-            for (int x = 0; x < _size.X; x++)
-            {
-                for (int y = 0; y < _size.Y; y++)
-                {
-                    int newX = pos.X + x;
-                    int newY = pos.Y + y;
-                    
-                    if (newX == goal.X && newY == goal.Y)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+    private int Heuristic(Vector a, Vector b)
+    {
+        return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
     }
 }

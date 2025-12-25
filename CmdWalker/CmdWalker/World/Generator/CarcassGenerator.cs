@@ -66,5 +66,16 @@ internal abstract class CarcassGenerator
             }
         }
     }
+    protected void Fill(char glyph)
+    {
+        for (int y = 0; y < _height; y++)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                _field[y, x] = glyph;
+            }
+        }
+    }
+
     private void Swap(ref int a, ref int b) =>  (a, b) = (b, a);
 }

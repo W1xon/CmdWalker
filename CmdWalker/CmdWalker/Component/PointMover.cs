@@ -1,83 +1,87 @@
-﻿namespace CmdWalker;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace CmdWalker;
 
 internal class PointMover
 {
-        private List<Vector> _waypoints;
-        private SearchPath _pathFinder;
-        private Vector _target;
-        private GameEntity _parent;
-        private Random _random = new Random();
-        private Map _map;
+    private GameEntity _parent;
+    private SearchPath _pathFinder;
+        
+    private Vector _patrolTarget;
+    private Random _rnd = new Random();
 
-        int _maxIteration;
-        private Vector _oldPosition;
-        private int _stuckCount;
-        public PointMover(GameEntity parent)
-        {
-            _parent = parent;
-            _pathFinder = new SearchPath(_parent.Transform.Size);
-            _waypoints = new List<Vector>();
-        }
-        public Vector GetDirection(Map map)
-        {
-            Init(map);
-            var player = map.EntityManager.GetEntity<Player>().First();
+    public PointMover(GameEntity parent)
+    {
+        _parent = parent;
+        _pathFinder = new SearchPath();
+    }
+
+    public Vector GetDirection(Map map)
+    {
+        var player = map.EntityManager.GetEntity<Player>().FirstOrDefault();
+        if (player == null) return Vector.Zero;
+
+        Vector myPos = _parent.Transform.Position;
+        Vector targetPos = player.Transform.Position;
             
-            if(player == null) 
-                return Vector.Zero;
-            if (Vector.Distance(player.Transform.Position, _parent.Transform.Position) < 20)
-            {
-                _target = _pathFinder.GetNextPosition(map.Plane, _parent.Transform.Position, player.Transform.Position, _maxIteration) != Vector.Zero 
-                    ? player.Transform.Position : _waypoints.GetRandomValue();
-            }
-            else
-            {
-                CheckingDestinationPoint();
-            }
-            CheckOldPosition();
-            return _pathFinder.GetNextPosition(map.Plane, _parent.Transform.Position, _target, _maxIteration) - _parent.Transform.Position;
-        }
+        float distToPlayer = Vector.Distance(myPos, targetPos);
 
-        private void Init(Map map)
+        if (distToPlayer < 20) 
         {
-            if (_map == null)
+            if (distToPlayer <= 2)
             {
-                _map = map;
+                return GetDirectDirection(myPos, targetPos);
             }
 
-            if (_waypoints != null && _waypoints.Count > 0) return;
-             _maxIteration = (int)(map.Size.X * map.Size.Y * 0.25f);
-            GenerateWaypoints();
-            _target = _waypoints.GetRandomValue();
+            Vector nextStep = _pathFinder.GetNextPosition(map, myPos, targetPos, 500);
+                
+            if (nextStep != myPos) 
+                return nextStep - myPos; 
         }
 
-        private void CheckingDestinationPoint()
+        return PatrolLogic(map, myPos);
+    }
+
+    private Vector PatrolLogic(Map map, Vector myPos)
+    {
+        if (_patrolTarget == Vector.Zero || Vector.Distance(myPos, _patrolTarget) <= 1)
         {
-            if(!_waypoints.Contains(_target) || Vector.Distance(_target,_parent.Transform.Position ) <= 1 || _stuckCount > 3)
-                _target = _waypoints.GetRandomValue();
+            GenerateNewPatrolTarget(map, myPos);
         }
-        private void CheckOldPosition()
+
+        Vector nextStep = _pathFinder.GetNextPosition(map, myPos, _patrolTarget, 200);
+            
+        if (nextStep != myPos)
+            return nextStep - myPos;
+            
+        return Vector.Zero;
+    }
+
+    private void GenerateNewPatrolTarget(Map map, Vector center)
+    {
+        for (int i = 0; i < 10; i++)
         {
-            if (_oldPosition == _parent.Transform.Position)
-                _stuckCount++;
-            else
-                _stuckCount = 0;
-            _oldPosition = _parent.Transform.Position;
-        }
-        private void GenerateWaypoints()
-        {
-            int totalPoint = _random.Next(2, 5);
-            Vector areaSize = _parent.Transform.Size;
-            int radius = _random.Next(15, 25);
-            for (int i = 0; i < totalPoint; i++)
+            int rx = _rnd.Next(-10, 10);
+            int ry = _rnd.Next(-10, 10);
+            Vector p = center + new Vector(rx, ry);
+
+            if (map.Carcas.IsFree(p, Vector.One) && p.X > 0 && p.Y > 0)
             {
-                List<Vector> reachableCells =  ReachableZoneScanner.GetReachableCells(_map.Carcas, _parent.Transform.Position, radius);
-                Vector point;
-                do
-                {
-                     point = reachableCells.GetRandomValueAndRemove();
-                } while ( !_map.Carcas.IsFree(point, areaSize));
-                _waypoints.Add(point);
+                _patrolTarget = p;
+                return;
             }
         }
+    }
+
+    private Vector GetDirectDirection(Vector from, Vector to)
+    {
+        int dx = to.X - from.X;
+        int dy = to.Y - from.Y;
+
+        if (Math.Abs(dx) > Math.Abs(dy)) return new Vector(Math.Sign(dx), 0);
+        if (Math.Abs(dy) > 0) return new Vector(0, Math.Sign(dy));
+        return Vector.Zero;
+    }
 }

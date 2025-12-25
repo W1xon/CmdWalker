@@ -2,60 +2,52 @@
 
 internal class ReachableZoneScanner
 {
-    
-    private static Queue<Vector> _frontier = new Queue<Vector>();
-    private static HashSet<Vector> _visited = new HashSet<Vector>();
     public static List<Vector> GetReachableCells(TileMap map, Vector start, int radius = 0)
     {
-        List<Vector> reachableCells = new List<Vector>();
-        _frontier.Clear();
-        _visited.Clear();
-        _frontier.Clear();
-        _frontier.Enqueue(start);
-        _visited.Add(start);
+        var reachableCells = new List<Vector>();
+        var frontier = new Queue<Vector>();
+        var visited = new HashSet<Vector>();
 
-        while (_frontier.Count > 0)
+        frontier.Enqueue(start);
+        visited.Add(start);
+        reachableCells.Add(start);
+
+        while (frontier.Count > 0)
         {
-            var current = _frontier.Dequeue();
+            var current = frontier.Dequeue();
+
             if (radius != 0 && Vector.Distance(start, current) > radius)
-                break;
-            var neighbors = GetNeighbors(map, current);
-        
-            foreach (var neighbor in neighbors)
+                continue;
+
+            foreach (var neighbor in GetNeighbors(map, current))
             {
-                if (_visited.Contains(neighbor))
+                if (!visited.Add(neighbor))
                     continue;
 
-                _frontier.Enqueue(neighbor);
-                _visited.Add(neighbor);
-
+                frontier.Enqueue(neighbor);
                 reachableCells.Add(neighbor);
             }
         }
 
         return reachableCells;
     }
-    
-    private static List<Vector> GetNeighbors(TileMap map, Vector pos)
-    {
-        var neighbors = new List<Vector>();
 
+    private static IEnumerable<Vector> GetNeighbors(TileMap map, Vector pos)
+    {
         int[] dx = { 0, 0, -1, 1 };
         int[] dy = { -1, 1, 0, 0 };
 
         for (int i = 0; i < 4; i++)
         {
-            int newX = pos.X + dx[i];
-            int newY = pos.Y + dy[i];
-            Vector newPos = new Vector(newX, newY);
-            if (newX >= 0 && newX < map.Size.X &&
-                newY >= 0 && newY < map.Size.Y &&
-                map.GetCell(newPos) != RenderPalette.GetChar(TileType.Wall))
-            {
-                neighbors.Add(newPos);
-            }
-        }
+            var newPos = new Vector(pos.X + dx[i], pos.Y + dy[i]);
 
-        return neighbors;
+            if (!map.IsWithinBounds(newPos))
+                continue;
+
+            if (map.GetCell(newPos) == RenderPalette.GetChar(TileType.Wall))
+                continue;
+
+            yield return newPos;
+        }
     }
 }

@@ -31,7 +31,7 @@
         }
         public override void Move(Vector direction)
         {
-            CalculateDirection();
+            _dir = PointMover.GetDirection(_map);
             if (!CanMoveDir(direction))
                 return;
             
@@ -55,10 +55,6 @@
             _map.EntityManager.DeleteEntity(this);
         }
 
-        private void CalculateDirection()
-        {
-            _dir = PointMover.GetDirection(_map);
-        }
         private bool TryAttack(Vector position)
         {
             foreach (var entity in _map.EntityManager.Entities.Where(e => e.GetType() == typeof(Player) ))
