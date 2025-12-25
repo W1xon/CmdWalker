@@ -28,7 +28,7 @@
         {
             for(int i = 0; i < positions.Length; i++) 
             {
-                SetCell(positions[i], symbols[i].ToString());
+                RestoreCell(positions[i], symbols[i].ToString());
             }
         }
         public void SetCells(Vector position, IVisual visual, bool isStandartColor = false)
@@ -37,7 +37,7 @@
             for (int y = 0; y < visual.Representation.GetLength(0); y++)
             {
                 Vector newPos = position + new Vector(0, y);
-                SetCell(newPos, visual.Representation.GetRowAsString(y), color);
+                DrawOverlayCell(newPos, visual.Representation.GetRowAsString(y), color);
             }
         }
         public char GetCell(Vector pos, bool isCarcas = false)
@@ -45,13 +45,30 @@
             return isCarcas ? Carcas.GetCell(pos) : Plane.GetCell(pos);
         }
         
-        private void SetCell(Vector pos, string symbols, ConsoleColor color = ConsoleColor.White)
+        private void DrawOverlayCell(Vector pos, string symbols, ConsoleColor color = ConsoleColor.White)
         {
-            Draw(pos, symbols,  this, color);
-            foreach (var symbol in symbols)
+            for (int i = 0; i < symbols.Length; i++)
             {
-                Plane.SetCell(pos, symbol);
+                char symbol = symbols[i];
+
+                if (symbol == ' ')
+                    continue;
+                var posOffset = new Vector(pos.X + i, pos.Y);
+                Draw(posOffset, symbol.ToString(), this, color);
+                Plane.SetCell(posOffset, symbol);
             }
         }
+        private void RestoreCell(Vector pos, string symbols)
+        {
+            for (int i = 0; i < symbols.Length; i++)
+            {
+                char symbol = symbols[i];
+                Vector p = new(pos.X + i, pos.Y);
+
+                Draw(p, symbol.ToString(), this, ConsoleColor.White);
+                Plane.SetCell(p, symbol);
+            }
+        }
+
     }
 }

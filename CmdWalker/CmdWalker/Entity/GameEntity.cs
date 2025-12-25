@@ -11,7 +11,6 @@
                     _transform.Size = Visual.Size;
                     return _transform;
                 }
-
                 return _transform;
             }
             private set => _transform = value;

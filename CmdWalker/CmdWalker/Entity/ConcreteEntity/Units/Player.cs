@@ -41,7 +41,8 @@
            {
                case ConsoleKey.I:
                    Inventory.TryUse(Vector.Down, collectable =>
-                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Down));
+                       collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Down)
+                       && collectable.GetVisual().Size.X <= Collider.GetDistance(Vector.Up));
                    break;
                case ConsoleKey.K:
                    Inventory.TryUse(Vector.Up, collectable =>

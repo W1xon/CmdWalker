@@ -2,7 +2,6 @@
 
 internal class Glyph : IVisual
 {
-    private readonly string _symbol;
     private readonly ConsoleColor _color;
 
     private string _leftAdditive = string.Empty;
@@ -11,7 +10,7 @@ internal class Glyph : IVisual
     private string _downAdditive = string.Empty;
 
     private char[,] _representation;
-
+    
     public char[,] Representation
     {
         get => _representation;
@@ -49,11 +48,11 @@ internal class Glyph : IVisual
         set => SetAdditive(ref _downAdditive, value);
     }
 
-    public string Symbol => $"{_leftAdditive}{_symbol}{_rightAdditive}";
+    public string Symbol { get; }
 
     public Glyph(string symbol, ConsoleColor color)
     {
-        _symbol = symbol;
+        Symbol = symbol;
         _color = color;
         UpdateRepresentation();
     }
@@ -72,7 +71,7 @@ internal class Glyph : IVisual
 
     private void UpdateRepresentation()
     {
-        string middleLine = $"{_leftAdditive}{_symbol}{_rightAdditive}";
+        string middleLine = $"{_leftAdditive}{Symbol}{_rightAdditive}";
         int width = middleLine.Length;
 
         bool hasUp = !string.IsNullOrWhiteSpace(_upAdditive);
@@ -81,22 +80,18 @@ internal class Glyph : IVisual
         int height = 1 + (hasUp ? 1 : 0) + (hasDown ? 1 : 0);
         _representation = new char[height, width];
 
+
         int y = 0;
 
         if (hasUp)
-        {
-            DrawAdditiveLine(y, _upAdditive);
-            y++;
-        }
+            DrawAdditiveLine(y++, _upAdditive);
 
-        DrawCentralLine(y);
-        y++;
+        DrawCentralLine(y++);
 
         if (hasDown)
-        {
             DrawAdditiveLine(y, _downAdditive);
-        }
     }
+
 
     private void DrawAdditiveLine(int y, string additive)
     {
@@ -121,7 +116,7 @@ internal class Glyph : IVisual
 
     private void DrawCentralLine(int y)
     {
-        string line = $"{_leftAdditive}{_symbol}{_rightAdditive}";
+        string line = $"{_leftAdditive}{Symbol}{_rightAdditive}";
 
         for (int x = 0; x < line.Length; x++)
         {

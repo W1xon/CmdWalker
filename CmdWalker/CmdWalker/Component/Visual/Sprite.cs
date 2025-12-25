@@ -21,6 +21,7 @@ internal class Sprite : IVisual
     public string UpAdditive { get; set; }
     public string DownAdditive { get; set; }
 
+    
     private char[,] _sprite;
     private readonly ConsoleColor _color;
 
