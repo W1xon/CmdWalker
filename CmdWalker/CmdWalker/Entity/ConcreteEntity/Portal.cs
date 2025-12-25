@@ -9,6 +9,7 @@ internal class Portal : GameEntity
 
     private int _tickCounter = 0;
     private int _ticksBeforeMove = 40;
+    private Random _random = new();
     public Portal(Vector position, bool isEntrance = false) : base(position)
     {
         IsEntrance = isEntrance;
@@ -48,7 +49,8 @@ internal class Portal : GameEntity
                 _map.SetCells(Transform.Position, Visual); 
                 if (IsEntrance && entity is Player)
                 {
-                    SceneManager.SwitchTo(new RoomGameScene(), LvlDifficult.Easy);
+                    
+                    SceneManager.SwitchTo(_random.Next(2) == 10 ? new RoomGameScene() : new DungeonGameScene(), LvlDifficult.Easy);
                     return; 
                 }
             }
