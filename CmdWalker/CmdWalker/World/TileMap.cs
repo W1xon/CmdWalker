@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker;
 
-internal class TileMap
+public class TileMap
 {
     public char[,] Tiles { get; private set; }
     public Vector Size { get; private set; }

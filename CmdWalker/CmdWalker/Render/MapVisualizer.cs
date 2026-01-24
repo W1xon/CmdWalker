@@ -5,11 +5,12 @@ namespace CmdWalker;
 internal static class MapVisualizer
 {
     
-    private static List<Vector> _reachableCells = new List<Vector>();
-    private static Queue<Vector> _frontier = new Queue<Vector>();
-    private static HashSet<Vector> _visited = new HashSet<Vector>();
+    private static List<Vector> _reachableCells = [];
+    private static Queue<Vector> _frontier = new();
+    private static HashSet<Vector> _visited = [];
     
-    private static List<Vector> _neighbors = new List<Vector>();
+    private static List<Vector> _neighbors = [];
+    
     public static void RenderEntireMap(Map map)
     {
         for (int y = 0; y < map.Size.Y; y++)
@@ -44,7 +45,6 @@ internal static class MapVisualizer
                  {
                      if (_visited.Contains(neighbor))
                          continue;
-     
                      _frontier.Enqueue(neighbor);
                      _visited.Add(neighbor);
      

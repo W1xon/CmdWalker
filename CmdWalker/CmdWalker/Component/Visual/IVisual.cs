@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker;
 
-internal interface IVisual
+public interface IVisual
 {
     char[,] Representation { get; set; }    
     ConsoleColor Color { get; }

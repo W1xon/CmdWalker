@@ -5,7 +5,7 @@ internal abstract class GameScene : IScene
     public static Map Map;
     protected MapBuilder _mapBuilder;
     protected MapGenerator _mapGenerator;
-    protected Canvas _canvas = new Canvas();
+    protected Canvas _canvas;
     protected Debug _debug = new Debug();
     public bool IsActive { get; set; }
 
@@ -31,4 +31,9 @@ internal abstract class GameScene : IScene
         IsActive = false;
     }
     public abstract void InitCanvas();
+
+    public void Render()
+    {
+        _canvas.Render();
+    }
 }

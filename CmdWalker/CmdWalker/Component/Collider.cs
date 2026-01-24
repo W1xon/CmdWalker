@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker;
 
-internal class Collider
+public class Collider
 {
     public bool IsTrigger { get; set; }
     public GameEntity Parent { get; set; }

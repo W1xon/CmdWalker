@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker
 {
-    internal class Map : RenderObject
+    public class Map : RenderObject
     {
         public TileMap Plane { get; set; } = new TileMap();
         public TileMap Carcas { get; set; } = new TileMap();
@@ -20,6 +20,10 @@
             structure.Build(this);
         }
         public bool IsWithinBounds(Vector pos) => Carcas.IsWithinBounds(pos);        
+        public override void Write(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+        {
+            _parent.Write(position, symbol,  this, color);
+        }
         public override void Draw(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
         {
             _parent.Draw(position, symbol,  this, color);
@@ -54,7 +58,7 @@
                 if (symbol == ' ')
                     continue;
                 var posOffset = new Vector(pos.X + i, pos.Y);
-                Draw(posOffset, symbol.ToString(), this, color);
+                Write(posOffset, symbol.ToString(), this, color);
                 Plane.SetCell(posOffset, symbol);
             }
         }
@@ -65,7 +69,7 @@
                 char symbol = symbols[i];
                 Vector p = new(pos.X + i, pos.Y);
 
-                Draw(p, symbol.ToString(), this, ConsoleColor.White);
+                Write(p, symbol.ToString(), this, ConsoleColor.White);
                 Plane.SetCell(p, symbol);
             }
         }

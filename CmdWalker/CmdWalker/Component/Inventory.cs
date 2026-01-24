@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker;
 
-internal class Inventory
+public class Inventory
 {
     public ICollectable ActiveItem { get; private set; }
     private List<Stack> _stacks = new List<Stack>();

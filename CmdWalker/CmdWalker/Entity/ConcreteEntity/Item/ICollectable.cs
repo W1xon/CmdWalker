@@ -1,13 +1,13 @@
 ﻿namespace CmdWalker;
 
-internal enum ItemState
+public enum ItemState
 {
     OnMap,    
     InInventory, 
     Active    
 }
 
-internal interface ICollectable
+public interface ICollectable
 {
     string GetName();
     IVisual GetVisual();

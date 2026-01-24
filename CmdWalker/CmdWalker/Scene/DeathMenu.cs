@@ -9,6 +9,7 @@ internal class DeathMenu : IScene
     private int _selectedIndex;
     private int _pulseFrame;
     private readonly List<Vector> _stars;
+
     private readonly string[] _asciiTitle = new[]
     {
         @"__   __            ____  _          _ ",
@@ -50,7 +51,7 @@ internal class DeathMenu : IScene
     public void Update()
     {
         IsActive = true;
-        var key = InputHandler.GetKeyDown();
+        var key = Input.GetKeyDown();
         if (key == ConsoleKey.UpArrow)
             _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length;
         else if (key == ConsoleKey.DownArrow)

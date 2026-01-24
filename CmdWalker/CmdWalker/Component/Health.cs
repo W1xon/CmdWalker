@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker
 {
-    internal class Health
+    public class Health
     {
         private int _max;
         private int _current;

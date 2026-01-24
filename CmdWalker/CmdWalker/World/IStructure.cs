@@ -8,7 +8,7 @@
         East,
     }
 
-    internal interface IStructure
+    public interface IStructure
     {
         public void Build(Map map);
         public void Create();

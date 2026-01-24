@@ -15,11 +15,11 @@
         }
         public static void Show()
         {
-            Instance.Draw(Instance.Position, new string(' ',8) , Instance);
-            Instance.Draw(Instance.Position, $"FPS: {Game.CurrentFPS}", Instance, ConsoleColor.DarkGreen);
-            Instance.Draw(new Vector( Instance.Position.X , Instance.Position.Y + 2), $"Kills: {_killCount}", Instance, ConsoleColor.DarkRed);
+            Instance.Write(Instance.Position, new string(' ',8) , Instance);
+            Instance.Write(Instance.Position, $"FPS: {Game.CurrentFPS}", Instance, ConsoleColor.DarkGreen);
+            Instance.Write(new Vector( Instance.Position.X , Instance.Position.Y + 2), $"Kills: {_killCount}", Instance, ConsoleColor.DarkRed);
             
-            Instance.Draw(new Vector( Instance.Position.X , Instance.Position.Y + 3), $"Инфа дебага: {Info}", Instance, ConsoleColor.DarkRed);
+            Instance.Write(new Vector( Instance.Position.X , Instance.Position.Y + 3), $"Инфа дебага: {Info}", Instance, ConsoleColor.DarkRed);
 
             if(InventoryInfo.Item1 != null &&
                (_currentScene != SceneManager.ActiveScene ||
@@ -58,7 +58,7 @@
                     int y = Position.Y + 4 + stackIndex * 3 + i;
                     int inventoryRow = stackIndex * 3 + i;
 
-                    Instance.Draw(
+                    Instance.Write(
                         new Vector(Position.X, y),
                         InventoryInfo.Item1.GetRowAsString(inventoryRow),
                         Instance,
@@ -79,15 +79,19 @@
             for (int y = 0; y < _oldInventoryY; y++)
             {
                     int newY = Position.Y + 4 + y;
-                    Instance.Draw(new Vector(Position.X, newY), new string(' ', InventoryInfo.Item1.GetLength(1)) , Instance);
+                    Instance.Write(new Vector(Position.X, newY), new string(' ', InventoryInfo.Item1.GetLength(1)) , Instance);
                 
             }
+        }
+
+        public override void Write(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+        {
+            _parent.Write(position, symbol,  this, color);
         }
 
         public override void Draw(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
         {
             _parent.Draw(position, symbol,  this, color);
         }
-        
     }
 }

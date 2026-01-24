@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker;
 
-internal class EntityManager
+public class EntityManager
 {
     public List<GameEntity> Entities { get => new List<GameEntity>(_entites); }
     private List<GameEntity> _entites = new List<GameEntity>();
