@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker;
 
-internal abstract class CarcassGenerator
+public abstract class CarcassGenerator
 {
     protected char[,] _field;
     protected int _width;

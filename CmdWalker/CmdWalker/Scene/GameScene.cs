@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker;
 
-internal abstract class GameScene : IScene
+public abstract class GameScene : IScene
 {
     public static Map Map;
     protected MapBuilder _mapBuilder;

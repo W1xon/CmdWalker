@@ -9,7 +9,11 @@ internal class Sprite : IVisual
         set => _sprite = value;
     }
 
-    public ConsoleColor Color => _color;
+    public ConsoleColor Color
+    {
+        get => _color;
+        set => _color = value;
+    }
 
     public Vector Size => new Vector(
         _sprite.GetLength(1),
@@ -23,7 +27,7 @@ internal class Sprite : IVisual
 
     
     private char[,] _sprite;
-    private readonly ConsoleColor _color;
+    private ConsoleColor _color;
 
     public Sprite(char[,] sprite, ConsoleColor color)
     {

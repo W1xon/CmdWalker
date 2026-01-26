@@ -34,4 +34,5 @@ internal static class SceneManager
         if (_sceneStack.Any()) Deactivate();
         Activate(scene, lvlDifficult);
     }
+    
 }

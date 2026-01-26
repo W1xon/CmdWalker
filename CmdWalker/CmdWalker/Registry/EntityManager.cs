@@ -32,4 +32,6 @@ public class EntityManager
     {
         return _entites.OfType<T>().ToList();
     }
+
+    public Player? GetPlayer() => GetEntity<Player>().FirstOrDefault();
 }

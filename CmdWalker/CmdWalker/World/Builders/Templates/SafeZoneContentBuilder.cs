@@ -18,7 +18,7 @@ internal class SafeZoneContentBuilder(LvlConfig config) : ContentBuilder(config)
 
     public override void AddItems()
     {
-        //достаем инфу из сохранений в дальнейшем
+        
     }
 
     public override void AddUnits()
@@ -34,5 +34,10 @@ internal class SafeZoneContentBuilder(LvlConfig config) : ContentBuilder(config)
     {
         _config.Size = new Vector(40, 20);
         _config.Configure();
+    }
+    public override void AddConstruction()
+    {
+        Content.Constructions = [];
+        Content.Constructions.AddRange(_config.Constructions);
     }
 }

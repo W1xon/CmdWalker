@@ -35,7 +35,7 @@ internal class Grenade : Projectile
     public override void Launch(Vector direction)
     {
         var creator = CreatorRegistry.GetCreator<GrenadeCreator, Grenade>();
-        creator.Set(GameScene.Map.EntityManager.GetEntity<Player>().First(),
+        creator.Set(GameScene.Map.EntityManager.GetPlayer(),
             direction);
         GameScene.Map.EntityManager.SpawnEntity(creator.CreateActive());
     }

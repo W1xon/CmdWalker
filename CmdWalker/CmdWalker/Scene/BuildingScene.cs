@@ -1,38 +1,30 @@
 ﻿namespace CmdWalker;
 
-internal class DungeonGameScene : GameScene
+public class BuildingScene : GameScene
 {
     public override void Enter(LvlDifficult lvlDifficult)
-    {   
+    {
         base.Enter();
         IsActive = true;
         LvlConfig lvlConfig = new LvlConfig(lvlDifficult);
-        Map = _mapGenerator.Generate(new DungeonContentBuilder(lvlConfig));
+        lvlConfig.Constructions.Add(HomeShope.Construction[0]);
+        Map = _mapGenerator.Generate(new BuildingContentBuilder(lvlConfig));
         InitCanvas();
-        MapVisualizer.AnimateReachableArea(Map, Map.EntityManager.GetPlayer().Transform.Position);
-        Map.EntityManager.GetPlayer().Controller.BindInput();
+        MapVisualizer.AnimateReachableArea(Map, new Vector(0,0));
+        
     }
-
     public override void Update()
-    {     
+    {
         base.Update();
         if (!IsActive) return;
         Debug.Show();
-        
         Render();
     }
-
-    public override void Exit()
-    {
-        base.Exit();
-        Map.EntityManager.GetPlayer()?.Controller.UnbindInput();
-    }
-
     public override void InitCanvas()
-    { 
+    {
         Vector sizeCanvas = new Vector(Map.Size.X + 2, 0) + Map.Size;
         _canvas = new Canvas(sizeCanvas);
         _canvas.AddChild(Map, Vector.Zero);
-        _canvas.AddChild(_debug, new Vector(Map.Size.X + 2, 0) );
+        _canvas.AddChild(_debug, new Vector(Map.Size.X + 2, 0));
     }
 }

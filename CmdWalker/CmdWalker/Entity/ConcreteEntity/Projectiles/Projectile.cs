@@ -68,7 +68,7 @@
         {
             _map.SetCells(Transform.Position, Visual);
             if(_player == null)
-                _player = _map.EntityManager.GetEntity<Player>().First();
+                _player = _map.EntityManager.GetPlayer();
             if (_player.IsSelf(Transform.Position))
             {
                 _player.Inventory.PickUp(this);

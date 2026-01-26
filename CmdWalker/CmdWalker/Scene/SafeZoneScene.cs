@@ -1,16 +1,17 @@
 ﻿namespace CmdWalker;
 
-internal class SafeZoneScene : GameScene
+public class SafeZoneScene : GameScene
 {
     public override void Enter(LvlDifficult lvlDifficult)
     {
-        base.Enter();
-        IsActive = true;
-        LvlConfig lvlConfig = new LvlConfig(lvlDifficult);
-        Map = _mapGenerator.Generate(new SafeZoneContentBuilder(lvlConfig));
+       base.Enter();
+       IsActive = true;
+       LvlConfig lvlConfig = new LvlConfig(lvlDifficult);
+       lvlConfig.Constructions = HomeData.Construction;
+       Map = _mapGenerator.Generate(new SafeZoneContentBuilder(lvlConfig));
        InitCanvas();
-       MapVisualizer.AnimateReachableArea(Map, Map.EntityManager.GetEntity<Player>().First().Transform.Position);
-
+       MapVisualizer.AnimateReachableArea(Map, Map.EntityManager.GetPlayer().Transform.Position);
+       Map.EntityManager.GetPlayer().Controller.BindInput();
     }
     public override void Update()
     {
@@ -19,6 +20,13 @@ internal class SafeZoneScene : GameScene
         Debug.Show();
         Render();
     }
+
+    public override void Exit()
+    {
+        base.Exit();
+        Map.EntityManager.GetPlayer().Controller.UnbindInput();
+    }
+
     public override void InitCanvas()
     {
         Vector sizeCanvas = new Vector(Map.Size.X + 2, 0) + Map.Size;

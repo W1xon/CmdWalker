@@ -6,8 +6,7 @@ public class Collider
     public GameEntity Parent { get; set; }
     private Vector _size => Parent.Transform.Size;
     private Map _map;
-    private bool _isSprite;
-    public List<Type> Excludes = new List<Type>();
+    public List<Type> Excludes = new();
     
     public Collider(bool isTrigger = false)
     {
@@ -70,8 +69,8 @@ public class Collider
         int i = 0;
 
         for (int x = 0; x < _size.X; x++)
-        for (int y = 0; y < _size.Y; y++)
-            body[i++] = new Vector(Parent.Transform.Position.X + x, Parent.Transform.Position.Y + y);
+            for (int y = 0; y < _size.Y; y++)
+                body[i++] = new Vector(Parent.Transform.Position.X + x, Parent.Transform.Position.Y + y);
         
         return body;
     }

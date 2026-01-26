@@ -7,9 +7,7 @@ internal class Portal : GameEntity
     private const ConsoleColor EntranceColor = ConsoleColor.Yellow;
     private const ConsoleColor ExitColor = ConsoleColor.Red;
 
-    private int _tickCounter = 0;
-    private int _ticksBeforeMove = 40;
-    private Random _random = new();
+    private readonly Random _random = new();
     public Portal(Vector position, bool isEntrance = false) : base(position)
     {
         IsEntrance = isEntrance;
@@ -19,16 +17,10 @@ internal class Portal : GameEntity
         );
         Layer = 1;
     }
-
     public override void Update()
     {
         InitializeMapIfNeeded();
-        _tickCounter++;
-        if (_tickCounter < _ticksBeforeMove)
-        {
-            _map.SetCells(Transform.Position, Visual); 
-            _tickCounter = 0;
-        }
+        _map.SetCells(Transform.Position, Visual); 
         CheckForCollisions();
     }
 
@@ -49,7 +41,6 @@ internal class Portal : GameEntity
                 _map.SetCells(Transform.Position, Visual); 
                 if (IsEntrance && entity is Player)
                 {
-                    
                     SceneManager.SwitchTo(_random.Next(2) == 10 ? new RoomGameScene() : new DungeonGameScene(), LvlDifficult.Easy);
                     return; 
                 }

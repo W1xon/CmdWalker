@@ -1,21 +1,24 @@
 ﻿namespace CmdWalker;
-internal enum LvlDifficult
+
+public enum LvlDifficult
 { 
     Easy,
     Medium,
     Hard,
     Extreme,
 }
-internal class LvlConfig
+
+public class LvlConfig
 {
     public Vector Size;
     public Vector MaxRoomSize;
     public Vector MinRoomSize;
     public int RoomCount;
     public LvlDifficult Difficult;
-    public Dictionary<Type, int> UnitPreferences = new Dictionary<Type,  int>();
-    public Dictionary<Type, int> ItemPreferences = new Dictionary<Type,  int>();
-    public Dictionary<Type, int> EntityPreferences = new Dictionary<Type,  int>();
+    public Dictionary<Type, int> UnitPreferences = new();
+    public Dictionary<Type, int> ItemPreferences = new();
+    public Dictionary<Type, int> EntityPreferences = new();
+    public List<Construction> Constructions = new();
     private Random _random = new Random();
     public LvlConfig(LvlDifficult difficult)
     {

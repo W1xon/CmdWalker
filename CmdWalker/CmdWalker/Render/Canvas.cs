@@ -1,11 +1,11 @@
 ﻿namespace CmdWalker;
 
-internal class Canvas : RenderObject
+public class Canvas : RenderObject
 {
-    private List<RenderObject> _child = [];
-    private char[] _screenBuffer;
-    private char[] _oldBuffer;
-    private ConsoleColor[] _colorBuffer;
+    private readonly List<RenderObject> _child = [];
+    private readonly char[] _screenBuffer;
+    private readonly char[] _oldBuffer;
+    private readonly ConsoleColor[] _colorBuffer;
     private Vector _size;
     public Canvas(Vector size)
     {

@@ -2,8 +2,7 @@
 
 internal class Gun : Weapon
 {
-    private Dictionary<int, Type> _collectableCreators;
-    private ProjectileCreator _creator;
+    private readonly Dictionary<int, Type> _collectableCreators;
     private Player _player;
     public Gun(Vector position, GameEntity parent, ItemState state) : base(position, parent, state)
     {
@@ -35,7 +34,7 @@ internal class Gun : Weapon
     { 
         _map.SetCells(Transform.Position, Visual);
         if(_player == null)
-            _player = _map.EntityManager.GetEntity<Player>().First();
+            _player = _map.EntityManager.GetPlayer();
         if (_player.IsSelf(Transform.Position))
         {
             _parent = _player;
@@ -46,8 +45,7 @@ internal class Gun : Weapon
     }
     public override void Fire(Vector dir, Inventory inventory)
     {
-        
-        _creator = GetCreator(inventory);
+        ProjectileCreator _creator  = GetCreator(inventory);
         if (_creator == null) return;
         _creator.Set(this, dir);
         var projectile = _creator.CreateActive();

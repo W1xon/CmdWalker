@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker
 {
-    internal class Room : IStructure
+    public class Room : IStructure
     {
         public Transform Transform { get; set; }
         public char[,] Plane;

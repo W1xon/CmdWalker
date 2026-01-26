@@ -2,7 +2,7 @@
 
 internal class Glyph : IVisual
 {
-    private readonly ConsoleColor _color;
+    private  ConsoleColor _color;
 
     private string _leftAdditive = string.Empty;
     private string _rightAdditive = string.Empty;
@@ -17,7 +17,11 @@ internal class Glyph : IVisual
         set => _representation = value;
     }
 
-    public ConsoleColor Color => _color;
+    public ConsoleColor Color
+    {
+        get => _color;
+        set => _color = value;
+    }
 
     public Vector Size => new(
         _representation.GetLength(1),

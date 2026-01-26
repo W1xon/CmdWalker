@@ -9,7 +9,8 @@ internal class RoomGameScene : GameScene
         LvlConfig lvlConfig = new LvlConfig(lvlDifficult);
         Map = _mapGenerator.Generate(new RoomContentBuilder(lvlConfig));
        InitCanvas();
-       MapVisualizer.AnimateReachableArea(Map, Map.EntityManager.GetEntity<Player>().First().Transform.Position);
+       MapVisualizer.AnimateReachableArea(Map, Map.EntityManager.GetPlayer().Transform.Position);
+       Map.EntityManager.GetPlayer().Controller.BindInput();
 
      }
 
@@ -20,6 +21,11 @@ internal class RoomGameScene : GameScene
         Debug.Show();
         
         Render();
+    }
+    public override void Exit()
+    {
+        base.Exit();
+        Map.EntityManager.GetPlayer().Controller.UnbindInput();
     }
     public override void InitCanvas()
     {

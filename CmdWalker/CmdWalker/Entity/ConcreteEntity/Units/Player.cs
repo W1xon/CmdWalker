@@ -5,7 +5,7 @@ namespace CmdWalker;
 public class Player : Unit
 {
     public readonly Inventory Inventory;
-    private readonly PlayerController _controller;
+    public  PlayerController Controller { get; private set; }
     public Player(Vector pos) : base(pos)
     {
         _health = new Health(100);
@@ -16,7 +16,7 @@ public class Player : Unit
 
         Inventory = new Inventory(this);
 
-        _controller = new PlayerController(this);
+        Controller = new PlayerController(this);
     }
     
     public override void Move(Vector direction)
@@ -47,7 +47,7 @@ public class Player : Unit
 
     public override void Destroy()
     {
-        _controller.Dispose();
+        Controller.Dispose();
 
         ClearPreviousPosition();
         _map.EntityManager.DeleteEntity(this);

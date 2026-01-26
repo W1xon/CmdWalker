@@ -3,7 +3,7 @@
 public interface IVisual
 {
     char[,] Representation { get; set; }    
-    ConsoleColor Color { get; }
+    ConsoleColor Color { get; set; }
     Vector Size { get; }
     string LeftAdditive { get; set; }
     string RightAdditive { get; set; }

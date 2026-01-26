@@ -20,7 +20,7 @@ internal class PointMover
 
     public Vector GetDirection(Map map)
     {
-        var player = map.EntityManager.GetEntity<Player>().FirstOrDefault();
+        var player = map.EntityManager.GetPlayer();
         if (player == null) return Vector.Zero;
 
         Vector myPos = _parent.Transform.Position;

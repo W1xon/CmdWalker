@@ -23,7 +23,8 @@ public abstract class GameEntity
     protected Map _map;
     private Transform _transform;
     public virtual void Update() { }
-    public GameEntity(Vector position)
+
+    protected GameEntity(Vector position)
     {
         Transform = new Transform(position, Vector.One);
         Collider = new Collider();

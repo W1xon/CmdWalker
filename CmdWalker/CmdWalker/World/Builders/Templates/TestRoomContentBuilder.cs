@@ -39,4 +39,7 @@ internal class TestRoomContentBuilder(LvlConfig config) : ContentBuilder(config)
         _config.Size = new Vector(90, 30);
         _config.Configure();
     }
+    public override void AddConstruction()
+    {
+    }
 }

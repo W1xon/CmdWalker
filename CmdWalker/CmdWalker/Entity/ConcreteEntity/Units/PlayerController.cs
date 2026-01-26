@@ -2,7 +2,7 @@
 
 public class PlayerController : IDisposable
 {
-    private Player _player;
+    private readonly Player _player;
     
     // Movement
     private readonly Action _moveUp;
@@ -15,6 +15,7 @@ public class PlayerController : IDisposable
     private readonly Action _useDown;
     private readonly Action _useLeft;
     private readonly Action _useRight;
+    private readonly Action _openShope;
 
     // Equip 1–9
     private readonly Action[] _equipActions = new Action[9];
@@ -34,11 +35,15 @@ public class PlayerController : IDisposable
         _useLeft  = () => Use(Vector.Left);
         _useRight = () => Use(Vector.Right);
 
-        BindInput();
+        _openShope = () =>
+        {
+            if(HomeShope.Construction.Count > 0)
+                SceneManager.SwitchTo(new BuildingScene(), LvlDifficult.Easy);
+        };
     }
     
 
-    private void BindInput()
+    public void BindInput()
     {
         // Movement (WASD)
         Input.Bind(ConsoleKey.W, _moveUp);
@@ -52,6 +57,7 @@ public class PlayerController : IDisposable
         Input.Bind(ConsoleKey.J, _useLeft);
         Input.Bind(ConsoleKey.L, _useRight);
 
+        Input.Bind(ConsoleKey.O, _openShope);
         // Equip slots 1–9
         for (int i = 0; i < 9; i++)
         {
@@ -69,7 +75,7 @@ public class PlayerController : IDisposable
         }
     }
 
-    private void UnbindInput()
+    public void UnbindInput()
     {
         Input.Unbind(ConsoleKey.W, _moveUp);
         Input.Unbind(ConsoleKey.S, _moveDown);
@@ -81,6 +87,7 @@ public class PlayerController : IDisposable
         Input.Unbind(ConsoleKey.J, _useLeft);
         Input.Unbind(ConsoleKey.L, _useRight);
 
+        Input.Unbind(ConsoleKey.O, _openShope);
         for (int i = 0; i < 9; i++)
         {
             Input.Unbind(ConsoleKey.D1 + i, _equipActions[i]);

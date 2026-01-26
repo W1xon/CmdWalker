@@ -61,6 +61,10 @@ internal class DungeonContentBuilder(LvlConfig config) : ContentBuilder(config)
             CreateOnMap(GetPosition(Vector.One)));
     }
 
+    public override void AddConstruction()
+    {
+    }
+
     public override void AddUnits()
     {
         int count = 0;
@@ -86,7 +90,7 @@ internal class DungeonContentBuilder(LvlConfig config) : ContentBuilder(config)
         Content.GameEntities.Add(
             CreatorRegistry.GetCreator<SkeletonCreator, Skeleton>()
                 .Create(GetPosition(RenderPalette.GetSize(TileType.Skeleton))));*/
-        var player = GameScene.Map.EntityManager.GetEntity<Player>().FirstOrDefault();
+        var player = GameScene.Map.EntityManager.GetPlayer();
         var playerPos = Content.GameEntities.First(e => e is Portal { IsEntrance: false }).Transform.Position;
         if (player != null)
         {

@@ -9,7 +9,8 @@
         Player,
         Gun,
         Bullet,
-        BounceBullet
+        BounceBullet,
+        Table
     }
     internal static class RenderPalette
     {
@@ -34,6 +35,16 @@
    			        { '╚', '═', '╩', '═', '╝' },
 		        }
             },
+            {
+                TileType.Table, new char[,]
+                {
+                    { '░','░','░','░','░','░','░' }, // верхняя поверхность
+                    { ' ',' ','*','*','*',' ',' ' }, // рабочая поверхность/инструменты
+                    { ' ','*','+','+','+','*',' ' }, // полка/ящики
+                    { '▓','▓','▓','▓','▓','▓','▓' }, // ножки (можно заменить на ещё легкий символ, если нужно)
+                }
+
+            },
         };
         
         public static char GetChar(TileType tileType) =>  _glyphs[tileType][0];
@@ -45,7 +56,7 @@
             {
                 return new Vector(glyph.Length, 1);
             }
-            else if (_sprites.TryGetValue(tileType, out var sprite))
+            if (_sprites.TryGetValue(tileType, out var sprite))
             {
                 return new Vector(sprite.GetLength(1), sprite.GetLength(0));
             }

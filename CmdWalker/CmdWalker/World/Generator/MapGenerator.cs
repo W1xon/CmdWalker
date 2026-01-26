@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker
 {
-    internal class MapGenerator(IMapBuilder builder)
+    public class MapGenerator(IMapBuilder builder)
     {
         public Map Generate(ContentBuilder contentBuilder)
         {
@@ -11,6 +11,7 @@
             builder.AddItem(content.Items);
             builder.AddEntity(content.GameEntities);
             builder.AddUnit(content.Units);
+            builder.AddConstruction(content.Constructions);
             builder.GetMap().InitializePlane();
             Console.SetCursorPosition(0, 0);
             return builder.GetMap();
@@ -29,6 +30,7 @@
             contentBuilder.AddEntities();
             contentBuilder.AddItems();
             contentBuilder.AddUnits();
+            contentBuilder.AddConstruction();
             return contentBuilder.GetTemplate();
         }
     }

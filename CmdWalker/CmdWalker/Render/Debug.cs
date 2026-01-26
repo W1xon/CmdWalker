@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker
 {
-    internal  class Debug : RenderObject
+    public class Debug : RenderObject
     {
         public static Debug Instance;
         public static (char[,], ConsoleColor[]) InventoryInfo;

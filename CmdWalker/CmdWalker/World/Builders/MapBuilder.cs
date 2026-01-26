@@ -1,6 +1,6 @@
 ﻿namespace CmdWalker
 {
-    internal class MapBuilder : IMapBuilder
+    public class MapBuilder : IMapBuilder
     {
         protected Map _map;
         protected Random _rand = new Random();
@@ -39,6 +39,14 @@
             }
         }
 
+        public void AddConstruction(List<Construction> constructions)
+        {
+            if (constructions == null) return;
+            foreach(var construction in constructions)
+            {
+                _map.EntityManager.SpawnEntity(construction);
+            }
+        }
 
         public void AddUnit(List<Unit> units)
         {
