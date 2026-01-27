@@ -28,7 +28,7 @@ public class BuildingContentBuilder(LvlConfig config) : ContentBuilder(config)
         Content.Constructions = [];
         foreach (var construction in _config.Constructions)
         {
-            construction.ChangeToBuild();
+            construction.EnterPlacementMode();
             construction.Transform.Position = GetPosition(construction.Transform.Size);
         }
         Content.Constructions.AddRange(_config.Constructions);
