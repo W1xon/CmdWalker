@@ -21,7 +21,7 @@ public class Inventory
         }
         ActiveItem = _stacks[index].Item;
         BindToEntityGlyph(Vector.Right);
-        Debug.InventoryInfo = Summary();
+        Debug.InventoryView = Summary();
     }
 
     public bool TryEquip(int index, Func<ICollectable, bool> isCorrectly)
@@ -40,7 +40,7 @@ public class Inventory
     {
         ActiveItem = null;
         BindToEntityGlyph();
-        Debug.InventoryInfo = Summary();
+        Debug.InventoryView = Summary();
     }
 
     public void PickUp(ICollectable item)
@@ -53,20 +53,20 @@ public class Inventory
         else
             _stacks.Add(new Stack(item, 1));
 
-        Debug.InventoryInfo = Summary();
+        Debug.InventoryView = Summary();
     }
 
     public void DropAll(ICollectable collectable)
     {
         _stacks.Remove(GetStack(collectable));
         
-        Debug.InventoryInfo = Summary();
+        Debug.InventoryView = Summary();
     }
 
     public void DropAll()
     {
         _stacks.Clear();
-        Debug.InventoryInfo = Summary();
+        Debug.InventoryView = Summary();
     }
     public void Drop(ICollectable collectable)
     {
@@ -82,7 +82,7 @@ public class Inventory
                     ActiveItem = null;
             }
         }
-        Debug.InventoryInfo = Summary();
+        Debug.InventoryView = Summary();
     }
 
     public void Use()
@@ -116,6 +116,7 @@ public class Inventory
         }
         return false;
     }
+
 
     public bool Contains(ICollectable item) => Contains(item.GetName());
     public bool Contains(string name) => _stacks.FirstOrDefault(i => i.Item.GetName() == name) != null;
@@ -153,26 +154,32 @@ public class Inventory
            
     }
 
-    private (char[,],  ConsoleColor[]) Summary()
+    private List<InventorySummary> Summary()
     {
-        char[,] inventory = new char[_stacks.Count * 3,8];
-        ConsoleColor[] consoleColors = new ConsoleColor[_stacks.Count];
-        int k = 0;
-        for (int i = 0; i < _stacks.Count; i++)
+        List<InventorySummary> inventorySummaries = new(_stacks.Count);
+        
+        foreach (var stack in _stacks)
         {
-            consoleColors[i] = _stacks[i].Item == ActiveItem ? ConsoleColor.Red : ConsoleColor.White;
-            inventory.InsertString(k++, 0, "╔══════╗");
-            if(_stacks[i].Item.GetVisual() is Glyph glyph)
+            var summary = new InventorySummary
             {
-                inventory.InsertString(k++, 0, $"║{glyph.Symbol, - 2} x{_stacks[i].Count,2}║");
+                Size = new Vector(8, 3),
+                Rows = new char[3,8],
+                IsEquip = stack.Item == ActiveItem
+            };
+
+            summary.Rows.InsertString(0, 0, "╔══════╗");
+            if(stack.Item.GetVisual() is Glyph glyph)
+            {
+                summary.Rows.InsertString(1, 0, $"║{glyph.Symbol,-2} x{stack.Count,2}║");
+                summary.Symbol = glyph.Symbol;
             }
             else
-            {
-                inventory.InsertString(k++, 0, $"║     ║");
-            }
-            inventory.InsertString(k++, 0, "╚══════╝");
+                summary.Rows.InsertString(1, 0, $"║     ║");
+            summary.Rows.InsertString(2, 0, "╚══════╝");
+            
+            inventorySummaries.Add(summary);
         }
-        return (inventory, consoleColors);
+        return inventorySummaries;
     }
 
     private Stack? GetStack(ICollectable item)

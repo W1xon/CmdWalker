@@ -6,7 +6,7 @@ public abstract class GameScene : IScene
     protected MapBuilder _mapBuilder;
     protected MapGenerator _mapGenerator;
     protected Canvas _canvas;
-    protected Debug _debug = new Debug();
+    protected Debug _debug = new();
     public bool IsActive { get; set; }
 
     public virtual void Enter()

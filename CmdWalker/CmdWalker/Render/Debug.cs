@@ -1,97 +1,131 @@
-﻿namespace CmdWalker
+﻿namespace CmdWalker;
+
+public class Debug : RenderObject
 {
-    public class Debug : RenderObject
+    public static List<InventorySummary> InventoryView;
+    public static string Info = "";
+
+    private static int _killCount;
+
+    private static int _prevInventoryHeight = 0;
+    private static int _prevInventoryCount;
+    private static int _prevEquippedIndex;
+
+    private static IScene _currentScene;
+
+    private static Debug _instance;
+
+    private const int SlotHeight = 3;
+    private const int InventoryOffset = 4;
+
+    public Debug()
     {
-        public static Debug Instance;
-        public static (char[,], ConsoleColor[]) InventoryInfo;
-        public static string Info = ""; 
-        private static int _killCount;
-        private static int  _oldInventoryY = 0;
-        private static char[,] _oldInventoryView;
-        private static IScene _currentScene;
-        public Debug()
-        {
-            Instance = this;
-        }
-        public static void Show()
-        {
-            Instance.Write(Instance.Position, new string(' ',8) , Instance);
-            Instance.Write(Instance.Position, $"FPS: {Game.CurrentFPS}", Instance, ConsoleColor.DarkGreen);
-            Instance.Write(new Vector( Instance.Position.X , Instance.Position.Y + 2), $"Kills: {_killCount}", Instance, ConsoleColor.DarkRed);
-            
-            Instance.Write(new Vector( Instance.Position.X , Instance.Position.Y + 3), $"Инфа дебага: {Info}", Instance, ConsoleColor.DarkRed);
+        _instance = this;
+    }
 
-            if(InventoryInfo.Item1 != null &&
-               (_currentScene != SceneManager.ActiveScene ||
-                _oldInventoryView != InventoryInfo.Item1))
-            {
-                    _oldInventoryView = InventoryInfo.Item1;
-                    Instance.ClearInventory();
-                    Instance.ShowInventory();
-                
-            }
-            if(InventoryInfo.Item1 == null && _currentScene != SceneManager.ActiveScene )
-            {
-                _oldInventoryView = null;
-                Instance.ClearInventory();
-            }
-                
-            
-            if(_currentScene != SceneManager.ActiveScene)
-                _currentScene = SceneManager.ActiveScene;
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-        
-        public static void AddKill()
+    public static void Show()
+    {
+        _instance.Write(_instance.Position, new string(' ', 8), _instance);
+        _instance.Write(_instance.Position, $"FPS: {Game.CurrentFPS}", _instance, ConsoleColor.DarkGreen);
+
+        _instance.Write(
+            new Vector(_instance.Position.X, _instance.Position.Y + 2),
+            $"Kills: {_killCount}",
+            _instance,
+            ConsoleColor.DarkRed
+        );
+
+        _instance.Write(
+            new Vector(_instance.Position.X, _instance.Position.Y + 3),
+            $"Инфа дебага: {Info}",
+            _instance,
+            ConsoleColor.DarkRed
+        );
+
+        if (InventoryView != null && InventoryView.Count > 0)
         {
-            _killCount++;
+            _instance.ClearInventory();
+            _instance.RenderInventory();
+
+            _prevInventoryCount = InventoryView.Count;
+            _prevEquippedIndex = GetEquippedIndex();
         }
 
-        private void ShowInventory()
+        if (_currentScene != SceneManager.ActiveScene)
+            _currentScene = SceneManager.ActiveScene;
+
+        Console.ForegroundColor = ConsoleColor.White;
+    }
+
+    public static void AddKill()
+    {
+        _killCount++;
+    }
+
+    private void RenderInventory()
+    {
+        for (int i = 0; i < InventoryView.Count; i++)
         {
-            for (int stackIndex = 0; stackIndex < InventoryInfo.Item2.Length; stackIndex++)
+            for (int row = 0; row < InventoryView[i].Size.Y; row++)
             {
-                Console.ForegroundColor = InventoryInfo.Item2[stackIndex];
+                int y = Position.Y + InventoryOffset + i * InventoryView[i].Size.Y + row;
 
-                for (int i = 0; i < 3; i++) 
-                {
-                    int y = Position.Y + 4 + stackIndex * 3 + i;
-                    int inventoryRow = stackIndex * 3 + i;
-
-                    Instance.Write(
-                        new Vector(Position.X, y),
-                        InventoryInfo.Item1.GetRowAsString(inventoryRow),
-                        Instance,
-                        InventoryInfo.Item2[stackIndex]
-                    );
-                }
-            }
-
-            if (InventoryInfo.Item2.Length > 0)
-            {
-                _oldInventoryY = InventoryInfo.Item1.GetLength(0);
+                _instance.Draw(
+                    new Vector(Position.X, y),
+                    InventoryView[i].Rows.GetRowAsString(row),
+                    _instance,
+                    InventoryView[i].IsEquip ? ConsoleColor.Red : ConsoleColor.White
+                );
             }
         }
 
-
-        private  void ClearInventory()
+        if (InventoryView.Count > 0)
         {
-            for (int y = 0; y < _oldInventoryY; y++)
-            {
-                    int newY = Position.Y + 4 + y;
-                    Instance.Write(new Vector(Position.X, newY), new string(' ', InventoryInfo.Item1.GetLength(1)) , Instance);
-                
-            }
+            _prevInventoryHeight = InventoryView.Count * SlotHeight;
+        }
+    }
+
+    private void ClearInventory()
+    {
+        if (!NeedsInventoryClear())
+            return;
+
+        for (int y = 0; y < _prevInventoryHeight; y++)
+        {
+            int newY = Position.Y + InventoryOffset + y;
+
+            _instance.Draw(
+                new Vector(Position.X, newY),
+                new string(' ', InventoryView[0].Rows.GetLength(1)),
+                _instance
+            );
+        }
+    }
+
+    private bool NeedsInventoryClear()
+    {
+        return _prevInventoryCount != InventoryView.Count
+               || _prevEquippedIndex != GetEquippedIndex();
+    }
+
+    private static int GetEquippedIndex()
+    {
+        for (int i = 0; i < InventoryView.Count; i++)
+        {
+            if (InventoryView[i].IsEquip)
+                return i;
         }
 
-        public override void Write(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
-        {
-            _parent.Write(position, symbol,  this, color);
-        }
+        return -1;
+    }
 
-        public override void Draw(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
-        {
-            _parent.Draw(position, symbol,  this, color);
-        }
+    public override void Write(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+    {
+        _parent.Write(position, symbol, this, color);
+    }
+
+    public override void Draw(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+    {
+        _parent.Draw(position, symbol, this, color);
     }
 }
