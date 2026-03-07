@@ -1,4 +1,8 @@
-﻿namespace CmdWalker;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace CmdWalker;
 
 public enum LvlDifficult
 { 
@@ -14,12 +18,25 @@ public class LvlConfig
     public Vector MaxRoomSize;
     public Vector MinRoomSize;
     public int RoomCount;
-    public LvlDifficult Difficult;
-    public Dictionary<Type, int> UnitPreferences = new();
-    public Dictionary<Type, int> ItemPreferences = new();
-    public Dictionary<Type, int> EntityPreferences = new();
-    public List<Construction> Constructions = new();
-    private Random _random = new Random();
+    
+    public LvlDifficult Difficult { get; }
+
+    public Dictionary<Type, int> UnitPreferences { get; } = new();
+    public Dictionary<Type, int> ItemPreferences { get; } = new();
+    public Dictionary<Type, int> EntityPreferences { get; } = new();
+    
+    public List<Construction> Constructions { get; set; } = new();
+
+    private readonly Random _random = new();
+
+    private static readonly Dictionary<LvlDifficult, double> DifficultyMultipliers = new()
+    {
+        { LvlDifficult.Easy, 0.015 },
+        { LvlDifficult.Medium, 0.04 },
+        { LvlDifficult.Hard, 0.07 },
+        { LvlDifficult.Extreme, 0.12 }
+    };
+
     public LvlConfig(LvlDifficult difficult)
     {
         Difficult = difficult;
@@ -27,61 +44,45 @@ public class LvlConfig
 
     public void Configure()
     {
-        CreateEntities(UnitPreferences, 0.025f);
-        CreateEntities(ItemPreferences, 0.7f);
-        CreateEntities(EntityPreferences, 0.0001f);
+        UnitPreferences.Clear();
+        ItemPreferences.Clear();
+        EntityPreferences.Clear();
+
+        PopulateEntities(UnitPreferences, EntityRegistry.UnitTypes, 0.2f);
+        PopulateEntities(ItemPreferences, EntityRegistry.ItemTypes, 0.8f);
+        PopulateEntities(EntityPreferences, EntityRegistry.EntityTypes, 0.1f);
+        
+        EnsurePortal();
     }
-    private void CreateEntities(Dictionary<Type, int> preferences, float seed)
+
+    private void PopulateEntities(Dictionary<Type, int> targetDict, List<Type> sourceTypes, float typeDensity)
     {
-        int max = CalculateMaxEntities(seed);
-        int count = 0;
+        if (sourceTypes == null || sourceTypes.Count == 0) return;
 
-        while (count <= max)
+        int totalTiles = Size.X * Size.Y;
+        double diffMod = DifficultyMultipliers[Difficult];
+
+        int maxCount = (int)Math.Ceiling(totalTiles * diffMod * typeDensity);
+
+        for (int i = 0; i < maxCount; i++)
         {
-            if (max < 1) break;
-            int num = _random.Next(1, 1);
-            Type entityType = null;
+            Type entityType = sourceTypes.GetRandomValue();
 
-            if (preferences == UnitPreferences)
-                entityType = EntityRegistry.UnitTypes.GetRandomValue();
-            else if (preferences == ItemPreferences)
-                entityType = EntityRegistry.ItemTypes.GetRandomValue();
-            else if (preferences == EntityPreferences)
-                entityType = EntityRegistry.EntityTypes.GetRandomValue();
-            
-            if (entityType == typeof(Player))
+            if (entityType == typeof(Player)) 
                 continue;
 
-            preferences.TryGetValue(entityType, out int current);
-            preferences[entityType] = current + num;
-            count += num;
+            targetDict.TryGetValue(entityType, out int current);
+            targetDict[entityType] = current + 1;
         }
-
-        if (!EntityPreferences.ContainsKey(typeof(Portal)))
-            EntityPreferences.Add(typeof(Portal), 1);
     }
 
-
-    private int CalculateMaxEntities(float seed)
+    private void EnsurePortal()
     {
-        int totalTiles = Size.X * Size.Y;
-        double difficultyModifier = 0;
-        if (Difficult == LvlDifficult.Easy)
+        if (!EntityPreferences.ContainsKey(typeof(Portal)))
         {
-            difficultyModifier = _random.NextDouble(0.01, 0.03);
+            EntityPreferences.Add(typeof(Portal), 1);
         }
-        else if (Difficult == LvlDifficult.Medium)
-        {
-            difficultyModifier = _random.NextDouble(0.05, 0.06);
-        }
-        else if (Difficult == LvlDifficult.Hard)
-        {
-            difficultyModifier = _random.NextDouble(0.075, 0.1);
-        }
-        else if (Difficult == LvlDifficult.Extreme)
-        {
-            difficultyModifier = _random.NextDouble(0.1, 0.15);
-        }
-        return (int)Math.Ceiling(totalTiles * difficultyModifier * Math.Pow(seed, 2));
     }
+
+    public double GetCurrentMultiplier() => DifficultyMultipliers[Difficult];
 }

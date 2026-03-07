@@ -4,34 +4,32 @@ internal class SearchPath
 {
     private List<Vector> _path = new();
     private Vector _lastTarget = Vector.Zero;
-
+    private readonly Random _rnd = new Random();
     private static readonly Vector[] _directions = new[] { 
         Vector.Up, Vector.Down, Vector.Left, Vector.Right 
     };
 
-    public Vector GetNextPosition(Map map, Vector start, Vector target, int maxIteration)
+    public Vector GetNextPosition(Map map, Vector start, Vector target, 
+        Vector size = default, int maxIteration = 100)
     {
-        if (_path.Count == 0 || _lastTarget != target || !_path.Contains(start))
+        if (_path.Count == 0 || _lastTarget != target || start != _path[0])
         {
-            CalculatePath(map, start, target, maxIteration);
+            CalculatePath(map, start, target,size, maxIteration);
             _lastTarget = target;
         }
+        if (_path.Count == 0) return Vector.Zero;
 
-        if (_path.Count == 0) return start;
 
-        int currentIndex = _path.IndexOf(start);
-
-        if (currentIndex >= 0 && currentIndex < _path.Count - 1)
+        if (_path.Count > 1) 
         {
-            return _path[currentIndex + 1];
+            return _path[1]; 
         }
-
-        return start;
+        return Vector.Zero;
     }
 
-    private void CalculatePath(Map map, Vector start, Vector goal, int maxIteration)
+    private void CalculatePath(Map map, Vector start, Vector goal, 
+        Vector size = default, int maxIteration = 100)
     {
-        _path.Clear();
             
         var cameFrom = new Dictionary<Vector, Vector>();
         var costSoFar = new Dictionary<Vector, int>();
@@ -52,7 +50,7 @@ internal class SearchPath
 
             if (current == goal) break; 
 
-            foreach (var next in GetNeighbors(map, current))
+            foreach (var next in GetNeighbors(map, current, size))
             {
                 int newCost = costSoFar[current] + 1; 
 
@@ -67,7 +65,8 @@ internal class SearchPath
         }
 
         Vector endNode = cameFrom.ContainsKey(goal) ? goal : Vector.Zero;
-            
+        
+        _path.Clear();
         if (endNode == Vector.Zero) return; 
 
         var temp = endNode;
@@ -80,7 +79,7 @@ internal class SearchPath
         _path.Reverse();  
     }
 
-    private IEnumerable<Vector> GetNeighbors(Map map, Vector pos)
+    private IEnumerable<Vector> GetNeighbors(Map map, Vector pos, Vector size)
     {
         foreach (var dir in _directions)
         {
@@ -88,8 +87,8 @@ internal class SearchPath
                 
             if (next.X < 0 || next.Y < 0 || next.X >= map.Size.X || next.Y >= map.Size.Y) 
                 continue;
-
-            if (!map.Carcas.IsFree(next, Vector.One)) 
+            if(size == default) size = Vector.One;
+            if (!map.Carcas.IsFree(next, size)) 
                 continue;
 
             yield return next;
@@ -98,6 +97,7 @@ internal class SearchPath
 
     private int Heuristic(Vector a, Vector b)
     {
-        return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
+        int baseDist = Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
+        return baseDist + _rnd.Next(0, 3); 
     }
 }

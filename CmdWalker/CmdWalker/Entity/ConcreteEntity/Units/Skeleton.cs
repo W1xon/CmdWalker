@@ -2,7 +2,7 @@
 {
     internal class Skeleton : Unit
     {
-        public PointMover PointMover { get; set; }
+        private PointMover PointMover { get; set; }
         private Vector _dir;
         private int _tickCounter = 0;
         private int _ticksBeforeMove = 10;
@@ -41,10 +41,9 @@
         }
         public override bool CanMoveDir(Vector dir)
         {
-            Vector newPos = Transform.Position + dir;
             bool canMove =  Collider.CanMoveTo(dir);
             
-            if(TryAttack(newPos)) canMove = false;
+            if(TryAttack()) canMove = false;
             
             return canMove;
         }
@@ -55,17 +54,18 @@
             _map.EntityManager.DeleteEntity(this);
         }
 
-        private bool TryAttack(Vector position)
+        private bool TryAttack()
         {
-            foreach (var entity in _map.EntityManager.Entities.Where(e => e.GetType() == typeof(Player) ))
+            for (int i = 0; i < _map.EntityManager.Entities.Count; i++)
             {
-                if (entity.IsIntersection(Collider) && entity is IDamageable damageable && damageable != this)
+                var entity = _map.EntityManager.Entities[i];
+                if (entity is not Player player) continue;
+                if (player.IsIntersection(Collider) && entity is IDamageable damageable && damageable != this)
                 {
                     damageable.TakeDamage(_damage);
                     return true;
                 }
             }
-
             return false;
         }
     }

@@ -6,6 +6,8 @@
         public TileMap Carcas { get; set; } = new TileMap();
         public Vector Size { get; set; }
         public EntityManager EntityManager { get; private set; }
+
+        private Random _rand = new Random();
         public Map()
         {
             EntityManager = new EntityManager(this);
@@ -73,6 +75,23 @@
                 Plane.SetCell(p, symbol);
             }
         }
+        
+        public Vector GetFreePosition(Vector size)
+        {
+            Vector position = Vector.Zero;
+            bool isOccupied = true;
+            do
+            {
+                Vector randV = Vector.GetRandom().Abs();
+                position.X =  randV.X *_rand.Next(0, Plane.Size.X);
+                position.Y =  randV.Y *_rand.Next(0, Plane.Size.Y);
+                if (!Plane.IsFree(position, size)) continue;
+                isOccupied =
+                    EntityManager.Entities.Any(e => Collider.Intersects(e.Transform.Position, e.Transform.Size, position, size));
 
+            } while (isOccupied);
+
+            return position;
+        }
     }
 }

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace CmdWalker;
+﻿namespace CmdWalker;
 
 internal class PointMover
 {
-    private GameEntity _parent;
-    private SearchPath _pathFinder;
-        
+    private readonly GameEntity _parent;
+    private readonly SearchPath _pathFinder;
     private Vector _patrolTarget;
-    private Random _rnd = new Random();
+
+    private const float AggroRange = 20f;
+    private const int ArrivalThreshold = 1;
+
+    private Vector CurrentPos => _parent.Transform.Position;
+    private Vector EntitySize => _parent.Transform.Size;
 
     public PointMover(GameEntity parent)
     {
@@ -23,65 +23,39 @@ internal class PointMover
         var player = map.EntityManager.GetPlayer();
         if (player == null) return Vector.Zero;
 
-        Vector myPos = _parent.Transform.Position;
-        Vector targetPos = player.Transform.Position;
-            
-        float distToPlayer = Vector.Distance(myPos, targetPos);
+        var playerPos = player.Transform.Position;
+        
+        if (Vector.Distance(CurrentPos, playerPos) > AggroRange) 
+            return PatrolLogic(map);
 
-        if (distToPlayer < 20) 
-        {
-            if (distToPlayer <= 2)
-            {
-                return GetDirectDirection(myPos, targetPos);
-            }
+        var nextStep = GetNextStepTo(map, playerPos);
+        
+        if (nextStep == CurrentPos || nextStep == Vector.Zero)
+            return PatrolLogic(map);
 
-            Vector nextStep = _pathFinder.GetNextPosition(map, myPos, targetPos, 500);
-                
-            if (nextStep != myPos) 
-                return nextStep - myPos; 
-        }
-
-        return PatrolLogic(map, myPos);
+        return CurrentPos.DirectionTo(nextStep);
     }
 
-    private Vector PatrolLogic(Map map, Vector myPos)
+    private Vector PatrolLogic(Map map)
     {
-        if (_patrolTarget == Vector.Zero || Vector.Distance(myPos, _patrolTarget) <= 1)
+        if (_patrolTarget == Vector.Zero || Vector.Distance(CurrentPos, _patrolTarget) <= ArrivalThreshold)
         {
-            GenerateNewPatrolTarget(map, myPos);
+            _patrolTarget = map.GetFreePosition(EntitySize);
         }
 
-        Vector nextStep = _pathFinder.GetNextPosition(map, myPos, _patrolTarget, 200);
-            
-        if (nextStep != myPos)
-            return nextStep - myPos;
-            
-        return Vector.Zero;
-    }
+        var nextStep = GetNextStepTo(map, _patrolTarget);
 
-    private void GenerateNewPatrolTarget(Map map, Vector center)
-    {
-        for (int i = 0; i < 10; i++)
+        if (nextStep == Vector.Zero)
         {
-            int rx = _rnd.Next(-10, 10);
-            int ry = _rnd.Next(-10, 10);
-            Vector p = center + new Vector(rx, ry);
-
-            if (map.Carcas.IsFree(p, Vector.One) && p.X > 0 && p.Y > 0)
-            {
-                _patrolTarget = p;
-                return;
-            }
+            _patrolTarget = Vector.Zero;
+            return Vector.Zero;
         }
+
+        return nextStep != CurrentPos ? CurrentPos.DirectionTo(nextStep) : Vector.Zero;
     }
 
-    private Vector GetDirectDirection(Vector from, Vector to)
+    private Vector GetNextStepTo(Map map, Vector target) 
     {
-        int dx = to.X - from.X;
-        int dy = to.Y - from.Y;
-
-        if (Math.Abs(dx) > Math.Abs(dy)) return new Vector(Math.Sign(dx), 0);
-        if (Math.Abs(dy) > 0) return new Vector(0, Math.Sign(dy));
-        return Vector.Zero;
+        return _pathFinder.GetNextPosition(map, CurrentPos, target, EntitySize);
     }
 }

@@ -26,17 +26,25 @@ internal class Game
         while (true)
         {
             long currentTick = Stopwatch.GetTimestamp();
+    
             if (currentTick >= nextFrameTick)
             {
+                if (currentTick - nextFrameTick > (long)targetTicksPerFrame * 5) 
+                {
+                    nextFrameTick = currentTick;
+                }
+
                 nextFrameTick += (long)targetTicksPerFrame;
+        
                 Input.UpdateInput();
                 SceneManager.ActiveScene.Update();
+        
                 _frameCount++;
                 UpdateFPS();
             }
             else
             {
-                Thread.Sleep(0); 
+                Thread.Sleep(1); 
             }
         }
     }
