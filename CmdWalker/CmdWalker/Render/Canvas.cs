@@ -15,14 +15,14 @@ public class Canvas : RenderObject
         _colorBuffer = new ConsoleColor[size.X * size.Y];
         _size = size;
     }
-    public override void Draw(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+    public override void Draw(Vector position, string symbol,  ConsoleColor color = ConsoleColor.White)
     {
         Vector correctPos = position + Position;
         Console.SetCursorPosition(correctPos.X, correctPos.Y);
         Console.ForegroundColor = color;
         Console.Write(symbol);
     }
-    public override void Write(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+    public override void Write(Vector position, string symbol, ConsoleColor color = ConsoleColor.White)
     {
 
         for (int x = 0; x < symbol.Length; x++)

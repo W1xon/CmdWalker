@@ -54,6 +54,6 @@ public class Player : Unit
         Inventory.DropAll();
 
         Debug.Info = "Игрока грохнули";
-        SceneManager.SwitchTo(new DeathMenu(new Vector(90, 30)));
+        SceneManager.SwitchTo(new DeathScene(new Vector(90, 30)));
     }
 }

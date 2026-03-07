@@ -25,20 +25,18 @@ public class Debug : RenderObject
 
     public static void Show()
     {
-        _instance.Write(_instance.Position, new string(' ', 8), _instance);
-        _instance.Write(_instance.Position, $"FPS: {Game.CurrentFPS}", _instance, ConsoleColor.DarkGreen);
+        _instance.Write(_instance.Position, new string(' ', 8));
+        _instance.Write(_instance.Position, $"FPS: {Game.CurrentFPS}",  ConsoleColor.DarkGreen);
 
         _instance.Write(
             new Vector(_instance.Position.X, _instance.Position.Y + 2),
             $"Kills: {_killCount}",
-            _instance,
             ConsoleColor.DarkRed
         );
 
         _instance.Write(
             new Vector(_instance.Position.X, _instance.Position.Y + 3),
             $"Инфа дебага: {Info}",
-            _instance,
             ConsoleColor.DarkRed
         );
 
@@ -73,7 +71,6 @@ public class Debug : RenderObject
                 _instance.Draw(
                     new Vector(Position.X, y),
                     InventoryView[i].Rows.GetRowAsString(row),
-                    _instance,
                     InventoryView[i].IsEquip ? ConsoleColor.Red : ConsoleColor.White
                 );
             }
@@ -96,8 +93,7 @@ public class Debug : RenderObject
 
             _instance.Draw(
                 new Vector(Position.X, newY),
-                new string(' ', InventoryView[0].Rows.GetLength(1)),
-                _instance
+                new string(' ', InventoryView[0].Rows.GetLength(1))
             );
         }
     }
@@ -119,13 +115,13 @@ public class Debug : RenderObject
         return -1;
     }
 
-    public override void Write(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+    public override void Write(Vector position, string symbol,  ConsoleColor color = ConsoleColor.White)
     {
-        _parent.Write(position, symbol, this, color);
+        _parent.Write(position, symbol,  color);
     }
 
-    public override void Draw(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+    public override void Draw(Vector position, string symbol,  ConsoleColor color = ConsoleColor.White)
     {
-        _parent.Draw(position, symbol, this, color);
+        _parent.Draw(position, symbol,  color);
     }
 }

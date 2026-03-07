@@ -22,13 +22,13 @@
             structure.Build(this);
         }
         public bool IsWithinBounds(Vector pos) => Carcas.IsWithinBounds(pos);        
-        public override void Write(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+        public override void Write(Vector position, string symbol, ConsoleColor color = ConsoleColor.White)
         {
-            _parent.Write(position, symbol,  this, color);
+            _parent.Write(position, symbol, color);
         }
-        public override void Draw(Vector position, string symbol, RenderObject renderObject, ConsoleColor color = ConsoleColor.White)
+        public override void Draw(Vector position, string symbol,  ConsoleColor color = ConsoleColor.White)
         {
-            _parent.Draw(position, symbol,  this, color);
+            _parent.Draw(position, symbol,   color);
         }
         public void SetCells(Vector[] positions, char[] symbols)
         {
@@ -60,7 +60,7 @@
                 if (symbol == ' ')
                     continue;
                 var posOffset = new Vector(pos.X + i, pos.Y);
-                Write(posOffset, symbol.ToString(), this, color);
+                Write(posOffset, symbol.ToString(),  color);
                 Plane.SetCell(posOffset, symbol);
             }
         }
@@ -71,7 +71,7 @@
                 char symbol = symbols[i];
                 Vector p = new(pos.X + i, pos.Y);
 
-                Write(p, symbol.ToString(), this, ConsoleColor.White);
+                Write(p, symbol.ToString(),  ConsoleColor.White);
                 Plane.SetCell(p, symbol);
             }
         }
