@@ -57,7 +57,8 @@ by building something that shouldn’t work this well in a console.
 <div align="center">
 
   <img src="Assets/Screenshot_1.png" width="85%" alt="CmdWalker Main Menu"><br>
-  <sub>🖥️ Start screen — the calm before the code.</sub>
+  <img src="Assets/Screenshot_4.png" width="85%" alt="CmdWalker Main Menu"><br>
+  <sub>🖥️ Start & Death screens — the calm before the code.</sub>
 
   <br><br>
 
