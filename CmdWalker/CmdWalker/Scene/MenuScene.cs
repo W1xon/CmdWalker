@@ -1,6 +1,4 @@
-﻿using CmdWalker.Sound;
-
-namespace CmdWalker;
+﻿namespace CmdWalker;
 
 internal class MenuScene : GameScene
 {
