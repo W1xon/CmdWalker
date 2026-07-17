@@ -34,8 +34,8 @@ internal class ReachableZoneScanner
 
     private static IEnumerable<Vector> GetNeighbors(TileMap map, Vector pos)
     {
-        int[] dx = { 0, 0, -1, 1 };
-        int[] dy = { -1, 1, 0, 0 };
+        int[] dx = [0, 0, -1, 1];
+        int[] dy = [-1, 1, 0, 0];
 
         for (int i = 0; i < 4; i++)
         {

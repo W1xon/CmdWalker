@@ -38,6 +38,7 @@ public class Canvas : RenderObject
 
     public void Render()
     {
+        ConsoleColor currentConsoleColor = Console.ForegroundColor;
         for (int i = 0; i < _screenBuffer.Length; i++)
         {
             if (_oldBuffer[i] == _screenBuffer[i])
@@ -48,7 +49,13 @@ public class Canvas : RenderObject
 
             Vector correctPos = new Vector(posX, posY) + Position;
             Console.SetCursorPosition(correctPos.X, correctPos.Y);
-            Console.ForegroundColor = _colorBuffer[i];
+
+            if (_colorBuffer[i] != currentConsoleColor)
+            {
+                Console.ForegroundColor = _colorBuffer[i];
+                currentConsoleColor = _colorBuffer[i]; 
+            }
+            
             Console.Write(_screenBuffer[i]);
 
             _oldBuffer[i] = _screenBuffer[i];
