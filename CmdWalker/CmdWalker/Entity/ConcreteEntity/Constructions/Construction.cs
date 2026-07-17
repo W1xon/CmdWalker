@@ -54,21 +54,6 @@ public abstract class Construction(Vector position) : GameEntity(position), IMov
 
     public bool CanMoveDir(Vector dir) => Collider.CanMoveTo(dir);
 
-    public void ClearPreviousPosition(char defaultChar = '\0')
-    {
-        Vector[] positions = Collider.GetPositions();
-        char[] backgroundCells = new char[positions.Length];
-        
-        for (int i = 0; i < positions.Length; i++)
-        {
-            backgroundCells[i] = defaultChar == 0 
-                ? _map.GetCell(positions[i], true) 
-                : defaultChar;
-        }
-        
-        _map.SetCells(positions, backgroundCells);
-    }
-
     public void Move(Vector direction)
     {
         if (direction == Vector.Zero || !CanMoveDir(direction))

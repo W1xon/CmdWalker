@@ -44,4 +44,19 @@ public abstract class GameEntity
     {
         return Collider.Intersects(other);
     }
+    public void ClearPreviousPosition(char defaultChar = '\0')
+    {
+        int count = Transform.Position.X * Transform.Position.Y;
+        Span<Vector> positions = stackalloc Vector[count];
+        Span<char> backgroundCells = stackalloc char[count];
+        Collider.FillPositions(positions);
+        for (int i = 0; i < positions.Length; i++)
+        {
+            backgroundCells[i] = defaultChar == 0 
+                ? _map.GetCell(positions[i], true) 
+                : defaultChar;
+        }
+        
+        _map.SetCells(positions, backgroundCells);
+    }
 }

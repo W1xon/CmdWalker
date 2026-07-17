@@ -63,16 +63,14 @@ public class Collider
     {
         return Intersects(Parent.Transform.Position, _size, other.Parent.Transform.Position, other._size);
     }
-    public Vector[] GetPositions()
+    public void FillPositions(Span<Vector> buffer)
     {
-        var body = new Vector[_size.X * _size.Y];
         int i = 0;
-
+        Vector parentPos = Parent.Transform.Position;
         for (int x = 0; x < _size.X; x++)
             for (int y = 0; y < _size.Y; y++)
-                body[i++] = new Vector(Parent.Transform.Position.X + x, Parent.Transform.Position.Y + y);
+                buffer[i++] = new Vector(parentPos.X + x, parentPos.Y + y);
         
-        return body;
     }
     public Vector GetRelativePosition(Vector direction)
     {
@@ -87,13 +85,16 @@ public class Collider
     }
     public bool CanMoveTo(Vector direction)
     {
-        Vector[] currentPositions = GetPositions();
-        foreach (var pos in currentPositions)
+        for (int x = 0; x < _size.X; x++)
         {
-            Vector newPos = pos + direction;
-            if (newPos.X < 0 || newPos.Y < 0 || newPos.X >= _map.Size.X || newPos.Y >= _map.Size.Y) return false;
-            if (IsOther(newPos))
-                return false;
+            for (int y = 0; y < _size.Y; y++)
+            {
+                Vector pos = new Vector(Parent.Transform.Position.X + x, Parent.Transform.Position.Y + y);
+                Vector newPos = pos + direction;
+                if (newPos.X < 0 || newPos.Y < 0 || newPos.X >= _map.Size.X || newPos.Y >= _map.Size.Y) return false;
+                if (IsOther(newPos))
+                    return false;
+            }
         }
         return true;
     }
@@ -101,9 +102,11 @@ public class Collider
     private bool IsOther(Vector pos)
     {
         if (_map.GetCell(pos) == RenderPalette.GetChar(TileType.Wall)) return true;
-        foreach (var entity in _map.EntityManager.Entities)
+        var entities = _map.EntityManager.Entities;
+        for (int i = 0; i < entities.Count; i++)
         {
-            if (Excludes.Contains(entity.GetType())) return false;
+            var entity = entities[i];
+            if (Excludes.Contains(entity.GetType())) continue;
             if (entity is ICollectable item && item.GetState() != ItemState.Active) continue;
             if (entity.IsSelf(pos) && entity != Parent && !entity.Collider.IsTrigger) return true;
         }

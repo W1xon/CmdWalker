@@ -30,7 +30,7 @@
         {
             _parent.Draw(position, symbol,   color);
         }
-        public void SetCells(Vector[] positions, char[] symbols)
+        public void SetCells(ReadOnlySpan<Vector> positions, ReadOnlySpan<char> symbols)
         {
             for(int i = 0; i < positions.Length; i++) 
             {
