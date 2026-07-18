@@ -66,7 +66,6 @@ internal class Grenade : Projectile
         {
             Boom();
             Destroy();
-            
         }
     }
     private void Boom()

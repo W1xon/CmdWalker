@@ -11,6 +11,8 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
     {   
         int count = 0;
         Content.GameEntities = new List<GameEntity>();
+        
+        bool isFirstPortalNotEntrance = false;
         foreach (var (entityType, value) in _config.EntityPreferences)
         {
             for (int i = 0; i < value; i++)
@@ -20,8 +22,12 @@ internal class RoomContentBuilder(LvlConfig config) : ContentBuilder(config)
                 {
                     Content.GameEntities.Add(CreatorRegistry.GetCreator<PortalCreator>(entityType)
                         .Create(GetFreePosition(RenderPalette.GetSize(TileType.Portal)), true));
-                    Content.GameEntities.Add(CreatorRegistry.GetCreator<PortalCreator>(entityType)
-                        .Create(GetFreePosition(RenderPalette.GetSize(TileType.Portal)), false));
+                    if(!isFirstPortalNotEntrance)
+                    {
+                        Content.GameEntities.Add(CreatorRegistry.GetCreator<PortalCreator>(entityType)
+                            .Create(GetFreePosition(RenderPalette.GetSize(TileType.Portal)), false));
+                        isFirstPortalNotEntrance = true;
+                    }
                 }
             }
 

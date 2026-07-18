@@ -42,8 +42,10 @@
         protected bool TryKill()
         { 
             var target = new Vector((Transform.Position.X + _dir.X), (Transform.Position.Y + _dir.Y));
-            foreach (var entity in _map.EntityManager.Entities)
+            var entities = _map.EntityManager.Entities;
+            for(int i = 0; i < entities.Count; i++)
             {
+                var entity = entities[i];  
                 if (!entity.IsSelf(target) || entity is not IDamageable damageable) continue;
                 if (damageable == _parent) continue;
                 
