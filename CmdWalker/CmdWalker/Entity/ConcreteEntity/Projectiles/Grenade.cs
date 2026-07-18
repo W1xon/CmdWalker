@@ -70,9 +70,12 @@ internal class Grenade : Projectile
     }
     private void Boom()
     {
-        List<Vector> rotatedDirection = GenerateDiscreteCircle(_rand.Next(2,5));
+        int radius = _rand.Next(2, 5);
+        int maxSize = (2 * radius + 1) * (2 * radius + 1);
+        Span<Vector> rotatedDirection = stackalloc Vector[maxSize];
+        int count = FillDiscreteCircle(rotatedDirection, radius);
         var creator = CreatorRegistry.GetCreator<ShrapnelCreator, Shrapnel>();
-        for (int i = 0; i < rotatedDirection.Count; i ++)
+        for (int i = 0; i < count; i ++)
         {
             var dir = rotatedDirection[i];
             creator.Set(this, dir);
@@ -80,10 +83,9 @@ internal class Grenade : Projectile
         }
     }
 
-    private List<Vector> GenerateDiscreteCircle(int radius)
+    private int FillDiscreteCircle(Span<Vector> buffer, int radius)
     {
-        List<Vector> result = new List<Vector>(radius*radius);
-    
+        int i = 0;
         for (int y = -radius; y <= radius; y++)
         {
             for (int x = -radius; x <= radius; x++)
@@ -92,15 +94,12 @@ internal class Grenade : Projectile
                     continue; 
 
                 double distance = Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
-                
                 double offset = 0.2;
                 if (distance <= radius + (radius * 0.2))
-                    result.Add(new Vector(x, y));
+                    buffer[i++] = new Vector(x, y);
             }
         }
 
-        return result;
+        return i;
     }
-
-
 }

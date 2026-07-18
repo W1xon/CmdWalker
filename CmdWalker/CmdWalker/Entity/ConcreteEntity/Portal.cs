@@ -4,7 +4,7 @@ internal class Portal : GameEntity
 {
     public readonly bool IsEntrance;
     private bool _isInitialized;
-    private const ConsoleColor EntranceColor = ConsoleColor.Yellow;
+    private const ConsoleColor EntranceColor = ConsoleColor.Green;
     private const ConsoleColor ExitColor = ConsoleColor.Red;
 
     private readonly Random _random = new();
@@ -45,7 +45,6 @@ internal class Portal : GameEntity
                     return; 
                 }
             }
-            
         }
     }
 }
