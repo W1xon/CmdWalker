@@ -5,7 +5,9 @@ internal static class MapVisualizer
     private static readonly Queue<Vector> _frontier = new();
     private static readonly HashSet<Vector> _visited = [];
     private static readonly List<Vector> _neighbors = new(8);
-
+    private static readonly int[] Dx = [0, 0, -1, 1, -1, 1, -1, 1];
+    private static readonly int[] Dy = new[] { -1, 1, 0, 0, -1, -1, 1, 1 };
+    
     public static void AnimateReachableArea(Map map, Vector center, bool fillStaticWalls = false)
     {
         if (fillStaticWalls)
@@ -107,13 +109,11 @@ internal static class MapVisualizer
     private static void FindNeighbors(TileMap map, Vector pos)
     {
         _neighbors.Clear();
-        int[] dx = { 0, 0, -1, 1, -1, 1, -1, 1 };
-        int[] dy = { -1, 1, 0, 0, -1, -1, 1, 1 };
 
         for (int i = 0; i < 8; i++)
         {
-            int nx = pos.X + dx[i];
-            int ny = pos.Y + dy[i];
+            int nx = pos.X + Dx[i];
+            int ny = pos.Y + Dy[i];
             if (nx >= 0 && nx < map.Size.X && ny >= 0 && ny < map.Size.Y)
                 _neighbors.Add(new Vector(nx, ny));
         }

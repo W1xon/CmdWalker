@@ -39,7 +39,7 @@
             return Collider.CanMoveTo(dir);
         }
 
-        protected bool TryKill()
+        protected bool TryKill(Action? beforeDestruction = null)
         { 
             var target = new Vector((Transform.Position.X + _dir.X), (Transform.Position.Y + _dir.Y));
             var entities = _map.EntityManager.Entities;
@@ -48,7 +48,8 @@
                 var entity = entities[i];  
                 if (!entity.IsSelf(target) || entity is not IDamageable damageable) continue;
                 if (damageable == _parent) continue;
-                
+                if(beforeDestruction is not null) 
+                    beforeDestruction.Invoke();
                 Destroy();
                 ClearPreviousPosition();
                 damageable.TakeDamage(_damage);

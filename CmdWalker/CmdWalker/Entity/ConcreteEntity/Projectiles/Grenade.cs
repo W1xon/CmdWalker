@@ -31,7 +31,7 @@ internal class Grenade : Projectile
     public override void Execute()
     {
     }
-
+    
     public override void Launch(Vector direction)
     {
         var creator = CreatorRegistry.GetCreator<GrenadeCreator, Grenade>();
@@ -62,7 +62,7 @@ internal class Grenade : Projectile
             _map.SetCells(Transform.Position, Visual);
             return;
         }
-        if(!TryKill() ||  _distance <= 0 )
+        if(!TryKill(Boom) ||  _distance <= 0 )
         {
             Boom();
             Destroy();
